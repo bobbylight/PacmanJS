@@ -23,6 +23,7 @@
       "gtp": true,
       "game": true,
       "pacman": true,
+      "require": true,
       "tiled": true
    },
    "exported": [ "init" ]

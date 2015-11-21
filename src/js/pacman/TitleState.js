@@ -88,7 +88,7 @@ handleStart: {
          
          var game = this.game;
          game.clearScreen('rgb(0,0,0)');
-         var w = game.getWidth();
+         //var w = game.getWidth();
          
          var titleImage = game.assets.get('title');
          var x = (game.getWidth() - titleImage.width) / 2;

@@ -1,7 +1,7 @@
 /*
  * Game bootstrap code.  This can be in an inline <script> tag as well.
  */
-var TILE_SIZE = 8;//16;
+//var TILE_SIZE = 8;//16;
 var CANVAS_WIDTH = 224;//448;
 var CANVAS_HEIGHT = 288;//576;
 var game;
