@@ -13,6 +13,7 @@ pacman.TitleState.prototype = Object.create(pacman._BaseState.prototype, {
          game.canvas.addEventListener('touchstart', this.handleStart, false);
          this._delay = new gtp.Delay({ millis: [ 600, 400 ] });
          this._blink = true;
+         this._choice = 0;
          game.audio.playMusic(pacman.Sounds.MUSIC_TITLE_SCREEN);
       }
    },
@@ -44,7 +45,15 @@ handleStart: {
          }
          
          var im = game.inputManager;
-         if (im.enter()) {
+         if (im.up(true)) {
+            this._choice = Math.abs(this._choice - 1);
+            game.audio.playSound(pacman.Sounds.TOKEN);
+         }
+         else if (im.down(true)) {
+            this._choice = (this._choice + 1) % 2;
+            game.audio.playSound(pacman.Sounds.TOKEN);
+         }
+         else if (im.enter(true)) {
             this._startGame();
          }
          
@@ -55,7 +64,16 @@ handleStart: {
       value: function(ctx) {
          'use strict';
          
+         var charWidth = 9;
+         
          this._renderStaticStuff(ctx);
+         
+         // Draw the menu "choice" arrow
+         // " - 5" to account for differently sized choices
+         var x = (game.getWidth() - charWidth * 15) / 2 - 5;
+         var y = (game.getHeight() - 15 * 2) / 2;
+         game.drawString(x, y + this._choice * 15, '>');
+         
 //         if (!game.audio.isInitialized()) {
 //            var text = 'Sound is disabled as your';
 //            x = ( w - game.stringWidth(text)) / 2;
@@ -88,12 +106,33 @@ handleStart: {
          
          var game = this.game;
          game.clearScreen('rgb(0,0,0)');
-         //var w = game.getWidth();
+         var SCREEN_WIDTH = game.getWidth();
+         var charWidth = 9;
          
+         // Title image
          var titleImage = game.assets.get('title');
-         var x = (game.getWidth() - titleImage.width) / 2;
+         var x = (SCREEN_WIDTH - titleImage.width) / 2;
          var y = titleImage.height * 1.2;
          titleImage.draw(ctx, x, y);
+         
+         // Game menu
+         var temp = 'STANDARD MAZE';
+         var charCount = temp.length - 1; // "-1" for selection arrow
+         // " - 5" to account for differently sized choices
+         x = (SCREEN_WIDTH - charWidth * charCount) / 2 - 5;
+         y = (game.getHeight() - 15 * 2) / 2;
+         game.drawString(x, y, temp);
+         temp = 'ALTERNATE MAZE';
+         y += 15;
+         game.drawString(x, y, temp);
+         
+         // TODO: Render the dot scores.
+         
+         // Copyright
+         temp = '2015 OLD MAN GAMES';
+         x = (SCREEN_WIDTH - charWidth * temp.length) / 2;
+         y = game.getHeight() - 20;
+         game.drawString(x, y, temp);
       }
    },
    

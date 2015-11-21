@@ -25,10 +25,7 @@ pacman.LoadingState.prototype = Object.create(pacman._BaseState.prototype, {
                self._loadingImage = game.assets.get('loading');
             
                game.assets.addImage('title', 'res/title.png');
-//            game.assets.addSpriteSheet('hero', 'res/hero.png', 16, 16, 1, true);
-//            game.assets.addSpriteSheet('npcs', 'res/npcs.png', 16, 16, 1, true);
-//            game.assets.addImage('battleBG', 'res/battle_backgrounds.png');
-//            game.assets.addImage('font', 'res/font_8x10.png');
+               game.assets.addSpriteSheet('font', 'res/font.png', 9,7, 0,0);
 //            game.assets.addJson('enemies', 'res/enemies.json');
 //            game.assets.addJson('enemyTerritories', 'res/enemyTerritories.json');
 //            game.assets.addCanvas('enemiesImage', 'res/monsters.png');
