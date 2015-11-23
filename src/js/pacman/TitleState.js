@@ -64,37 +64,56 @@ handleStart: {
       value: function(ctx) {
          'use strict';
          
-         var charWidth = 9;
+         var SCREEN_WIDTH = game.getWidth(),
+             SCREEN_HEIGHT = game.getHeight(),
+             charWidth = 9;
          
          this._renderStaticStuff(ctx);
          
          // Draw the menu "choice" arrow
          // " - 5" to account for differently sized choices
-         var x = (game.getWidth() - charWidth * 15) / 2 - 5;
-         var y = (game.getHeight() - 15 * 2) / 2;
+         var x = (SCREEN_WIDTH - charWidth * 15) / 2 - 5;
+         var y = (SCREEN_HEIGHT - 15 * 2) / 2;
          game.drawString(x, y + this._choice * 15, '>');
          
-//         if (!game.audio.isInitialized()) {
-//            var text = 'Sound is disabled as your';
-//            x = ( w - game.stringWidth(text)) / 2;
-//            y = 390;
-//            game.drawString(text, x, y);
-//            text = 'browser does not support';
-//            x = ( w - game.stringWidth(text)) / 2;
-//            y += 26;
-//            game.drawString(text, x, y);
-//            text = 'web audio';
-//            x = (w - game.stringWidth(text)) / 2;
-//            y += 26;
-//            game.drawString(text, x, y);
-//         }
-//         
-//         if (this._blink) {
-//            var prompt = 'Press Enter';
-//            x = (w - game.stringWidth(prompt)) / 2;
-//            y = 240;
-//            game.drawString(prompt, x, y);
-//         }
+         // Draw the small and big dots
+         x += charWidth * 1.5;
+         y = 200;
+         game.canvas.getContext('2d').fillStyle = '#ffffff';
+         game.drawSmallDot(x + 3, y + 2);
+         y += 9;
+         game.drawBigDot(x, y);
+         
+         if (!game.audio.isInitialized()) {
+            this._renderNoSoundMessage();
+         }
+      }
+   },
+   
+   _stringWidth: {
+      value: function(str) {
+         'use strict';
+         return game.assets.get('font').cellW * str.length;
+      }
+   },
+   
+   _renderNoSoundMessage: {
+      value: function(ctx) {
+         'use strict';
+         var w = game.getWidth();
+         
+         var text = 'SOUND IS DISABLED AS';
+         var x = (w - this._stringWidth(text)) / 2;
+         var y = game.getHeight() - 20 - 9*3;
+         game.drawString(x, y, text);
+         text = 'YOUR BROWSER DOES NOT';
+         x = ( w - this._stringWidth(text)) / 2;
+         y += 9;
+         game.drawString(x, y, text);
+         text = 'SUPPORT WEB AUDIO';
+         x = (w - this._stringWidth(text)) / 2;
+         y += 9;
+         game.drawString(x, y, text);
       }
    },
    
@@ -126,7 +145,15 @@ handleStart: {
          y += 15;
          game.drawString(x, y, temp);
          
-         // TODO: Render the dot scores.
+         // Scores for the dot types
+         x += charWidth * 2;
+         temp = '10 POINTS';
+         charCount = temp.length - 2; // "-2" for animated dots
+         y = 200;
+         game.drawString(x, y, temp);
+         temp = '50 POINTS';
+         y += 9;
+         game.drawString(x, y, temp);
          
          // Copyright
          temp = '2015 OLD MAN GAMES';

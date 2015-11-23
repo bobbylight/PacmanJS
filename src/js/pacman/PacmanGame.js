@@ -5,6 +5,27 @@ pacman.PacmanGame = function() {
 
 pacman.PacmanGame.prototype = Object.create(gtp.Game.prototype, {
    
+   drawBigDot: {
+      value: function(x, y) {
+         'use strict';
+         var ms = this.getGameTime();
+         if (ms < 0 || (ms % 500) > 250) {
+            var ctx = this.canvas.getContext('2d');
+            var sx = 135,
+                sy = 38;
+            game.assets.get('sprites').drawScaled2(ctx, sx,sy,8,8, x,y,8,8);
+         }
+      }
+   },
+   
+   drawSmallDot: {
+      value: function(x, y) {
+         'use strict';
+         var ctx = this.canvas.getContext('2d');
+         ctx.fillRect(x, y, 2, 2);
+      }
+   },
+   
    drawString: {
       value: function(x, y, text) {
          'use strict';
