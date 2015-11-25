@@ -163,29 +163,10 @@ handleStart: {
       }
    },
    
-   _adjustGameMap: {
-      
-      value: function() {
-         'use strict';
-         
-         var map = game.map;
-         
-         // Hide layers that shouldn't be shown (why aren't they marked as hidden
-         // in Tiled?)
-         for (var i=0; i<map.getLayerCount(); i++) {
-            var layer = map.getLayerByIndex(i);
-            if (layer.name !== 'tileLayer') {
-               layer.visible = false;
-            }
-         }
-      }
-      
-   },
-   
    _startGame: {
       value: function() {
          'use strict';
-         game.startNewGame();
+         game.startGame(this._choice);
       }
    }
    

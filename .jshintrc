@@ -1,5 +1,4 @@
 {
-   "bitwise": true,
    "browser": true,
    "curly": true,        // Require curly braces around code blocks
    "debug": false,

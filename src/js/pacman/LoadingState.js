@@ -27,16 +27,8 @@ pacman.LoadingState.prototype = Object.create(pacman._BaseState.prototype, {
                game.assets.addImage('title', 'res/title.png');
                game.assets.addSpriteSheet('font', 'res/font.png', 9,7, 0,0);
                game.assets.addImage('sprites', 'res/sprite_tiles.png');
-//            game.assets.addJson('enemies', 'res/enemies.json');
-//            game.assets.addJson('enemyTerritories', 'res/enemyTerritories.json');
-//            game.assets.addCanvas('enemiesImage', 'res/monsters.png');
-//            game.assets.addJson('enemyAtlas', 'res/enemyAtlas.json');
-//            game.assets.addJson('overworld.json', 'res/maps/overworld.json');
-//            game.assets.addJson('equipment', 'res/equipment.json');
-//            game.assets.addJson('brecconary.json', 'res/maps/brecconary.json');
-//            game.assets.addJson('tantegelCastle.json', 'res/maps/tantegelCastle.json');
-//            game.assets.addJson('erdricksCave1.json', 'res/maps/erdricksCave1.json');
-//            game.assets.addJson('erdricksCave2.json', 'res/maps/erdricksCave2.json');
+               game.assets.addSpriteSheet('mapTiles', 'res/map_tiles.png', 8,8, 0,0);
+               game.assets.addJson('levels', 'res/levelData.json');
                game.assets.addSound(pacman.Sounds.CHASING_GHOSTS, 'res/sounds/chasing_ghosts.wav');
                game.assets.addSound(pacman.Sounds.CHOMP_1, 'res/sounds/chomp_1.wav');
                game.assets.addSound(pacman.Sounds.CHOMP_2, 'res/sounds/chomp_2.wav');
@@ -50,6 +42,15 @@ pacman.LoadingState.prototype = Object.create(pacman._BaseState.prototype, {
                game.assets.addSound(pacman.Sounds.SIREN, 'res/sounds/siren.wav');
                game.assets.addSound(pacman.Sounds.TOKEN, 'res/sounds/token.wav');
                game.assets.onLoad(function() {
+                  
+                  // Convert level data from hex strings to numbers
+                  function hexStrToInt(str) { return parseInt(str, 16); }
+                  var levelData = game.assets.get('levels');
+                  for (var i = 0; i < levelData.length; i++) {
+                     for (var row = 0; row < levelData[i].length; row++) {
+                        levelData[i][row] = levelData[i][row].map(hexStrToInt);
+                     }
+                  }
                   
                   var skipTitle = gtp.Utils.getRequestParam('skipTitle');
                   if (skipTitle !== null) { // Allow empty strings
