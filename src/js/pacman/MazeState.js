@@ -10,8 +10,12 @@ pacman.MazeState.prototype = Object.create(pacman._BaseState, {
       value: function() {
          'use strict';
          
-         this._maze = new pacman.Maze(this._mazeFile);
+         game.pacman.reset();
+         //game.resetGhosts();
          
+         this._maze = new pacman.Maze(this._mazeFile);
+         this._firstTimeThrough = true;
+         this._updateScoreIndex = -1;
       }
    },
    
@@ -85,8 +89,29 @@ pacman.MazeState.prototype = Object.create(pacman._BaseState, {
          
          this._maze.render(ctx);
          
+         // "window.pacman" because of hoisting of pacman var below
+         var TILE_SIZE = 8;
+         var mazeY = game.getHeight() - 2*TILE_SIZE -
+               window.pacman.Maze.TILE_COUNT_VERTICAL * TILE_SIZE;
+         ctx.translate(0, mazeY);
+         
          //game.paintFruit(ctx);
-         // TODO: Paint Pacman and ghosts
+         
+         var pacman = game.pacman;
+         if (this._updateScoreIndex === -1) {
+            if (this._substate !== 0/*SUBSTATE_GAME_OVER*/) {
+               pacman.render(ctx);
+            }
+         }
+         else {
+            var x = pacman.x;
+            var y = pacman.y;
+            game.paintPointsEarned(ctx, this._updateScoreIndex, x, y);
+         }
+         
+         //game.paintGhosts(ctx);
+         
+         ctx.translate(0, -mazeY);
          
          game.drawScores(ctx);
          this._paintExtraLives(ctx);

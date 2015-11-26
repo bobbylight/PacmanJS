@@ -2,6 +2,8 @@ pacman.PacmanGame = function() {
    'use strict';
    gtp.Game.apply(this, arguments);
    this._highScore = 0;
+   
+   this.pacman = new pacman.Pacman();
 };
 
 pacman.PacmanGame.prototype = Object.create(gtp.Game.prototype, {
@@ -132,6 +134,23 @@ pacman.PacmanGame.prototype = Object.create(gtp.Game.prototype, {
       value: function() {
          'use strict';
          return this._lives;
+      }
+   },
+   
+   /**
+    * Paints the "points earned," for example, when PacMan eats a ghost or
+    * fruit.
+    *
+    * @param {CanvasContext2D} ctx The graphics context to use.
+    * @param {int} ptsIndex The index into the points array.
+    * @param {int} dx The x-coordinate at which to draw.
+    * @param {int} dy The y-coordinate at which to draw.
+    */
+   paintPointsEarned: {
+      value: function(ctx, ptsIndex, dx, dy) {
+         'use strict';
+//         var y = 9 * ptsIndex;
+//         this._ptsImage.drawScaled2(ctx, 0,y, 17,9, dx,dy, 17,9);
       }
    },
    
