@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "declaration": true,
+        "noImplicitAny": true,
+        "removeComments": false,
+        "preserveConstEnums": true,
+        "outDir": "src/js/",
+        "sourceMap": true
+    },
+    "filesGlob": [
+        "src/app/**/*.ts",
+        "bower_components/gtp/dist-all/gtp-all.d.ts"
+    ],
+    "files": [
+        "src/app/pacman.ts",
+        "src/app/pacman/_BaseSprite.ts",
+        "src/app/pacman/_BaseState.ts",
+        "src/app/pacman/Direction.ts",
+        "src/app/pacman/LoadingState.ts",
+        "src/app/pacman/Maze.ts",
+        "src/app/pacman/MazeState.ts",
+        "src/app/pacman/Pacman.ts",
+        "src/app/pacman/PacmanGame.ts",
+        "src/app/pacman/Sounds.ts",
+        "src/app/pacman/TitleState.ts",
+        "bower_components/gtp/dist-all/gtp-all.d.ts"
+    ],
+    "atom": {
+        "rewriteTsconfig": true
+    }
+}

@@ -1,37 +1,31 @@
-pacman._BaseSprite = function(frameCount) {
-   'use strict';
-   
-   this.bounds = new gtp.Rectangle();
-   this._intersectBounds = new gtp.Rectangle();
-   this.direction = pacman.Direction.EAST;
-   
-   this._frame = 0; // The current "frame" to use when painting the sprite
-   this._frameCount = frameCount;
-   
-    // The last time this sprite updated itself, in ms
-   this._lastUpdateTime = 0;
-};
+var pacman;
+(function (pacman) {
+    'use strict';
+    var _BaseSprite = (function () {
+        function _BaseSprite(frameCount) {
+            this.bounds = new gtp.Rectangle();
+            this._intersectBounds = new gtp.Rectangle();
+            this.direction = pacman.Direction.EAST;
+            this._frame = 0;
+            this._frameCount = frameCount;
+            this._lastUpdateTime = 0;
+        }
+        _BaseSprite.prototype.getFrame = function () {
+            return this._frame;
+        };
+        _BaseSprite.prototype.getFrameCount = function () {
+            return this._frameCount;
+        };
+        _BaseSprite.prototype.reset = function () {
+            this._lastUpdateTime = 0;
+        };
+        _BaseSprite.prototype.setLocation = function (x, y) {
+            this.bounds.x = x;
+            this.bounds.y = y;
+        };
+        return _BaseSprite;
+    })();
+    pacman._BaseSprite = _BaseSprite;
+})(pacman || (pacman = {}));
 
-pacman._BaseSprite.prototype = {
-   
-   getFrame: function() {
-      'use strict';
-      return this._frame;
-   },
-   
-   getFrameCount: function() {
-      'use strict';
-      return this._frameCount;
-   },
-   
-   reset: function() {
-      'use strict';
-      this._lastUpdateTime = 0;
-   },
-   
-   setLocation: function(x,  y) {
-      'use strict';
-      this.bounds.x = x;
-      this.bounds.y = y;
-   }
-};
+//# sourceMappingURL=_BaseSprite.js.map
