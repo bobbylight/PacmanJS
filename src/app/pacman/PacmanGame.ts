@@ -16,7 +16,7 @@ module pacman {
     }
 
     drawBigDot(x: number, y: number) {
-      var ms = this.getGameTime();
+      var ms = this.playTime;
       if (ms < 0 || (ms % 500) > 250) {
          var ctx = this.canvas.getContext('2d');
          var sx = 135,

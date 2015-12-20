@@ -14,7 +14,7 @@ var pacman;
             this.pacman = new pacman.Pacman();
         }
         PacmanGame.prototype.drawBigDot = function (x, y) {
-            var ms = this.getGameTime();
+            var ms = this.playTime;
             if (ms < 0 || (ms % 500) > 250) {
                 var ctx = this.canvas.getContext('2d');
                 var sx = 135, sy = 38;
