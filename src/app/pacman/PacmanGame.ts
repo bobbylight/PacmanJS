@@ -1,18 +1,50 @@
 module pacman {
   'use strict';
 
+  export enum GhostUpdateStrategy {
+    UPDATE_ALL, UPDATE_NONE, UPDATE_ONE
+  }
+
   export class PacmanGame extends gtp.Game {
 
     private _highScore: number;
     private _lives: number;
     private _score: number;
     private _level: number;
+    private _ghostUpdateStrategy: GhostUpdateStrategy;
+    private _chompSound: number;
     pacman: pacman.Pacman;
+
+    /**
+  	 * Whether the player has earned an extra life (from achieving a
+  	 * certain score).
+  	 */
+  	private _earnedExtraLife: boolean;
+
+    /**
+  	 * The sound effect currently looping (the background siren, the ghosts
+  	 * running away, the ghost eyes running away, etc.).
+  	 */
+  	private _loopedSoundId: number;
+
+    private _loopedSoundName: string;
+
+    /**
+  	 * A flag used internally to decide when a ghost changing state should
+  	 * also change the background noise (siren, eyes, etc.).
+  	 */
+  	private _resettingGhostStates: boolean;
 
     constructor(args?: any) {
       super(args);
       this._highScore = 0;
       this.pacman = new pacman.Pacman();
+      this._chompSound = 0;
+      this._ghostUpdateStrategy = GhostUpdateStrategy.UPDATE_ALL;
+    }
+
+    addFruit() {
+      // TODO
     }
 
     drawBigDot(x: number, y: number) {
@@ -97,12 +129,37 @@ module pacman {
       }
     }
 
+    static get EXTRA_LIFE_SCORE(): number {
+      return 10000;
+    }
+
+    increaseLives(amount: number): number {
+      return this._lives += amount;
+    }
+
+    increaseScore(amount: number) {
+      this._score += amount;
+      if (!this._earnedExtraLife && this._score >= PacmanGame.EXTRA_LIFE_SCORE) {
+        this.audio.playSound(Sounds.EXTRA_LIFE);
+        this.increaseLives(1);
+        this._earnedExtraLife = true;
+      }
+    }
+
     get level(): number {
       return this._level;
     }
 
     get lives() : number {
       return this._lives;
+    }
+
+    loadNextLevel() {
+      // TODO
+    }
+
+    makeGhostsBlue() {
+      // TODO
     }
 
     /**
@@ -120,6 +177,65 @@ module pacman {
  //         this._ptsImage.drawScaled2(ctx, 0,y, 17,9, dx,dy, 17,9);
     }
 
+    /**
+     * Plays the next appropriate chomp sound.
+     */
+    playChompSound() {
+      this.audio.playSound(this._chompSound === 0 ?
+          Sounds.CHOMP_1 : Sounds.CHOMP_2);
+      this._chompSound = (this._chompSound + 1) % 2;
+    }
+
+    resetGhosts() {
+
+      this._resettingGhostStates = true;
+
+      // Have each ghost go to one of four random corners while in scatter
+      // mode, but ensure each ghost goes to a different corner.
+      var corners: gtp.Point[] = [
+        new gtp.Point(2, 1),
+        new gtp.Point(2, Maze.TILE_COUNT_HORIZONTAL - 2),
+        new gtp.Point(Maze.TILE_COUNT_VERTICAL - 2, 1),
+        new gtp.Point(Maze.TILE_COUNT_VERTICAL - 2, Maze.TILE_COUNT_HORIZONTAL - 2)
+      ];
+      var cornerSeed: number = gtp.Utils.randomInt(4);
+
+      // for (var i: number = 0; i < ghosts.length; i++) {
+      //   ghosts[i].reset();
+      //   ghosts[i].setCorner(corners[(cornerSeed + i) % 4]);
+      // }
+
+      this._resettingGhostStates = false;
+    }
+    /**
+     * Starts looping a sound effect.
+     * @param {string} sound The sound effect to loop.
+     */
+    setLoopedSound(sound: string) {
+      if (sound !== this._loopedSoundName) {
+        if (this._loopedSoundId != null) {
+          this.audio.stopSound(this._loopedSoundId);
+        }
+        this._loopedSoundName = sound;
+        if (sound != null) {
+          this._loopedSoundId = game.audio.playSound(sound, true);
+        }
+        else {
+          this._loopedSoundId = null;
+        }
+      }
+    }
+
+    /**
+  	 * Sets whether to update none, one, or all of the ghosts' positions
+  	 * each frame.  This is used for debugging purposes.
+  	 * @param state How many ghosts to update.
+  	 */
+  	set ghostUpdateStrategy(strategy: GhostUpdateStrategy) {
+  		this._ghostUpdateStrategy = strategy;
+  	}
+
+
     startGame(level: number) {
 
         this._lives = 3;
@@ -131,5 +247,49 @@ module pacman {
         //this.setState(new gtp.FadeOutInState(this.state, mazeState));
         this.setState(mazeState); // The original did not fade in/out
     }
+
+    /**
+  	 * Goes to the next animation frame for pacman, the ghosts and the
+  	 * fruit.
+  	 */
+  	updateSpriteFrames() {
+  		this.pacman.updateFrame();
+      // TODO
+      // ghosts.forEach(function(ghost: Ghost) {
+      //   ghost.updateFrame();
+      // });
+  	}
+
+  	/**
+  	 * Updates the position of pacman, the ghosts and the fruit, in the
+  	 * specified maze.
+  	 * @param {Maze} maze The maze.
+     * @param {number} time
+  	 */
+  	updateSpritePositions(maze: Maze, time: number) {
+
+  		// NOTE: We MUST update ghost positions before PacMan position.  This
+  		// is because pacman.upatePosition() can cause the engine's "playtime"
+  		// to reset to 0, which in turn will mess up the ghosts'
+  		// updatePosition() calls (since we're using a "cached" time to pass
+  		// to them).  This is seen when PacMan eats the last dot in a level
+  		// and the next level is loaded.
+
+  		switch (this._ghostUpdateStrategy) {
+  			case GhostUpdateStrategy.UPDATE_ALL:
+          // this._ghosts.forEach(function(ghost: Ghost) {
+          //   ghost.updatePosition(maze, time);
+          // });
+  				break;
+  			case GhostUpdateStrategy.UPDATE_NONE:
+  				break;
+  			case GhostUpdateStrategy.UPDATE_ONE:
+  				// this._ghosts[0].updatePosition(maze, time);
+  				break;
+  		}
+
+  		this.pacman.updatePosition(maze, time);
+
+  	}
   }
 }

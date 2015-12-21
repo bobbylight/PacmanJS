@@ -19,6 +19,20 @@ var pacman;
             _super.call(this);
             this._mazeFile = mazeFile;
         }
+        Object.defineProperty(MazeState.prototype, "DYING_FRAME_DELAY_MILLIS", {
+            get: function () {
+                return 7500;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MazeState.prototype, "_readyDelayMillis", {
+            get: function () {
+                return this._firstTimeThrough ? 4500 : 2000;
+            },
+            enumerable: true,
+            configurable: true
+        });
         MazeState.prototype.init = function () {
             game.pacman.reset();
             //game.resetGhosts();
@@ -31,6 +45,9 @@ var pacman;
             this._substate = Substate.READY;
             this._firstTimeThrough = true;
             this._substateStartTime = 0;
+            this._nextDyingFrameTime = 0;
+            this._nextUpdateTime = 0;
+            this._lastSpriteFrameTime = 0;
         };
         MazeState.prototype._paintExtraLives = function (ctx) {
             // The indentation on either side of the status stuff at the bottom
@@ -137,6 +154,66 @@ var pacman;
         };
         MazeState.prototype.update = function (delta) {
             _super.prototype.update.call(this, delta);
+            var time = gtp.Utils.timestamp();
+            switch (this._substate) {
+                case Substate.READY:
+                    if (this._firstTimeThrough && this._substateStartTime === 0) {
+                        this._substateStartTime = time;
+                        game.audio.playSound(pacman.Sounds.OPENING);
+                    }
+                    if (time >= this._substateStartTime + this._readyDelayMillis) {
+                        this._substate = Substate.IN_GAME;
+                        this._substateStartTime = time;
+                        game.resetPlayTime();
+                        game.setLoopedSound(pacman.Sounds.SIREN);
+                        this._firstTimeThrough = false;
+                    }
+                    break;
+                case Substate.IN_GAME:
+                    this._updateInGameImpl(time);
+                    break;
+                case Substate.DYING:
+                    if (time >= this._nextDyingFrameTime) {
+                        if (!game.pacman.incDying()) {
+                            if (game.increaseLives(-1) <= 0) {
+                                this._substate = Substate.GAME_OVER;
+                            }
+                            else {
+                                game.resetPlayTime();
+                                game.pacman.reset();
+                                game.resetGhosts(); // Do AFTER resetting play time!
+                                this._substate = Substate.READY;
+                                this._substateStartTime = 0; // Play time was just reset
+                                this._lastSpriteFrameTime = 0;
+                            }
+                        }
+                        else {
+                            this._nextDyingFrameTime = time + this.DYING_FRAME_DELAY_MILLIS;
+                        }
+                    }
+                    break;
+                case Substate.GAME_OVER:
+                    // Do nothing
+                    break;
+            }
+        };
+        MazeState.prototype._updateInGameImpl = function (time) {
+            // If Pacman is eating a ghost, add a slight delay
+            if (this._nextUpdateTime > 0 && time < this._nextUpdateTime) {
+                return;
+            }
+            this._nextUpdateTime = 0;
+            this._updateScoreIndex = -1;
+            // Don't update sprite frame at each rendered frame; that would be too
+            // fast
+            if (time >= this._lastSpriteFrameTime + 100 * 10) {
+                this._lastSpriteFrameTime = time;
+                game.updateSpriteFrames();
+            }
+            // Update Pacman's, ghosts', and possibly fruit's positions
+            game.updateSpritePositions(this._maze, time);
+            // If Pacman hit a ghost, decide what to do
+            // TODO
         };
         return MazeState;
     })(pacman_1._BaseState);

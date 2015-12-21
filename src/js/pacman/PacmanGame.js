@@ -6,13 +6,24 @@ var __extends = (this && this.__extends) || function (d, b) {
 var pacman;
 (function (pacman) {
     'use strict';
+    (function (GhostUpdateStrategy) {
+        GhostUpdateStrategy[GhostUpdateStrategy["UPDATE_ALL"] = 0] = "UPDATE_ALL";
+        GhostUpdateStrategy[GhostUpdateStrategy["UPDATE_NONE"] = 1] = "UPDATE_NONE";
+        GhostUpdateStrategy[GhostUpdateStrategy["UPDATE_ONE"] = 2] = "UPDATE_ONE";
+    })(pacman.GhostUpdateStrategy || (pacman.GhostUpdateStrategy = {}));
+    var GhostUpdateStrategy = pacman.GhostUpdateStrategy;
     var PacmanGame = (function (_super) {
         __extends(PacmanGame, _super);
         function PacmanGame(args) {
             _super.call(this, args);
             this._highScore = 0;
             this.pacman = new pacman.Pacman();
+            this._chompSound = 0;
+            this._ghostUpdateStrategy = GhostUpdateStrategy.UPDATE_ALL;
         }
+        PacmanGame.prototype.addFruit = function () {
+            // TODO
+        };
         PacmanGame.prototype.drawBigDot = function (x, y) {
             var ms = this.playTime;
             if (ms < 0 || (ms % 500) > 250) {
@@ -83,6 +94,24 @@ var pacman;
                 x += 9; //CHAR_WIDTH
             }
         };
+        Object.defineProperty(PacmanGame, "EXTRA_LIFE_SCORE", {
+            get: function () {
+                return 10000;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PacmanGame.prototype.increaseLives = function (amount) {
+            return this._lives += amount;
+        };
+        PacmanGame.prototype.increaseScore = function (amount) {
+            this._score += amount;
+            if (!this._earnedExtraLife && this._score >= PacmanGame.EXTRA_LIFE_SCORE) {
+                this.audio.playSound(pacman.Sounds.EXTRA_LIFE);
+                this.increaseLives(1);
+                this._earnedExtraLife = true;
+            }
+        };
         Object.defineProperty(PacmanGame.prototype, "level", {
             get: function () {
                 return this._level;
@@ -97,6 +126,12 @@ var pacman;
             enumerable: true,
             configurable: true
         });
+        PacmanGame.prototype.loadNextLevel = function () {
+            // TODO
+        };
+        PacmanGame.prototype.makeGhostsBlue = function () {
+            // TODO
+        };
         /**
          * Paints the "points earned," for example, when PacMan eats a ghost or
          * fruit.
@@ -111,6 +146,61 @@ var pacman;
             //         var y = 9 * ptsIndex;
             //         this._ptsImage.drawScaled2(ctx, 0,y, 17,9, dx,dy, 17,9);
         };
+        /**
+         * Plays the next appropriate chomp sound.
+         */
+        PacmanGame.prototype.playChompSound = function () {
+            this.audio.playSound(this._chompSound === 0 ?
+                pacman.Sounds.CHOMP_1 : pacman.Sounds.CHOMP_2);
+            this._chompSound = (this._chompSound + 1) % 2;
+        };
+        PacmanGame.prototype.resetGhosts = function () {
+            this._resettingGhostStates = true;
+            // Have each ghost go to one of four random corners while in scatter
+            // mode, but ensure each ghost goes to a different corner.
+            var corners = [
+                new gtp.Point(2, 1),
+                new gtp.Point(2, pacman.Maze.TILE_COUNT_HORIZONTAL - 2),
+                new gtp.Point(pacman.Maze.TILE_COUNT_VERTICAL - 2, 1),
+                new gtp.Point(pacman.Maze.TILE_COUNT_VERTICAL - 2, pacman.Maze.TILE_COUNT_HORIZONTAL - 2)
+            ];
+            var cornerSeed = gtp.Utils.randomInt(4);
+            // for (var i: number = 0; i < ghosts.length; i++) {
+            //   ghosts[i].reset();
+            //   ghosts[i].setCorner(corners[(cornerSeed + i) % 4]);
+            // }
+            this._resettingGhostStates = false;
+        };
+        /**
+         * Starts looping a sound effect.
+         * @param {string} sound The sound effect to loop.
+         */
+        PacmanGame.prototype.setLoopedSound = function (sound) {
+            if (sound !== this._loopedSoundName) {
+                if (this._loopedSoundId != null) {
+                    this.audio.stopSound(this._loopedSoundId);
+                }
+                this._loopedSoundName = sound;
+                if (sound != null) {
+                    this._loopedSoundId = game.audio.playSound(sound, true);
+                }
+                else {
+                    this._loopedSoundId = null;
+                }
+            }
+        };
+        Object.defineProperty(PacmanGame.prototype, "ghostUpdateStrategy", {
+            /**
+             * Sets whether to update none, one, or all of the ghosts' positions
+             * each frame.  This is used for debugging purposes.
+             * @param state How many ghosts to update.
+             */
+            set: function (strategy) {
+                this._ghostUpdateStrategy = strategy;
+            },
+            enumerable: true,
+            configurable: true
+        });
         PacmanGame.prototype.startGame = function (level) {
             this._lives = 3;
             this._score = 0;
@@ -119,6 +209,44 @@ var pacman;
             var mazeState = new pacman.MazeState(levelData);
             //this.setState(new gtp.FadeOutInState(this.state, mazeState));
             this.setState(mazeState); // The original did not fade in/out
+        };
+        /**
+         * Goes to the next animation frame for pacman, the ghosts and the
+         * fruit.
+         */
+        PacmanGame.prototype.updateSpriteFrames = function () {
+            this.pacman.updateFrame();
+            // TODO
+            // ghosts.forEach(function(ghost: Ghost) {
+            //   ghost.updateFrame();
+            // });
+        };
+        /**
+         * Updates the position of pacman, the ghosts and the fruit, in the
+         * specified maze.
+         * @param {Maze} maze The maze.
+         * @param {number} time
+         */
+        PacmanGame.prototype.updateSpritePositions = function (maze, time) {
+            // NOTE: We MUST update ghost positions before PacMan position.  This
+            // is because pacman.upatePosition() can cause the engine's "playtime"
+            // to reset to 0, which in turn will mess up the ghosts'
+            // updatePosition() calls (since we're using a "cached" time to pass
+            // to them).  This is seen when PacMan eats the last dot in a level
+            // and the next level is loaded.
+            switch (this._ghostUpdateStrategy) {
+                case GhostUpdateStrategy.UPDATE_ALL:
+                    // this._ghosts.forEach(function(ghost: Ghost) {
+                    //   ghost.updatePosition(maze, time);
+                    // });
+                    break;
+                case GhostUpdateStrategy.UPDATE_NONE:
+                    break;
+                case GhostUpdateStrategy.UPDATE_ONE:
+                    // this._ghosts[0].updatePosition(maze, time);
+                    break;
+            }
+            this.pacman.updatePosition(maze, time);
         };
         return PacmanGame;
     })(gtp.Game);

@@ -1,11 +1,53 @@
 var pacman;
 (function (pacman) {
     'use strict';
+    var DOT_POINTS = [50, 10];
     var Maze = (function () {
         function Maze(mazeInfo) {
             this._data = [];
             this.reset(mazeInfo);
         }
+        /**
+         * Checks whether a dot is in the maze at the specified location.  If
+         * it is, it is removed.  If a dot is removed, the points the player should
+         * receive is returned.
+         *
+         * @param {number} row The row to check.
+         * @param {number} col The column to check.
+         * @return {number} The amount to add to the player's score, if any.
+         */
+        Maze.prototype.checkForDot = function (row, col) {
+            var score = 0;
+            var tile = this._getTileAt(row, col);
+            if (tile >= 0xfe) {
+                game.playChompSound();
+                if (tile === 0xfe) {
+                    game.makeGhostsBlue();
+                }
+                this._eatenDotCount++;
+                this._data[row][col] = 0;
+                score = DOT_POINTS[tile - 0xfe];
+                if (this._eatenDotCount === Maze.FRUIT_DOT_COUNT) {
+                    game.addFruit();
+                }
+                if (this._eatenDotCount === this._dotCount) {
+                    game.loadNextLevel();
+                }
+            }
+            return score;
+        };
+        Object.defineProperty(Maze, "FRUIT_DOT_COUNT", {
+            /**
+             * Returns the number of dots Pacman must eat before a fruit appears.
+             *
+             * @return {number} The number of dots Pacman must eat.
+             */
+            get: function () {
+                return 64;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Maze, "TILE_COUNT_HORIZONTAL", {
             get: function () {
                 return 28;
@@ -50,6 +92,16 @@ var pacman;
                 return -1;
             }
             return this._data[row][col] & 0xff; // Remove internally-used high bits
+        };
+        /**
+         * Returns whether a sprite can move onto the specified tile.
+         * @param {number} row The row to check.
+         * @param {number} col The column to check.
+         * @return {boolean} Whether a sprite can walk ono the specified tile.
+         */
+        Maze.prototype.isWalkable = function (row, col) {
+            var tile = this._getTileAt(row, col);
+            return tile === 0 || tile >= 0xf0;
         };
         Maze.prototype.render = function (ctx) {
             // Draw all static content

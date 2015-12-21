@@ -10,6 +10,20 @@ module pacman {
       this._dyingFrame = 0;
     }
 
+    getUpdateDelayMillis(): number {
+      return 10;
+    }
+
+    /**
+     * Returns whether Pacman ins completely dead, or still doing his dying
+     * animation.
+     * @return {boolean} Whether Pacman is completely dead.
+     */
+    incDying(): boolean {
+      this._dyingFrame = (this._dyingFrame + 1) % 12;
+      return this._dyingFrame !== 0;
+    }
+
     render(ctx: CanvasRenderingContext2D) {
 
       var SPRITE_SIZE = 16;
@@ -44,6 +58,28 @@ module pacman {
 
     setLocation(x: number, y: number) {
       super.setLocation(x, y);
+    }
+
+    updatePositionImpl(maze: Maze) {
+
+      var moveAmount: number = this.moveAmount;
+
+  		switch (this.direction) {
+        case Direction.WEST:
+  				this.goLeftIfPossible(maze, moveAmount);
+  				break;
+  			case Direction.EAST:
+  				this.goRightIfPossible(maze, moveAmount);
+  				break;
+  			case Direction.NORTH:
+  				this.goUpIfPossible(maze, moveAmount);
+  				break;
+  			case Direction.SOUTH:
+  				this.goDownIfPossible(maze, moveAmount);
+  				break;
+  		}
+
+  		game.increaseScore(maze.checkForDot(this.row, this.column));
     }
   }
 }

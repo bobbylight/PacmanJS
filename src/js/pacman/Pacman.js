@@ -12,6 +12,18 @@ var pacman;
             _super.call(this, 3);
             this._dyingFrame = 0;
         }
+        Pacman.prototype.getUpdateDelayMillis = function () {
+            return 10;
+        };
+        /**
+         * Returns whether Pacman ins completely dead, or still doing his dying
+         * animation.
+         * @return {boolean} Whether Pacman is completely dead.
+         */
+        Pacman.prototype.incDying = function () {
+            this._dyingFrame = (this._dyingFrame + 1) % 12;
+            return this._dyingFrame !== 0;
+        };
         Pacman.prototype.render = function (ctx) {
             var SPRITE_SIZE = 16;
             var x = this.bounds.x;
@@ -37,6 +49,24 @@ var pacman;
         };
         Pacman.prototype.setLocation = function (x, y) {
             _super.prototype.setLocation.call(this, x, y);
+        };
+        Pacman.prototype.updatePositionImpl = function (maze) {
+            var moveAmount = this.moveAmount;
+            switch (this.direction) {
+                case pacman.Direction.WEST:
+                    this.goLeftIfPossible(maze, moveAmount);
+                    break;
+                case pacman.Direction.EAST:
+                    this.goRightIfPossible(maze, moveAmount);
+                    break;
+                case pacman.Direction.NORTH:
+                    this.goUpIfPossible(maze, moveAmount);
+                    break;
+                case pacman.Direction.SOUTH:
+                    this.goDownIfPossible(maze, moveAmount);
+                    break;
+            }
+            game.increaseScore(maze.checkForDot(this.row, this.column));
         };
         return Pacman;
     })(pacman._BaseSprite);

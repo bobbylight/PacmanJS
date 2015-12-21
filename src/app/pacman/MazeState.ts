@@ -16,11 +16,22 @@ module pacman {
     private _updateScoreIndex: number;
     private _substate: Substate;
     private _substateStartTime: number;
+    private _nextUpdateTime: number;
+    private _nextDyingFrameTime: number;
     private _lastMazeScreenKeypressTime: number;
+    private _lastSpriteFrameTime: number;
 
     constructor(mazeFile: string) {
       super();
       this._mazeFile = mazeFile;
+    }
+
+    private get DYING_FRAME_DELAY_MILLIS(): number {
+      return 7500;
+    }
+
+    private get _readyDelayMillis(): number {
+      return this._firstTimeThrough ? 4500 : 2000;
     }
 
     init() {
@@ -39,6 +50,9 @@ module pacman {
   		this._substate = Substate.READY;
   		this._firstTimeThrough = true;
   		this._substateStartTime = 0;
+      this._nextDyingFrameTime = 0;
+      this._nextUpdateTime = 0;
+      this._lastSpriteFrameTime = 0;
     }
 
     _paintExtraLives(ctx: CanvasRenderingContext2D) {
@@ -163,6 +177,77 @@ module pacman {
 
     update(delta: number) {
       super.update(delta);
+
+      var time: number = gtp.Utils.timestamp();
+
+      switch (this._substate) {
+
+        case Substate.READY:
+          if (this._firstTimeThrough && this._substateStartTime === 0) {
+            this._substateStartTime = time;
+            game.audio.playSound(pacman.Sounds.OPENING);
+          }
+          if (time >= this._substateStartTime + this._readyDelayMillis) {
+            this._substate = Substate.IN_GAME;
+            this._substateStartTime = time;
+            game.resetPlayTime();
+            game.setLoopedSound(pacman.Sounds.SIREN);
+            this._firstTimeThrough = false;
+          }
+          break;
+
+        case Substate.IN_GAME:
+          this._updateInGameImpl(time);
+          break;
+
+        case Substate.DYING:
+          if (time >= this._nextDyingFrameTime) {
+            if (!game.pacman.incDying()) {
+              if (game.increaseLives(-1) <= 0) {
+                this._substate = Substate.GAME_OVER;
+              }
+              else {
+                game.resetPlayTime();
+                game.pacman.reset();
+                game.resetGhosts(); // Do AFTER resetting play time!
+                this._substate = Substate.READY;
+                this._substateStartTime = 0; // Play time was just reset
+                this._lastSpriteFrameTime = 0;
+              }
+            }
+            else {
+              this._nextDyingFrameTime = time + this.DYING_FRAME_DELAY_MILLIS;
+            }
+          }
+          break;
+
+        case Substate.GAME_OVER:
+          // Do nothing
+          break;
+      }
+    }
+
+    private _updateInGameImpl(time: number) {
+
+      // If Pacman is eating a ghost, add a slight delay
+      if (this._nextUpdateTime > 0 && time < this._nextUpdateTime) {
+        return;
+      }
+      this._nextUpdateTime = 0;
+      this._updateScoreIndex = -1;
+
+      // Don't update sprite frame at each rendered frame; that would be too
+      // fast
+      if (time >= this._lastSpriteFrameTime + 100 * 10) {
+        this._lastSpriteFrameTime = time;
+        game.updateSpriteFrames();
+      }
+
+      // Update Pacman's, ghosts', and possibly fruit's positions
+      game.updateSpritePositions(this._maze, time);
+
+      // If Pacman hit a ghost, decide what to do
+      // TODO
     }
   }
 }
