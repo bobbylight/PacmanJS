@@ -5,6 +5,8 @@ declare module pacman {
         private _firstTimeThrough;
         private _updateScoreIndex;
         private _substate;
+        private _substateStartTime;
+        private _lastMazeScreenKeypressTime;
         constructor(mazeFile: string);
         init(): void;
         _paintExtraLives(ctx: CanvasRenderingContext2D): void;

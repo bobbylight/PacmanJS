@@ -61,6 +61,9 @@ module pacman {
 
 		}
 
+		get inputRepeatMillis(): number {
+			return 200; // 0.2 seconds
+		}
 	}
 
 }

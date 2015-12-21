@@ -6,6 +6,13 @@ var __extends = (this && this.__extends) || function (d, b) {
 var pacman;
 (function (pacman_1) {
     'use strict';
+    var Substate;
+    (function (Substate) {
+        Substate[Substate["READY"] = 0] = "READY";
+        Substate[Substate["IN_GAME"] = 1] = "IN_GAME";
+        Substate[Substate["DYING"] = 2] = "DYING";
+        Substate[Substate["GAME_OVER"] = 3] = "GAME_OVER";
+    })(Substate || (Substate = {}));
     var MazeState = (function (_super) {
         __extends(MazeState, _super);
         function MazeState(mazeFile) {
@@ -18,6 +25,12 @@ var pacman;
             this._maze = new pacman_1.Maze(this._mazeFile);
             this._firstTimeThrough = true;
             this._updateScoreIndex = -1;
+            // Prevents the user's "Enter" press to start the game from being
+            // picked up by our handleInput().
+            this._lastMazeScreenKeypressTime = gtp.Utils.timestamp() + this.inputRepeatMillis;
+            this._substate = Substate.READY;
+            this._firstTimeThrough = true;
+            this._substateStartTime = 0;
         };
         MazeState.prototype._paintExtraLives = function (ctx) {
             // The indentation on either side of the status stuff at the bottom
@@ -81,7 +94,7 @@ var pacman;
             //game.paintFruit(ctx);
             var pacman = game.pacman;
             if (this._updateScoreIndex === -1) {
-                if (this._substate !== 0 /*SUBSTATE_GAME_OVER*/) {
+                if (this._substate !== Substate.GAME_OVER) {
                     pacman.render(ctx);
                 }
             }
@@ -95,7 +108,32 @@ var pacman;
             game.drawScores(ctx);
             this._paintExtraLives(ctx);
             this._paintPossibleFruits(ctx);
-            // TODO: Subtate messages - "READY", "GAME OVER", "PAUSED", etc.
+            if (this._substate === Substate.READY) {
+                // These calculations should be fast enough, especially considering
+                // that "READY!" is only displayed for about 4 seconds.
+                var ready = 'READY!';
+                var x = (game.getWidth() - ready.length * 9) / 2;
+                // Give "Ready!" a little nudge to the right.  This is because the
+                // ending '!' doesn't fill up the standard 8 pixels for a character,
+                // so "READY!" looks slightly too far to the left without it.
+                x += 3;
+                game.drawString(x, 160, ready);
+            }
+            else if (this._substate === Substate.GAME_OVER) {
+                var gameOver = 'GAME OVER';
+                var x = (game.getWidth() - gameOver.length * 9) / 2;
+                game.drawString(x, 160, gameOver);
+            }
+            if (game.paused) {
+                ctx.globalAlpha = 0.4;
+                ctx.fillStyle = 'black';
+                ctx.fillRect(0, 0, game.getWidth(), game.getHeight());
+                ctx.globalAlpha = 1;
+                ctx.fillRect(50, 100, game.getWidth() - 100, game.getHeight() - 200);
+                var paused = 'PAUSED';
+                var x = (game.getWidth() - paused.length * 9) / 2;
+                game.drawString(x, (game.getHeight() - 18) / 2, paused);
+            }
         };
         MazeState.prototype.update = function (delta) {
             _super.prototype.update.call(this, delta);

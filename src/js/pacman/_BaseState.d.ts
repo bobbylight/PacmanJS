@@ -7,5 +7,6 @@ declare module pacman {
         constructor(args?: gtp.Game | gtp.BaseStateArgs);
         createScreenshot(): HTMLCanvasElement;
         handleDefaultKeys(): void;
+        inputRepeatMillis: number;
     }
 }

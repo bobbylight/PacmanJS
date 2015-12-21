@@ -1,13 +1,22 @@
 module pacman {
   'use strict';
 
+  enum Substate {
+    READY,
+    IN_GAME,
+    DYING,
+    GAME_OVER
+  }
+
   export class MazeState extends _BaseState {
 
     private _mazeFile: string;
     private _maze: Maze;
     private _firstTimeThrough: boolean;
     private _updateScoreIndex: number;
-    private _substate: number;
+    private _substate: Substate;
+    private _substateStartTime: number;
+    private _lastMazeScreenKeypressTime: number;
 
     constructor(mazeFile: string) {
       super();
@@ -22,6 +31,14 @@ module pacman {
       this._maze = new Maze(this._mazeFile);
       this._firstTimeThrough = true;
       this._updateScoreIndex = -1;
+
+      // Prevents the user's "Enter" press to start the game from being
+  		// picked up by our handleInput().
+  		this._lastMazeScreenKeypressTime = gtp.Utils.timestamp() + this.inputRepeatMillis;
+
+  		this._substate = Substate.READY;
+  		this._firstTimeThrough = true;
+  		this._substateStartTime = 0;
     }
 
     _paintExtraLives(ctx: CanvasRenderingContext2D) {
@@ -97,7 +114,7 @@ module pacman {
 
       var pacman = game.pacman;
       if (this._updateScoreIndex === -1) {
-         if (this._substate !== 0/*SUBSTATE_GAME_OVER*/) {
+         if (this._substate !== Substate.GAME_OVER) {
             pacman.render(ctx);
          }
       }
@@ -115,7 +132,33 @@ module pacman {
       this._paintExtraLives(ctx);
       this._paintPossibleFruits(ctx);
 
-      // TODO: Subtate messages - "READY", "GAME OVER", "PAUSED", etc.
+      if (this._substate === Substate.READY) {
+        // These calculations should be fast enough, especially considering
+  			// that "READY!" is only displayed for about 4 seconds.
+  			var ready: string = 'READY!';
+  			var x: number = (game.getWidth() - ready.length * 9) / 2;
+  			// Give "Ready!" a little nudge to the right.  This is because the
+  			// ending '!' doesn't fill up the standard 8 pixels for a character,
+  			// so "READY!" looks slightly too far to the left without it.
+  			x += 3;
+        game.drawString(x, 160, ready);
+      }
+      else if (this._substate === Substate.GAME_OVER) {
+        var gameOver: string = 'GAME OVER';
+  			var x: number = (game.getWidth() - gameOver.length * 9) / 2;
+  			game.drawString(x, 160, gameOver);
+      }
+
+      if (game.paused) {
+        ctx.globalAlpha = 0.4;
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, game.getWidth(), game.getHeight());
+        ctx.globalAlpha = 1;
+        ctx.fillRect(50, 100, game.getWidth() - 100, game.getHeight() - 200);
+        var paused: string = 'PAUSED';
+        var x: number = (game.getWidth() - paused.length * 9) / 2;
+        game.drawString(x, (game.getHeight() - 18) / 2, paused);
+      }
     }
 
     update(delta: number) {

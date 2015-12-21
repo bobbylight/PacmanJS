@@ -53,6 +53,13 @@ var pacman;
                 }
             }
         };
+        Object.defineProperty(_BaseState.prototype, "inputRepeatMillis", {
+            get: function () {
+                return 200; // 0.2 seconds
+            },
+            enumerable: true,
+            configurable: true
+        });
         return _BaseState;
     })(gtp.State);
     pacman._BaseState = _BaseState;
