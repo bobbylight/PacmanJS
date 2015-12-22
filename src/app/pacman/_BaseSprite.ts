@@ -19,9 +19,22 @@ module pacman {
       this._lastUpdateTime = 0;
     }
 
+    atIntersection(maze: Maze): boolean {
+      // TODO: Optimize me
+      switch (this.direction) {
+        case Direction.NORTH:
+        case Direction.SOUTH:
+          return this.getCanMoveLeft(maze) || this.getCanMoveRight(maze);
+        case Direction.EAST:
+        case Direction.WEST:
+          return this.getCanMoveUp(maze) || this.getCanMoveDown(maze);
+      }
+      return false;
+    }
+
     getCanMoveDown(maze: Maze) {
-  		let x: number = this.bounds.x+8;
-  		let y: number = this.bounds.y+8;
+      let x: number = this.centerX;
+  		let y: number = this.centerY;
   		let xRemainder: number = x % this.TILE_SIZE;
   		let yRemainder: number = y % this.TILE_SIZE;//(y+TILE_SIZE) % this.TILE_SIZE;
   		if (xRemainder === 0 && yRemainder === 0) {
@@ -32,32 +45,30 @@ module pacman {
   		return this.direction == Direction.NORTH || this.direction == Direction.SOUTH;
   	}
 
-
   	getCanMoveLeft(maze: Maze) {
   		let x: number = this.bounds.x;
   		if (x<0) {
   			return true; // Going through tunnel.
   		}
-  		x += 8;
-  		let y: number = this.bounds.y + 8;
+  		x +=  this.TILE_SIZE / 2;
+  		let y: number = this.centerY;
   		let xRemainder: number = x % this.TILE_SIZE;//(x-TILE_SIZE) % this.TILE_SIZE;
   		let yRemainder: number = y % this.TILE_SIZE;
   		if (xRemainder === 0 && yRemainder === 0) {
         let row: number = this.row;
-  			let col: number = this.column;
-  			return col>0 && maze.isWalkable(row, col - 1);
+        let col: number = this.column;
+        return col>0 && maze.isWalkable(row, col - 1);
   		}
       return this.direction == Direction.EAST || this.direction == Direction.WEST;
   	}
-
 
   	getCanMoveRight(maze: Maze) {
   		let x: number = this.bounds.x;
   		if (x + this.width > this.SCREEN_WIDTH) {
   			return true; // Going through tunnel.
   		}
-  		x += 8;
-  		let y: number = this.bounds.y + 8;
+  		x +=  this.TILE_SIZE / 2;
+  		let y: number = this.centerY;
   		let xRemainder: number = x % this.TILE_SIZE;//(x+TILE_SIZE) % this.TILE_SIZE;
   		let yRemainder: number = y % this.TILE_SIZE;
   		if (xRemainder === 0 && yRemainder === 0) {
@@ -68,10 +79,9 @@ module pacman {
       return this.direction == Direction.EAST || this.direction == Direction.WEST;
   	}
 
-
   	getCanMoveUp(maze: Maze) {
-  		let x: number = this.bounds.x + 8;
-  		let y: number = this.bounds.y + 8;
+  		let x: number = this.centerX;
+  		let y: number = this.centerY;
   		let xRemainder: number = x % this.TILE_SIZE;
   		let yRemainder: number = y % this.TILE_SIZE;//(y-TILE_SIZE) % this.TILE_SIZE;
   		if (xRemainder === 0 && yRemainder === 0) {
@@ -82,20 +92,12 @@ module pacman {
       return this.direction == Direction.NORTH || this.direction == Direction.SOUTH;
   	}
 
-    getFrame() {
-       return this._frame;
-    }
-
-    getFrameCount() {
-       return this._frameCount;
-    }
-
     get centerX(): number {
-      return this.bounds.x + 8;
+      return this.bounds.x +  this.TILE_SIZE / 2;
     }
 
     get centerY(): number {
-      return this.bounds.y + 8;
+      return this.bounds.y +  this.TILE_SIZE / 2;
     }
 
     get column(): number {
@@ -114,8 +116,24 @@ module pacman {
       return col;
     }
 
+    getFrame() {
+       return this._frame;
+    }
+
+    getFrameCount() {
+       return this._frameCount;
+    }
+
     get moveAmount(): number {
       return 1; // TODO: Perhaps this is no longer needed?
+    }
+
+    get TILE_SIZE(): number {
+      return 8; // TODO: Move this somewhere more generic
+    }
+
+    get width(): number {
+      return this.bounds.w;
     }
 
     get row(): number {
@@ -129,10 +147,18 @@ module pacman {
      */
     abstract getUpdateDelayMillis(): number;
 
+    get x(): number {
+      return this.bounds.x;
+    }
+
+    get y(): number {
+      return this.bounds.y;
+    }
+
     goDownIfPossible(maze: Maze, moveAmount: number): boolean {
   		if (this.getCanMoveDown(maze)) {
   			this.direction = Direction.SOUTH;
-  			this._incY(moveAmount);
+  			this.incY(moveAmount);
   			return true;
   		}
   		return false;
@@ -141,7 +167,7 @@ module pacman {
   	goLeftIfPossible(maze: Maze, moveAmount: number): boolean {
   		if (this.getCanMoveLeft(maze)) {
   			this.direction = Direction.WEST; // May be redundant.
-  			this._incX(-moveAmount);
+  			this.incX(-moveAmount);
   			return true;
   		}
   		return false;
@@ -150,7 +176,7 @@ module pacman {
   	goRightIfPossible(maze: Maze, moveAmount: number): boolean {
   		if (this.getCanMoveRight(maze)) {
   			this.direction = Direction.EAST; // May be redundant.
-  			this._incX(moveAmount);
+  			this.incX(moveAmount);
   			return true;
   		}
   		return false;
@@ -159,13 +185,13 @@ module pacman {
   	goUpIfPossible(maze: Maze, moveAmount: number): boolean {
   		if (this.getCanMoveUp(maze)) {
   			this.direction = Direction.NORTH;
-  			this._incY(-moveAmount);
+  			this.incY(-moveAmount);
   			return true;
   		}
   		return false;
   	}
 
-    private _incX(amount: number) {
+    incX(amount: number) {
       this.bounds.x += amount;
       if (this.bounds.x + this.width <= 0) { // Going through tunnel
         this.bounds.x += this.SCREEN_WIDTH;
@@ -175,7 +201,7 @@ module pacman {
       }
     }
 
-    private _incY(amount: number) {
+    incY(amount: number) {
       this.bounds.y += amount;
     }
 
@@ -192,10 +218,6 @@ module pacman {
        this.bounds.y = y;
     }
 
-    get TILE_SIZE(): number {
-      return 8; // TODO: Move this somewhere more generic
-    }
-
     updateFrame() {
       this._frame = (this._frame + 1) % this.getFrameCount();
     }
@@ -207,8 +229,12 @@ module pacman {
       }
     }
 
-    get width(): number {
-      return this.bounds.w;
+    set x(x: number) {
+      this.bounds.x = x;
+    }
+
+    set y(y: number) {
+      this.bounds.y = y;
     }
 
     abstract updatePositionImpl(maze: Maze): void;

@@ -18,11 +18,47 @@ var pacman;
             _super.call(this, args);
             this._highScore = 0;
             this.pacman = new pacman.Pacman();
+            this._ghosts = this._createGhostArray();
             this._chompSound = 0;
             this._ghostUpdateStrategy = GhostUpdateStrategy.UPDATE_ALL;
         }
         PacmanGame.prototype.addFruit = function () {
             // TODO
+        };
+        /**
+         * Ensures the background sound effect being played is appropriate for
+         * the ghosts' current states.
+         */
+        PacmanGame.prototype.checkLoopedSound = function () {
+            if (this._resettingGhostStates) {
+                return;
+            }
+            var blue = false;
+            for (var i = 0; i < this._ghosts.length; i++) {
+                if (this._ghosts[i].isEyes()) {
+                    this.setLoopedSound(pacman.Sounds.EYES_RUNNING);
+                    return; // "eye" noise trumps blue noise.
+                }
+                else if (this._ghosts[i].isBlue()) {
+                    blue = true;
+                }
+            }
+            this.setLoopedSound(blue ? pacman.Sounds.CHASING_GHOSTS : pacman.Sounds.SIREN);
+        };
+        /**
+         * Creates the array of ghosts the game will use.
+         *
+         * @return The array of ghosts.
+         */
+        PacmanGame.prototype._createGhostArray = function () {
+            var ghosts = [];
+            this._resettingGhostStates = true;
+            ghosts.push(new pacman.Blinky(this));
+            // ghosts.push(new Pinky());
+            // ghosts.push(new Inky());
+            // ghosts.push(new Clyde());
+            this._resettingGhostStates = false;
+            return ghosts;
         };
         PacmanGame.prototype.drawBigDot = function (x, y) {
             var ms = this.playTime;
@@ -31,6 +67,16 @@ var pacman;
                 var sx = 135, sy = 38;
                 game.assets.get('sprites').drawScaled2(ctx, sx, sy, 8, 8, x, y, 8, 8);
             }
+        };
+        /**
+         * Paints all four ghosts in their present location and state.
+         *
+         * @param ctx The context with which to paint.
+         */
+        PacmanGame.prototype.drawGhosts = function (ctx) {
+            this._ghosts.forEach(function (ghost) {
+                ghost.paint(ctx);
+            });
         };
         PacmanGame.prototype.drawScores = function (ctx) {
             var scoreStr = this._score.toString();
@@ -101,17 +147,6 @@ var pacman;
             enumerable: true,
             configurable: true
         });
-        PacmanGame.prototype.increaseLives = function (amount) {
-            return this._lives += amount;
-        };
-        PacmanGame.prototype.increaseScore = function (amount) {
-            this._score += amount;
-            if (!this._earnedExtraLife && this._score >= PacmanGame.EXTRA_LIFE_SCORE) {
-                this.audio.playSound(pacman.Sounds.EXTRA_LIFE);
-                this.increaseLives(1);
-                this._earnedExtraLife = true;
-            }
-        };
         Object.defineProperty(PacmanGame.prototype, "level", {
             get: function () {
                 return this._level;
@@ -126,6 +161,45 @@ var pacman;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(PacmanGame.prototype, "PENALTY_BOX_EXIT_X", {
+            get: function () {
+                return (this.getWidth() - this.SPRITE_SIZE) / 2;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PacmanGame.prototype, "PENALTY_BOX_EXIT_Y", {
+            get: function () {
+                return 12 * this.TILE_SIZE - this.TILE_SIZE / 2;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PacmanGame.prototype, "SPRITE_SIZE", {
+            get: function () {
+                return 16;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PacmanGame.prototype, "TILE_SIZE", {
+            get: function () {
+                return 8;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PacmanGame.prototype.increaseLives = function (amount) {
+            return this._lives += amount;
+        };
+        PacmanGame.prototype.increaseScore = function (amount) {
+            this._score += amount;
+            if (!this._earnedExtraLife && this._score >= PacmanGame.EXTRA_LIFE_SCORE) {
+                this.audio.playSound(pacman.Sounds.EXTRA_LIFE);
+                this.increaseLives(1);
+                this._earnedExtraLife = true;
+            }
+        };
         PacmanGame.prototype.loadNextLevel = function () {
             // TODO
         };
@@ -165,10 +239,10 @@ var pacman;
                 new gtp.Point(pacman.Maze.TILE_COUNT_VERTICAL - 2, pacman.Maze.TILE_COUNT_HORIZONTAL - 2)
             ];
             var cornerSeed = gtp.Utils.randomInt(4);
-            // for (var i: number = 0; i < ghosts.length; i++) {
-            //   ghosts[i].reset();
-            //   ghosts[i].setCorner(corners[(cornerSeed + i) % 4]);
-            // }
+            for (var i = 0; i < this._ghosts.length; i++) {
+                this._ghosts[i].reset();
+                this._ghosts[i].setCorner(corners[(cornerSeed + i) % 4]);
+            }
             this._resettingGhostStates = false;
         };
         /**
@@ -210,16 +284,23 @@ var pacman;
             //this.setState(new gtp.FadeOutInState(this.state, mazeState));
             this.setState(mazeState); // The original did not fade in/out
         };
+        PacmanGame.prototype.startPacmanDying = function () {
+            this.setLoopedSound(null);
+            this.audio.playSound(pacman.Sounds.DIES);
+            this.pacman.startDying();
+            // this.fruit = null;
+            // this._fruitScoreIndex = -1;
+            // this._fruitScoreEndTime = -1;
+        };
         /**
          * Goes to the next animation frame for pacman, the ghosts and the
          * fruit.
          */
         PacmanGame.prototype.updateSpriteFrames = function () {
             this.pacman.updateFrame();
-            // TODO
-            // ghosts.forEach(function(ghost: Ghost) {
-            //   ghost.updateFrame();
-            // });
+            this._ghosts.forEach(function (ghost) {
+                ghost.updateFrame();
+            });
         };
         /**
          * Updates the position of pacman, the ghosts and the fruit, in the
@@ -236,14 +317,14 @@ var pacman;
             // and the next level is loaded.
             switch (this._ghostUpdateStrategy) {
                 case GhostUpdateStrategy.UPDATE_ALL:
-                    // this._ghosts.forEach(function(ghost: Ghost) {
-                    //   ghost.updatePosition(maze, time);
-                    // });
+                    this._ghosts.forEach(function (ghost) {
+                        ghost.updatePosition(maze, time);
+                    });
                     break;
                 case GhostUpdateStrategy.UPDATE_NONE:
                     break;
                 case GhostUpdateStrategy.UPDATE_ONE:
-                    // this._ghosts[0].updatePosition(maze, time);
+                    this._ghosts[0].updatePosition(maze, time);
                     break;
             }
             this.pacman.updatePosition(maze, time);

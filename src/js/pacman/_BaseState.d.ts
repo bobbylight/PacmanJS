@@ -6,7 +6,8 @@ declare module pacman {
          */
         constructor(args?: gtp.Game | gtp.BaseStateArgs);
         createScreenshot(): HTMLCanvasElement;
-        handleDefaultKeys(): void;
         inputRepeatMillis: number;
+        static INPUT_REPEAT_MILLIS: number;
+        handleDefaultKeys(): void;
     }
 }

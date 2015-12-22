@@ -13,7 +13,8 @@ module pacman {
     private _level: number;
     private _ghostUpdateStrategy: GhostUpdateStrategy;
     private _chompSound: number;
-    pacman: pacman.Pacman;
+    pacman: Pacman;
+    private _ghosts: Ghost[];
 
     /**
   	 * Whether the player has earned an extra life (from achieving a
@@ -38,7 +39,8 @@ module pacman {
     constructor(args?: any) {
       super(args);
       this._highScore = 0;
-      this.pacman = new pacman.Pacman();
+      this.pacman = new Pacman();
+      this._ghosts = this._createGhostArray();
       this._chompSound = 0;
       this._ghostUpdateStrategy = GhostUpdateStrategy.UPDATE_ALL;
     }
@@ -46,6 +48,48 @@ module pacman {
     addFruit() {
       // TODO
     }
+
+    /**
+  	 * Ensures the background sound effect being played is appropriate for
+  	 * the ghosts' current states.
+  	 */
+  	checkLoopedSound() {
+
+  		if (this._resettingGhostStates) {
+  			return;
+  		}
+
+  		let blue: boolean = false;
+
+  		for (let i: number = 0; i < this._ghosts.length; i++) {
+  			if (this._ghosts[i].isEyes()) {
+  				this.setLoopedSound(Sounds.EYES_RUNNING);
+  				return; // "eye" noise trumps blue noise.
+  			}
+  			else if (this._ghosts[i].isBlue()) {
+  				blue = true;
+  			}
+  		}
+
+  		this.setLoopedSound(blue ? Sounds.CHASING_GHOSTS : Sounds.SIREN);
+
+  	}
+
+    /**
+  	 * Creates the array of ghosts the game will use.
+  	 *
+  	 * @return The array of ghosts.
+  	 */
+  	private _createGhostArray(): Ghost[] {
+  		let ghosts: Ghost[] = [];
+  		this._resettingGhostStates = true;
+  		ghosts.push(new Blinky(this));
+      // ghosts.push(new Pinky());
+      // ghosts.push(new Inky());
+      // ghosts.push(new Clyde());
+  		this._resettingGhostStates = false;
+  		return ghosts;
+  	}
 
     drawBigDot(x: number, y: number) {
       var ms = this.playTime;
@@ -56,6 +100,17 @@ module pacman {
          game.assets.get('sprites').drawScaled2(ctx, sx,sy,8,8, x,y,8,8);
       }
     }
+
+    /**
+  	 * Paints all four ghosts in their present location and state.
+  	 *
+  	 * @param ctx The context with which to paint.
+  	 */
+  	drawGhosts(ctx: CanvasRenderingContext2D) {
+  		this._ghosts.forEach(function(ghost) {
+        ghost.paint(ctx);
+      });
+  	}
 
     drawScores(ctx: CanvasRenderingContext2D) {
 
@@ -133,6 +188,30 @@ module pacman {
       return 10000;
     }
 
+    get level(): number {
+      return this._level;
+    }
+
+    get lives() : number {
+      return this._lives;
+    }
+
+    get PENALTY_BOX_EXIT_X(): number {
+      return (this.getWidth() - this.SPRITE_SIZE) / 2;
+    }
+
+  	get PENALTY_BOX_EXIT_Y(): number {
+      return 12 * this.TILE_SIZE - this.TILE_SIZE / 2;
+    }
+
+    get SPRITE_SIZE(): number {
+      return 16;
+    }
+
+    get TILE_SIZE(): number {
+      return 8;
+    }
+
     increaseLives(amount: number): number {
       return this._lives += amount;
     }
@@ -144,14 +223,6 @@ module pacman {
         this.increaseLives(1);
         this._earnedExtraLife = true;
       }
-    }
-
-    get level(): number {
-      return this._level;
-    }
-
-    get lives() : number {
-      return this._lives;
     }
 
     loadNextLevel() {
@@ -200,13 +271,14 @@ module pacman {
       ];
       var cornerSeed: number = gtp.Utils.randomInt(4);
 
-      // for (var i: number = 0; i < ghosts.length; i++) {
-      //   ghosts[i].reset();
-      //   ghosts[i].setCorner(corners[(cornerSeed + i) % 4]);
-      // }
+      for (var i: number = 0; i < this._ghosts.length; i++) {
+        this._ghosts[i].reset();
+        this._ghosts[i].setCorner(corners[(cornerSeed + i) % 4]);
+      }
 
       this._resettingGhostStates = false;
     }
+
     /**
      * Starts looping a sound effect.
      * @param {string} sound The sound effect to loop.
@@ -235,7 +307,6 @@ module pacman {
   		this._ghostUpdateStrategy = strategy;
   	}
 
-
     startGame(level: number) {
 
         this._lives = 3;
@@ -248,16 +319,24 @@ module pacman {
         this.setState(mazeState); // The original did not fade in/out
     }
 
+    startPacmanDying() {
+      this.setLoopedSound(null);
+      this.audio.playSound(pacman.Sounds.DIES);
+      this.pacman.startDying();
+      // this.fruit = null;
+      // this._fruitScoreIndex = -1;
+      // this._fruitScoreEndTime = -1;
+    }
+
     /**
   	 * Goes to the next animation frame for pacman, the ghosts and the
   	 * fruit.
   	 */
   	updateSpriteFrames() {
   		this.pacman.updateFrame();
-      // TODO
-      // ghosts.forEach(function(ghost: Ghost) {
-      //   ghost.updateFrame();
-      // });
+      this._ghosts.forEach(function(ghost: Ghost) {
+        ghost.updateFrame();
+      });
   	}
 
   	/**
@@ -277,14 +356,14 @@ module pacman {
 
   		switch (this._ghostUpdateStrategy) {
   			case GhostUpdateStrategy.UPDATE_ALL:
-          // this._ghosts.forEach(function(ghost: Ghost) {
-          //   ghost.updatePosition(maze, time);
-          // });
+          this._ghosts.forEach(function(ghost: Ghost) {
+            ghost.updatePosition(maze, time);
+          });
   				break;
   			case GhostUpdateStrategy.UPDATE_NONE:
   				break;
   			case GhostUpdateStrategy.UPDATE_ONE:
-  				// this._ghosts[0].updatePosition(maze, time);
+  				this._ghosts[0].updatePosition(maze, time);
   				break;
   		}
 

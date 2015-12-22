@@ -93,6 +93,26 @@ var pacman;
             }
             return this._data[row][col] & 0xff; // Remove internally-used high bits
         };
+        Maze.prototype.isClearShotColumn = function (col, row1, row2) {
+            var start = Math.min(row1, row2);
+            var end = Math.max(row1, row2);
+            for (var i = start + 1; i < end; i++) {
+                if (!this.isWalkable(i, col)) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        Maze.prototype.isClearShotRow = function (row, col1, col2) {
+            var start = Math.min(col1, col2);
+            var end = Math.max(col1, col2);
+            for (var i = start + 1; i < end; i++) {
+                if (!this.isWalkable(row, i)) {
+                    return false;
+                }
+            }
+            return true;
+        };
         /**
          * Returns whether a sprite can move onto the specified tile.
          * @param {number} row The row to check.

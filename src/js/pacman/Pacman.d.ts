@@ -3,6 +3,7 @@ declare module pacman {
         _dyingFrame: number;
         constructor();
         getUpdateDelayMillis(): number;
+        handleInput(maze: Maze): void;
         /**
          * Returns whether Pacman ins completely dead, or still doing his dying
          * animation.
@@ -12,6 +13,7 @@ declare module pacman {
         render(ctx: CanvasRenderingContext2D): void;
         reset(): void;
         setLocation(x: number, y: number): void;
+        startDying(): void;
         updatePositionImpl(maze: Maze): void;
     }
 }

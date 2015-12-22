@@ -2,10 +2,10 @@ var pacman;
 (function (pacman) {
     'use strict';
     (function (Direction) {
-        Direction[Direction["NORTH"] = 0] = "NORTH";
-        Direction[Direction["EAST"] = 1] = "EAST";
-        Direction[Direction["SOUTH"] = 2] = "SOUTH";
-        Direction[Direction["WEST"] = 3] = "WEST";
+        Direction[Direction["EAST"] = 0] = "EAST";
+        Direction[Direction["SOUTH"] = 1] = "SOUTH";
+        Direction[Direction["WEST"] = 2] = "WEST";
+        Direction[Direction["NORTH"] = 3] = "NORTH";
     })(pacman.Direction || (pacman.Direction = {}));
     var Direction = pacman.Direction;
     var DirectionUtil = (function () {

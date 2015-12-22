@@ -138,7 +138,7 @@ module pacman {
          game.paintPointsEarned(ctx, this._updateScoreIndex, x, y);
       }
 
-      //game.paintGhosts(ctx);
+      game.drawGhosts(ctx);
 
       ctx.translate(0, -mazeY);
 
@@ -175,10 +175,66 @@ module pacman {
       }
     }
 
+    private _handleInput(delta: number, time: number) {
+
+      this.handleDefaultKeys();
+      let input: gtp.InputManager = game.inputManager;
+
+      if (!game.paused) {
+
+        switch (this._substate) {
+
+          case Substate.IN_GAME:
+            game.pacman.handleInput(this._maze);
+            break;
+
+          case Substate.GAME_OVER:
+            if (input.enter()) {
+              game.setState(new pacman.MazeState(this._mazeFile));
+            }
+            break;
+        }
+
+      }
+
+      if (time >= this._lastMazeScreenKeypressTime + MazeState.INPUT_REPEAT_MILLIS) {
+
+        // Enter -> Pause.  Don't check for pausing on "Game Over" screen as
+        // that will carry over into the next game!
+        if (input.enter() && this._substate !== Substate.GAME_OVER) {
+          game.paused = !game.paused;
+          this._lastMazeScreenKeypressTime = time;
+        }
+
+        // Hidden options (Z + keypress)
+        else if (!game.paused && this._substate === Substate.IN_GAME &&
+            input.isKeyDown(gtp.Keys.KEY_Z)) {
+
+          // Z+X => auto-load next level
+          if (input.isKeyDown(gtp.Keys.KEY_X)) {
+            game.loadNextLevel();
+            this._lastMazeScreenKeypressTime = time;
+          }
+
+          // Z+C => auto-death
+          else if (input.isKeyDown(gtp.Keys.KEY_C)) {
+            if (this._substate !== Substate.DYING) {
+              game.startPacmanDying();
+              this._substate = Substate.DYING;
+              this._nextDyingFrameTime = time + this.DYING_FRAME_DELAY_MILLIS;
+              this._lastMazeScreenKeypressTime = time;
+            }
+          }
+        }
+
+      }
+    }
+
     update(delta: number) {
       super.update(delta);
 
       var time: number = gtp.Utils.timestamp();
+      this._handleInput(delta, time);
 
       switch (this._substate) {
 
@@ -236,9 +292,9 @@ module pacman {
       this._nextUpdateTime = 0;
       this._updateScoreIndex = -1;
 
-      // Don't update sprite frame at each rendered frame; that would be too
-      // fast
-      if (time >= this._lastSpriteFrameTime + 100 * 10) {
+      // Don't update sprite frame at each rendered frame; that would be
+      // too fast
+      if (time >= this._lastSpriteFrameTime + 100) {
         this._lastSpriteFrameTime = time;
         game.updateSpriteFrames();
       }

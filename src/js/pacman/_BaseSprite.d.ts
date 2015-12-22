@@ -7,16 +7,19 @@ declare module pacman {
         _frameCount: number;
         _lastUpdateTime: number;
         constructor(frameCount: number);
+        atIntersection(maze: Maze): boolean;
         getCanMoveDown(maze: Maze): boolean;
         getCanMoveLeft(maze: Maze): boolean;
         getCanMoveRight(maze: Maze): boolean;
         getCanMoveUp(maze: Maze): boolean;
-        getFrame(): number;
-        getFrameCount(): number;
         centerX: number;
         centerY: number;
         column: number;
+        getFrame(): number;
+        getFrameCount(): number;
         moveAmount: number;
+        TILE_SIZE: number;
+        width: number;
         row: number;
         /**
          * Returns the number of milliseconds that should pass between the times
@@ -24,19 +27,19 @@ declare module pacman {
          * @return {number} The number of milliseconds.
          */
         abstract getUpdateDelayMillis(): number;
+        x: number;
+        y: number;
         goDownIfPossible(maze: Maze, moveAmount: number): boolean;
         goLeftIfPossible(maze: Maze, moveAmount: number): boolean;
         goRightIfPossible(maze: Maze, moveAmount: number): boolean;
         goUpIfPossible(maze: Maze, moveAmount: number): boolean;
-        private _incX(amount);
-        private _incY(amount);
+        incX(amount: number): void;
+        incY(amount: number): void;
         reset(): void;
         SCREEN_WIDTH: number;
         setLocation(x: number, y: number): void;
-        TILE_SIZE: number;
         updateFrame(): void;
         updatePosition(maze: Maze, time: number): void;
-        width: number;
         abstract updatePositionImpl(maze: Maze): void;
     }
 }

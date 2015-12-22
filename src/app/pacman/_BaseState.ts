@@ -18,6 +18,14 @@ module pacman {
 			return canvas;
 		}
 
+		get inputRepeatMillis(): number {
+			return 200; // 0.2 seconds
+		}
+
+		static get INPUT_REPEAT_MILLIS(): number {
+      return 200;
+    }
+		
 		handleDefaultKeys() {
 
 			var im = this.game.inputManager;
@@ -59,10 +67,6 @@ module pacman {
 
 			}
 
-		}
-
-		get inputRepeatMillis(): number {
-			return 200; // 0.2 seconds
 		}
 	}
 

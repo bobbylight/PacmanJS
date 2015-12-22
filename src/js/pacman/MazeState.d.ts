@@ -17,6 +17,7 @@ declare module pacman {
         _paintExtraLives(ctx: CanvasRenderingContext2D): void;
         _paintPossibleFruits(ctx: CanvasRenderingContext2D): void;
         render(ctx: CanvasRenderingContext2D): void;
+        private _handleInput(delta, time);
         update(delta: number): void;
         private _updateInGameImpl(time);
     }

@@ -2,10 +2,10 @@ module pacman {
 	'use strict';
 
 	export enum Direction {
-		NORTH = 0,
-		EAST = 1,
-		SOUTH = 2,
-		WEST = 3
+		EAST = 0,
+		SOUTH = 1,
+		WEST = 2,
+		NORTH = 3
 	}
 
 	export class DirectionUtil {

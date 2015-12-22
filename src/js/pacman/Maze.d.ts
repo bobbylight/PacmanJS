@@ -33,6 +33,8 @@ declare module pacman {
          * @return {int} The row data.
          */
         private _getTileAt(row, col);
+        isClearShotColumn(col: number, row1: number, row2: number): boolean;
+        isClearShotRow(row: number, col1: number, col2: number): boolean;
         /**
          * Returns whether a sprite can move onto the specified tile.
          * @param {number} row The row to check.

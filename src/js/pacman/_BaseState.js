@@ -21,6 +21,20 @@ var pacman;
             this.render(ctx);
             return canvas;
         };
+        Object.defineProperty(_BaseState.prototype, "inputRepeatMillis", {
+            get: function () {
+                return 200; // 0.2 seconds
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(_BaseState, "INPUT_REPEAT_MILLIS", {
+            get: function () {
+                return 200;
+            },
+            enumerable: true,
+            configurable: true
+        });
         _BaseState.prototype.handleDefaultKeys = function () {
             var im = this.game.inputManager;
             // Debugging actions
@@ -53,13 +67,6 @@ var pacman;
                 }
             }
         };
-        Object.defineProperty(_BaseState.prototype, "inputRepeatMillis", {
-            get: function () {
-                return 200; // 0.2 seconds
-            },
-            enumerable: true,
-            configurable: true
-        });
         return _BaseState;
     })(gtp.State);
     pacman._BaseState = _BaseState;

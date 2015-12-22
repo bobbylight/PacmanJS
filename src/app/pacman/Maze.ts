@@ -91,6 +91,28 @@ module pacman {
       return this._data[row][col] & 0xff; // Remove internally-used high bits
     }
 
+    isClearShotColumn(col: number, row1: number, row2: number): boolean {
+  		let start: number = Math.min(row1, row2);
+  		let end: number = Math.max(row1, row2);
+  		for (let i: number = start + 1; i < end; i++) {
+  			if (!this.isWalkable(i, col)) {
+  				return false;
+  			}
+  		}
+  		return true;
+  	}
+
+  	isClearShotRow(row: number, col1: number, col2: number): boolean {
+  		let start: number = Math.min(col1, col2);
+  		let end: number = Math.max(col1, col2);
+  		for (let i: number = start + 1; i < end; i++) {
+  			if (!this.isWalkable(row, i)) {
+  				return false;
+  			}
+  		}
+  		return true;
+  	}
+
     /**
   	 * Returns whether a sprite can move onto the specified tile.
   	 * @param {number} row The row to check.

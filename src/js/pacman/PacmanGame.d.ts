@@ -11,7 +11,8 @@ declare module pacman {
         private _level;
         private _ghostUpdateStrategy;
         private _chompSound;
-        pacman: pacman.Pacman;
+        pacman: Pacman;
+        private _ghosts;
         /**
          * Whether the player has earned an extra life (from achieving a
          * certain score).
@@ -30,16 +31,37 @@ declare module pacman {
         private _resettingGhostStates;
         constructor(args?: any);
         addFruit(): void;
+        /**
+         * Ensures the background sound effect being played is appropriate for
+         * the ghosts' current states.
+         */
+        checkLoopedSound(): void;
+        /**
+         * Creates the array of ghosts the game will use.
+         *
+         * @return The array of ghosts.
+         */
+        private _createGhostArray();
         drawBigDot(x: number, y: number): void;
+        /**
+         * Paints all four ghosts in their present location and state.
+         *
+         * @param ctx The context with which to paint.
+         */
+        drawGhosts(ctx: CanvasRenderingContext2D): void;
         drawScores(ctx: CanvasRenderingContext2D): void;
         drawSmallDot(x: number, y: number): void;
         drawSprite(dx: number, dy: number, sx: number, sy: number): void;
         drawString(x: number, y: number, text: string | number, ctx?: CanvasRenderingContext2D): void;
         static EXTRA_LIFE_SCORE: number;
-        increaseLives(amount: number): number;
-        increaseScore(amount: number): void;
         level: number;
         lives: number;
+        PENALTY_BOX_EXIT_X: number;
+        PENALTY_BOX_EXIT_Y: number;
+        SPRITE_SIZE: number;
+        TILE_SIZE: number;
+        increaseLives(amount: number): number;
+        increaseScore(amount: number): void;
         loadNextLevel(): void;
         makeGhostsBlue(): void;
         /**
@@ -69,6 +91,7 @@ declare module pacman {
          */
         ghostUpdateStrategy: GhostUpdateStrategy;
         startGame(level: number): void;
+        startPacmanDying(): void;
         /**
          * Goes to the next animation frame for pacman, the ghosts and the
          * fruit.

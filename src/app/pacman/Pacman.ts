@@ -14,6 +14,32 @@ module pacman {
       return 10;
     }
 
+    handleInput(maze: Maze) {
+
+      var input = game.inputManager;
+
+      if (input.left()) {
+        if (this.getCanMoveLeft(maze)) {
+          this.direction = Direction.WEST;
+        }
+      }
+      else if (input.right()) {
+        if (this.getCanMoveRight(maze)) {
+          this.direction = Direction.EAST;
+        }
+      }
+      if (input.up()) {
+        if (this.getCanMoveUp(maze)) {
+          this.direction = Direction.NORTH;
+        }
+      }
+      else if (input.down()) {
+        if (this.getCanMoveDown(maze)) {
+          this.direction = Direction.SOUTH;
+        }
+      }
+    }
+
     /**
      * Returns whether Pacman ins completely dead, or still doing his dying
      * animation.
@@ -26,10 +52,10 @@ module pacman {
 
     render(ctx: CanvasRenderingContext2D) {
 
-      var SPRITE_SIZE = 16;
+      var SPRITE_SIZE: number = game.SPRITE_SIZE;
 
-      var x = this.bounds.x;
-      var y = this.bounds.y;
+      var x: number = this.bounds.x;
+      var y: number = this.bounds.y;
 
       var srcX: number,
           srcY: number;
@@ -58,6 +84,10 @@ module pacman {
 
     setLocation(x: number, y: number) {
       super.setLocation(x, y);
+    }
+
+    startDying() {
+      this._dyingFrame = 1;
     }
 
     updatePositionImpl(maze: Maze) {
