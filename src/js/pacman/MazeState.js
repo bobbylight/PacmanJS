@@ -35,7 +35,7 @@ var pacman;
         });
         MazeState.prototype.init = function () {
             game.pacman.reset();
-            //game.resetGhosts();
+            game.resetGhosts();
             this._maze = new pacman_1.Maze(this._mazeFile);
             this._firstTimeThrough = true;
             this._updateScoreIndex = -1;

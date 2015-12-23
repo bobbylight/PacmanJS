@@ -21,6 +21,7 @@
         "src/app/pacman/Ghost.ts",
         "src/app/pacman/LoadingState.ts",
         "src/app/pacman/Maze.ts",
+        "src/app/pacman/MazeNode.ts",
         "src/app/pacman/MazeState.ts",
         "src/app/pacman/Pacman.ts",
         "src/app/pacman/PacmanGame.ts",

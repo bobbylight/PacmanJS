@@ -37,7 +37,7 @@ module pacman {
     init() {
 
       game.pacman.reset();
-      //game.resetGhosts();
+      game.resetGhosts();
 
       this._maze = new Maze(this._mazeFile);
       this._firstTimeThrough = true;

@@ -704,48 +704,48 @@ module pacman {
   		// At intersections, do a breadth-first search to find the shortest
   		// path to our corner, and head in that direction.
 
-  		// let moveAmount: number = this.moveAmount;
-      //
-  		// if (this.atIntersection(maze)) {
-      //
-  		// 	let fromRow: number = this.row;
-  		// 	let fromCol: number = this.column;
-  		// 	let toRow: number = this.corner.x;
-  		// 	let toCol: number = this.corner.y;
-  		// 	let node: MazeNode = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
-  		// 	if (!node) { // i.e. ghost is actually in the corner.
-  		// 		this.changeDirectionFallback(maze);
-  		// 	}
-  		// 	else {
-  		// 		if (node.col < fromCol) {
-  		// 			this.direction = Direction.WEST;
-  		// 			this.incX(-moveAmount);
-  		// 		}
-  		// 		else if (node.col>fromCol) {
-  		// 			this.direction = Direction.EAST;
-  		// 			this.incX(moveAmount);
-  		// 		}
-  		// 		else if (node.row<fromRow) {
-  		// 			this.direction = Direction.NORTH;
-  		// 			this.incY(-moveAmount);
-  		// 		}
-  		// 		else if (node.row>fromRow) {
-  		// 			this.direction = Direction.SOUTH;
-  		// 			this.incY(moveAmount);
-  		// 		}
-  		// 	}
-      //
-  		// }
-      //
-  		// // Not at an intersection, so we should be able to keep going
-  		// // in our current direction.
-  		// else {
-  		// 	this.continueInCurrentDirection(moveAmount);
-  		// }
-      //
-  		// if (game.playTime >= this._exitScatteringTime) {
-  		// 	this.motionState = MotionState.CHASING_PACMAN;
-  		// }
+  		let moveAmount: number = this.moveAmount;
+
+  		if (this.atIntersection(maze)) {
+
+  			let fromRow: number = this.row;
+  			let fromCol: number = this.column;
+  			let toRow: number = this._corner.x;
+  			let toCol: number = this._corner.y;
+  			let node: MazeNode = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
+  			if (!node) { // i.e. ghost is actually in the corner.
+  				this.changeDirectionFallback(maze);
+  			}
+  			else {
+  				if (node.col < fromCol) {
+  					this.direction = Direction.WEST;
+  					this.incX(-moveAmount);
+  				}
+  				else if (node.col>fromCol) {
+  					this.direction = Direction.EAST;
+  					this.incX(moveAmount);
+  				}
+  				else if (node.row<fromRow) {
+  					this.direction = Direction.NORTH;
+  					this.incY(-moveAmount);
+  				}
+  				else if (node.row>fromRow) {
+  					this.direction = Direction.SOUTH;
+  					this.incY(moveAmount);
+  				}
+  			}
+
+  		}
+
+  		// Not at an intersection, so we should be able to keep going
+  		// in our current direction.
+  		else {
+  			this.continueInCurrentDirection(moveAmount);
+  		}
+
+  		if (game.playTime >= this._exitScatteringTime) {
+  			this.motionState = MotionState.CHASING_PACMAN;
+  		}
 
   	}
 

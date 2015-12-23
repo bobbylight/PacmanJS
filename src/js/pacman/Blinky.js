@@ -44,48 +44,40 @@ var pacman;
             // Logic:
             // If at an intersection, do a breadth-first search for the shortest
             // route to PacMan, and go in that direction.
-            // let moveAmount: number = getMoveAmount();
-            //
-            // if (atIntersection(maze)) { // If the ghost can turn...
-            //
-            // 	let fromRow: number = getRow();
-            // 	let fromCol: number = getColumn();
-            // 	let toRow: number = engine.getPacMan().getRow();
-            // 	let toCol: number = engine.getPacMan().getColumn();
-            // 	let node: MazeNode = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
-            //
-            // 	if (node==null) { // Happens only with "God Mode" enabled.
-            // 		this.changeDirectionFallback(maze);
-            // 	}
-            // 	else if (node.col<fromCol) {
-            // 		this.direction = Direction.WEST;
-            // 		this.incX(-moveAmount);
-            // 	}
-            // 	else if (node.col>fromCol) {
-            // 		this.direction = Direction.EAST;
-            // 		this.incX(moveAmount);
-            // 	}
-            // 	else if (node.row<fromRow) {
-            // 		this.direction = Direction.NORTH;
-            // 		this.incY(-moveAmount);
-            // 	}
-            // 	else if (node.row>fromRow) {
-            // 		this.direction = Direction.SOUTH;
-            // 		this.incY(moveAmount);
-            // 	}
-            //
-            // }
-            //
-            // // Not at an intersection, so we should be able to keep going
-            // // in our current direction.
-            // else {
-            // 	this.continueInCurrentDirection(moveAmount);
-            // }
-            //
-            // // Switch over to scatter mode if it's time to do so.
-            // if (game.playTime >= this.startScatteringTime) {
-            //   this.motionState = MotionState.SCATTERING;
-            // }
+            var moveAmount = this.moveAmount;
+            if (this.atIntersection(maze)) {
+                var fromRow = this.row;
+                var fromCol = this.column;
+                var toRow = game.pacman.row;
+                var toCol = game.pacman.column;
+                var node = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
+                if (node == null) {
+                    this.changeDirectionFallback(maze);
+                }
+                else if (node.col < fromCol) {
+                    this.direction = pacman.Direction.WEST;
+                    this.incX(-moveAmount);
+                }
+                else if (node.col > fromCol) {
+                    this.direction = pacman.Direction.EAST;
+                    this.incX(moveAmount);
+                }
+                else if (node.row < fromRow) {
+                    this.direction = pacman.Direction.NORTH;
+                    this.incY(-moveAmount);
+                }
+                else if (node.row > fromRow) {
+                    this.direction = pacman.Direction.SOUTH;
+                    this.incY(moveAmount);
+                }
+            }
+            else {
+                this.continueInCurrentDirection(moveAmount);
+            }
+            // Switch over to scatter mode if it's time to do so.
+            if (game.playTime >= this.startScatteringTime) {
+                this.motionState = pacman.MotionState.SCATTERING;
+            }
         };
         return Blinky;
     })(pacman.Ghost);

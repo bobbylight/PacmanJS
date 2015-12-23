@@ -43,48 +43,48 @@ module pacman {
   		// If at an intersection, do a breadth-first search for the shortest
   		// route to PacMan, and go in that direction.
 
-  		// let moveAmount: number = getMoveAmount();
-      //
-  		// if (atIntersection(maze)) { // If the ghost can turn...
-      //
-  		// 	let fromRow: number = getRow();
-  		// 	let fromCol: number = getColumn();
-  		// 	let toRow: number = engine.getPacMan().getRow();
-  		// 	let toCol: number = engine.getPacMan().getColumn();
-  		// 	let node: MazeNode = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
-      //
-  		// 	if (node==null) { // Happens only with "God Mode" enabled.
-  		// 		this.changeDirectionFallback(maze);
-  		// 	}
-  		// 	else if (node.col<fromCol) {
-  		// 		this.direction = Direction.WEST;
-  		// 		this.incX(-moveAmount);
-  		// 	}
-  		// 	else if (node.col>fromCol) {
-  		// 		this.direction = Direction.EAST;
-  		// 		this.incX(moveAmount);
-  		// 	}
-  		// 	else if (node.row<fromRow) {
-  		// 		this.direction = Direction.NORTH;
-  		// 		this.incY(-moveAmount);
-  		// 	}
-  		// 	else if (node.row>fromRow) {
-  		// 		this.direction = Direction.SOUTH;
-  		// 		this.incY(moveAmount);
-  		// 	}
-      //
-  		// }
-      //
-  		// // Not at an intersection, so we should be able to keep going
-  		// // in our current direction.
-  		// else {
-  		// 	this.continueInCurrentDirection(moveAmount);
-  		// }
-      //
-  		// // Switch over to scatter mode if it's time to do so.
-  		// if (game.playTime >= this.startScatteringTime) {
-      //   this.motionState = MotionState.SCATTERING;
-  		// }
+  		let moveAmount: number = this.moveAmount;
+
+  		if (this.atIntersection(maze)) { // If the ghost can turn...
+
+  			let fromRow: number = this.row;
+  			let fromCol: number = this.column;
+  			let toRow: number = game.pacman.row;
+  			let toCol: number = game.pacman.column;
+  			let node: MazeNode = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
+
+  			if (node==null) { // Happens only with "God Mode" enabled.
+  				this.changeDirectionFallback(maze);
+  			}
+  			else if (node.col<fromCol) {
+  				this.direction = Direction.WEST;
+  				this.incX(-moveAmount);
+  			}
+  			else if (node.col>fromCol) {
+  				this.direction = Direction.EAST;
+  				this.incX(moveAmount);
+  			}
+  			else if (node.row<fromRow) {
+  				this.direction = Direction.NORTH;
+  				this.incY(-moveAmount);
+  			}
+  			else if (node.row>fromRow) {
+  				this.direction = Direction.SOUTH;
+  				this.incY(moveAmount);
+  			}
+
+  		}
+
+  		// Not at an intersection, so we should be able to keep going
+  		// in our current direction.
+  		else {
+  			this.continueInCurrentDirection(moveAmount);
+  		}
+
+  		// Switch over to scatter mode if it's time to do so.
+  		if (game.playTime >= this.startScatteringTime) {
+        this.motionState = MotionState.SCATTERING;
+  		}
 
   	}
 

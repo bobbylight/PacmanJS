@@ -1,7 +1,7 @@
 module pacman {
   'use strict';
 
-  var DOT_POINTS: number[] = [ 50, 10 ];
+  let DOT_POINTS: number[] = [ 50, 10 ];
 
   export class Maze {
 
@@ -9,6 +9,15 @@ module pacman {
     private _mazeCanvas: HTMLCanvasElement;
     private _eatenDotCount: number;
     private _dotCount: number;
+
+    closed: MazeNode[] = [];
+    open: MazeNode[] = [];
+    goalNode: MazeNode = new MazeNode();
+
+    /**
+     * A cache of nodes to speed up search operations.
+     */
+    private _nodeCache: gtp.Pool<MazeNode>;
 
     constructor(mazeInfo: any) {
       this._data = [];
@@ -49,6 +58,32 @@ module pacman {
   	}
 
     /**
+  	 * Returns the next node an object should move to if they want to take
+  	 * the shortest route possible to the destination.
+  	 *
+  	 * @param node The linked list of nodes in the path to the destination,
+  	 *        in reverse order.  This list should have been obtained from a
+  	 *        breadth-first search.
+  	 * @return The first node to move to.
+  	 */
+  	private static _constructPath(node: MazeNode): MazeNode/*MazeNode[]*/ {
+  		/*
+  		LinkedList<Node> path = new LinkedList<Node>();
+  		while (node.parent!=null) {
+  			path.addFirst(node);
+  			node = node.parent;
+  		}
+  		return path;
+  		*/
+      let prev: MazeNode = null;
+  		while (node.parent) {
+  			prev = node;
+  			node = node.parent;
+  		}
+  		return prev;
+  	}
+
+    /**
      * Returns the number of dots Pacman must eat before a fruit appears.
      *
      * @return {number} The number of dots Pacman must eat.
@@ -56,6 +91,135 @@ module pacman {
     static get FRUIT_DOT_COUNT(): number {
       return 64;
     }
+
+    /**
+  	 * Returns the "next" column, taking wrapping (from the tunnels) into
+  	 * account.
+  	 *
+  	 * @param {number} col The current column.
+  	 * @return {number} The column to the "right" of <code>col</code>.
+  	 * @see getPreviousColumn
+  	 */
+  	private static _getNextColumn(col: number): number {
+  		if (++col === Maze.TILE_COUNT_HORIZONTAL) {
+  			col = 0;
+  		}
+  		return col;
+  	}
+
+    getPathBreadthFirst(fromRow: number, fromCol: number, toRow: number,
+        toCol: number): MazeNode {
+
+      let self: Maze = this;
+      this.open.forEach(function(node: MazeNode) {
+        self._data[node.row][node.col] &= 0xff;
+      });
+      this.closed.forEach(function(node: MazeNode) {
+        self._data[node.row][node.col] &= 0xff;
+      });
+
+      this.open.length = 0;
+      this.closed.length = 0;
+      this.goalNode.set(toRow, toCol, null);
+      let temp: MazeNode = this._nodeCache.borrowObj();
+
+      //path.add(computeInt(fromRow, fromCol));
+      this.open.push(new MazeNode(fromRow, fromCol));
+      this._data[fromRow][fromCol] |= 0x100;
+
+      while (this.open.length > 0) {
+
+        let node: MazeNode = this.open.splice(0, 1)[0];
+        if (!node) {
+          debugger;
+        }
+        if (node.equals(this.goalNode)) {
+          this._data[node.row][node.col] &= 0xff; // Won't be in open or closed lists
+          return Maze._constructPath(node);
+        }
+
+        else {
+
+          this.closed.push(node);
+
+          // Add neighbors to the open list
+          if (this.isWalkable(node.row - 1, node.col)) {
+            //temp.set(node.row - 1, node.col);
+            //if (!this.closed.contains(temp) && !this.open.contains(temp)) {
+            //   temp.parent = node;
+            //}
+            if ((this._data[node.row - 1][node.col] & 0x100) === 0) {
+              this._data[node.row - 1][node.col] |= 0x100;
+              temp.set(node.row - 1, node.col, node);
+              this.open.push(temp);
+              temp = this._nodeCache.borrowObj();
+            }
+          }
+
+          if (this.isWalkable(node.row + 1, node.col)) {
+            //temp.set(node.row + 1, node.col);
+            //if (!this.closed.contains(temp) && !this.open.contains(temp)) {
+            //   temp.parent = node;
+            //}
+            if ((this._data[node.row + 1][node.col] & 0x100) === 0) {
+              this._data[node.row + 1][node.col] |= 0x100;
+              temp.set(node.row + 1, node.col, node);
+              this.open.push(temp);
+              temp = this._nodeCache.borrowObj();
+            }
+          }
+
+          let col: number = Maze._getPreviousColumn(node.col);
+          if (this.isWalkable(node.row, col)) {
+            //temp.set(node.row, col);
+            //if (!this.closed.contains(temp) && !this.open.contains(temp)) {
+            //   temp.parent = node;
+            //}
+            if ((this._data[node.row][col] & 0x100) === 0) {
+              this._data[node.row][col] |= 0x100;
+              temp.set(node.row, col, node);
+              this.open.push(temp);
+              temp = this._nodeCache.borrowObj();
+            }
+          }
+
+          col = Maze._getNextColumn(node.col);
+          if (this.isWalkable(node.row, col)) {
+            //temp.set(node.row, col);
+            //if (!this.closed.contains(temp) && !this.open.contains(temp)) {
+            //   temp.parent = node;
+            //}
+            if ((this._data[node.row][col] & 0x100) === 0) {
+              this._data[node.row][col] |= 0x100;
+              temp.set(node.row, col, node);
+              this.open.push(temp);
+              temp = this._nodeCache.borrowObj();
+            }
+          }
+
+
+        }
+      }
+
+      // No path found - should never happen
+      throw 'No path found from (' + fromRow + ', ', fromCol + ') to (' +
+          toRow + ', ' + toCol + ')';
+    }
+
+    /**
+  	 * Returns the "previous" column, taking wrapping (from the tunnels) into
+  	 * account.
+  	 *
+  	 * @param {number} col The current column.
+  	 * @return {number} The column to the "left" of <code>col</code>.
+     * @see getNextColumn
+  	 */
+  	private static _getPreviousColumn(col: number): number {
+  		if (col === 0) {
+  			col = Maze.TILE_COUNT_HORIZONTAL;
+  		}
+  		return col - 1;
+  	}
 
     static get TILE_COUNT_HORIZONTAL(): number {
       return 28;
@@ -120,7 +284,7 @@ module pacman {
   	 * @return {boolean} Whether a sprite can walk ono the specified tile.
   	 */
     isWalkable(row: number, col: number): boolean {
-      var tile: number = this._getTileAt(row, col);
+      let tile: number = this._getTileAt(row, col);
       return tile === 0 || tile >= 0xf0;
     }
 
@@ -129,18 +293,18 @@ module pacman {
       // Draw all static content
       ctx.drawImage(this._mazeCanvas, 0, 0);
 
-      var TILE_SIZE = 8;
+      let TILE_SIZE = 8;
 
       // Draw the dots
       ctx.fillStyle = '#ffffff';
-      for (var row = 0; row < Maze.TILE_COUNT_VERTICAL; row++) {
+      for (let row = 0; row < Maze.TILE_COUNT_VERTICAL; row++) {
 
-         var y = row * TILE_SIZE + (2 * TILE_SIZE);
+         let y = row * TILE_SIZE + (2 * TILE_SIZE);
 
-         for (var col = 0; col < Maze.TILE_COUNT_HORIZONTAL; col++) {
+         for (let col = 0; col < Maze.TILE_COUNT_HORIZONTAL; col++) {
 
-            var tile = this._getTileAt(row, col);
-            var x = col * TILE_SIZE;
+            let tile = this._getTileAt(row, col);
+            let x = col * TILE_SIZE;
 
             if (tile === Maze.TILE_DOT_SMALL) {
                game.drawSmallDot(x + 3, y + 2);
@@ -165,21 +329,21 @@ module pacman {
     reset(mazeInfo: any) {
        'use strict';
 
-       var TILE_SIZE = 8;
+       let TILE_SIZE = 8;
 
        // Load map data
-       var self = this;
+       let self = this;
        mazeInfo.forEach(function(rowData: number[]) {
           self._data.push(rowData);
        });
 
-       var mapTiles = game.assets.get('mapTiles');
+       let mapTiles = game.assets.get('mapTiles');
 
        // Create an image for the maze
-       var mazeY = 2 * TILE_SIZE;
+       let mazeY = 2 * TILE_SIZE;
        this._mazeCanvas = gtp.ImageUtils.createCanvas(game.getWidth(), game.getHeight());
-       var mazeCtx = this._mazeCanvas.getContext('2d');
-       var walkableCount = 0;
+       let mazeCtx = this._mazeCanvas.getContext('2d');
+       let walkableCount = 0;
        this._eatenDotCount = 0;
        this._dotCount = 0;
 
@@ -189,13 +353,13 @@ module pacman {
        this._renderScoresHeaders(mazeCtx);
 
        // Render each tile from the map data
-       for (var row = 0; row < this._data.length; row++) {
+       for (let row = 0; row < this._data.length; row++) {
 
-          var rowData = this._data[row];
+          let rowData = this._data[row];
 
-          for (var col = 0; col < rowData.length; col++) {
+          for (let col = 0; col < rowData.length; col++) {
 
-             var tile = rowData[col];
+             let tile = rowData[col];
              if (tile === 0 || tile >= 0xf0) {
                 walkableCount++;
              }
@@ -209,18 +373,17 @@ module pacman {
 
                 default:
                    tile--;
-                   var dx = col * TILE_SIZE;
-                   var dy = mazeY + row * TILE_SIZE;
+                   let dx = col * TILE_SIZE;
+                   let dy = mazeY + row * TILE_SIZE;
                    mapTiles.drawByIndex(mazeCtx, dx, dy, tile);
                    break;
              }
           }
        }
 
-       // TODO
- //      if (!this._nodeCache) {
- //         this._nodeCache = new NodeCache(walkableCount);
- //      }
+      if (!this._nodeCache) {
+         this._nodeCache = new gtp.Pool(MazeNode, walkableCount);
+      }
     }
   }
 }

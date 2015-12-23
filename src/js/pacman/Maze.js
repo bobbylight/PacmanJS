@@ -4,6 +4,9 @@ var pacman;
     var DOT_POINTS = [50, 10];
     var Maze = (function () {
         function Maze(mazeInfo) {
+            this.closed = [];
+            this.open = [];
+            this.goalNode = new pacman.MazeNode();
             this._data = [];
             this.reset(mazeInfo);
         }
@@ -36,6 +39,31 @@ var pacman;
             }
             return score;
         };
+        /**
+         * Returns the next node an object should move to if they want to take
+         * the shortest route possible to the destination.
+         *
+         * @param node The linked list of nodes in the path to the destination,
+         *        in reverse order.  This list should have been obtained from a
+         *        breadth-first search.
+         * @return The first node to move to.
+         */
+        Maze._constructPath = function (node) {
+            /*
+            LinkedList<Node> path = new LinkedList<Node>();
+            while (node.parent!=null) {
+                path.addFirst(node);
+                node = node.parent;
+            }
+            return path;
+            */
+            var prev = null;
+            while (node.parent) {
+                prev = node;
+                node = node.parent;
+            }
+            return prev;
+        };
         Object.defineProperty(Maze, "FRUIT_DOT_COUNT", {
             /**
              * Returns the number of dots Pacman must eat before a fruit appears.
@@ -48,6 +76,117 @@ var pacman;
             enumerable: true,
             configurable: true
         });
+        /**
+         * Returns the "next" column, taking wrapping (from the tunnels) into
+         * account.
+         *
+         * @param {number} col The current column.
+         * @return {number} The column to the "right" of <code>col</code>.
+         * @see getPreviousColumn
+         */
+        Maze._getNextColumn = function (col) {
+            if (++col === Maze.TILE_COUNT_HORIZONTAL) {
+                col = 0;
+            }
+            return col;
+        };
+        Maze.prototype.getPathBreadthFirst = function (fromRow, fromCol, toRow, toCol) {
+            var self = this;
+            this.open.forEach(function (node) {
+                self._data[node.row][node.col] &= 0xff;
+            });
+            this.closed.forEach(function (node) {
+                self._data[node.row][node.col] &= 0xff;
+            });
+            this.open.length = 0;
+            this.closed.length = 0;
+            this.goalNode.set(toRow, toCol, null);
+            var temp = this._nodeCache.borrowObj();
+            //path.add(computeInt(fromRow, fromCol));
+            this.open.push(new pacman.MazeNode(fromRow, fromCol));
+            this._data[fromRow][fromCol] |= 0x100;
+            while (this.open.length > 0) {
+                var node = this.open.splice(0, 1)[0];
+                if (!node) {
+                    debugger;
+                }
+                if (node.equals(this.goalNode)) {
+                    this._data[node.row][node.col] &= 0xff; // Won't be in open or closed lists
+                    return Maze._constructPath(node);
+                }
+                else {
+                    this.closed.push(node);
+                    // Add neighbors to the open list
+                    if (this.isWalkable(node.row - 1, node.col)) {
+                        //temp.set(node.row - 1, node.col);
+                        //if (!this.closed.contains(temp) && !this.open.contains(temp)) {
+                        //   temp.parent = node;
+                        //}
+                        if ((this._data[node.row - 1][node.col] & 0x100) === 0) {
+                            this._data[node.row - 1][node.col] |= 0x100;
+                            temp.set(node.row - 1, node.col, node);
+                            this.open.push(temp);
+                            temp = this._nodeCache.borrowObj();
+                        }
+                    }
+                    if (this.isWalkable(node.row + 1, node.col)) {
+                        //temp.set(node.row + 1, node.col);
+                        //if (!this.closed.contains(temp) && !this.open.contains(temp)) {
+                        //   temp.parent = node;
+                        //}
+                        if ((this._data[node.row + 1][node.col] & 0x100) === 0) {
+                            this._data[node.row + 1][node.col] |= 0x100;
+                            temp.set(node.row + 1, node.col, node);
+                            this.open.push(temp);
+                            temp = this._nodeCache.borrowObj();
+                        }
+                    }
+                    var col = Maze._getPreviousColumn(node.col);
+                    if (this.isWalkable(node.row, col)) {
+                        //temp.set(node.row, col);
+                        //if (!this.closed.contains(temp) && !this.open.contains(temp)) {
+                        //   temp.parent = node;
+                        //}
+                        if ((this._data[node.row][col] & 0x100) === 0) {
+                            this._data[node.row][col] |= 0x100;
+                            temp.set(node.row, col, node);
+                            this.open.push(temp);
+                            temp = this._nodeCache.borrowObj();
+                        }
+                    }
+                    col = Maze._getNextColumn(node.col);
+                    if (this.isWalkable(node.row, col)) {
+                        //temp.set(node.row, col);
+                        //if (!this.closed.contains(temp) && !this.open.contains(temp)) {
+                        //   temp.parent = node;
+                        //}
+                        if ((this._data[node.row][col] & 0x100) === 0) {
+                            this._data[node.row][col] |= 0x100;
+                            temp.set(node.row, col, node);
+                            this.open.push(temp);
+                            temp = this._nodeCache.borrowObj();
+                        }
+                    }
+                }
+            }
+            // No path found - should never happen
+            throw 'No path found from (' + fromRow + ', ', fromCol + ') to (' +
+                toRow + ', ' + toCol + ')';
+        };
+        /**
+         * Returns the "previous" column, taking wrapping (from the tunnels) into
+         * account.
+         *
+         * @param {number} col The current column.
+         * @return {number} The column to the "left" of <code>col</code>.
+         * @see getNextColumn
+         */
+        Maze._getPreviousColumn = function (col) {
+            if (col === 0) {
+                col = Maze.TILE_COUNT_HORIZONTAL;
+            }
+            return col - 1;
+        };
         Object.defineProperty(Maze, "TILE_COUNT_HORIZONTAL", {
             get: function () {
                 return 28;
@@ -193,14 +332,12 @@ var pacman;
                     }
                 }
             }
-            // TODO
-            //      if (!this._nodeCache) {
-            //         this._nodeCache = new NodeCache(walkableCount);
-            //      }
+            if (!this._nodeCache) {
+                this._nodeCache = new gtp.Pool(pacman.MazeNode, walkableCount);
+            }
         };
         return Maze;
     })();
     pacman.Maze = Maze;
 })(pacman || (pacman = {}));
-
 //# sourceMappingURL=Maze.js.map
