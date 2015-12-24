@@ -12,6 +12,7 @@ declare module pacman {
         private _ghostUpdateStrategy;
         private _chompSound;
         pacman: Pacman;
+        private _fruit;
         private _ghosts;
         private _extraPointsArray;
         /**
@@ -60,6 +61,7 @@ declare module pacman {
          */
         private _createGhostArray();
         drawBigDot(x: number, y: number): void;
+        drawFruit(ctx: CanvasRenderingContext2D): void;
         /**
          * Paints all four ghosts in their present location and state.
          *

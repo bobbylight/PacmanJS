@@ -14,6 +14,7 @@ module pacman {
     private _ghostUpdateStrategy: GhostUpdateStrategy;
     private _chompSound: number;
     pacman: Pacman;
+    private _fruit: Fruit;
     private _ghosts: Ghost[];
     private _extraPointsArray: number[];
 
@@ -69,7 +70,11 @@ module pacman {
     }
 
     addFruit() {
-      // TODO
+      if (!this._fruit) { // Should always be true.
+  			this._fruit = new Fruit(); // Made appropriate for current level.
+  			this._fruitScoreIndex = -1;
+  			this._fruitScoreEndTime = -1;
+  		}
     }
 
     checkForCollisions(): Ghost {
@@ -80,13 +85,13 @@ module pacman {
   			}
   		}
 
-  		// if (this._fruit && this._fruitScoreIndex === -1 &&
-      //     this.pacman.intersects(this._fruit)) {
-  		// 	this.increaseScore(this._extraPointsArray[fruit.getPointsIndex()]);
-  		// 	this.audio.playSound(Sounds.SOUND_EATING_FRUIT, false);
-  		// 	this._fruitScoreIndex = this._fruit.getPointsIndex();
-  		// 	this._fruitScoreEndTime = game.playTime + PacmanGame.SCORE_DISPLAY_LENGTH;
-  		// }
+  		if (this._fruit && this._fruitScoreIndex === -1 &&
+          this.pacman.intersects(this._fruit)) {
+  			this.increaseScore(this._extraPointsArray[this._fruit.pointsIndex]);
+  			this.audio.playSound(Sounds.EATING_FRUIT, false);
+  			this._fruitScoreIndex = this._fruit.pointsIndex;
+  			this._fruitScoreEndTime = game.playTime + PacmanGame.SCORE_DISPLAY_LENGTH;
+  		}
 
   		return null;
   	}
@@ -134,13 +139,29 @@ module pacman {
   	}
 
     drawBigDot(x: number, y: number) {
-      var ms = this.playTime;
+      let ms = this.playTime;
       if (ms < 0 || (ms % 500) > 250) {
-         var ctx = this.canvas.getContext('2d');
-         var sx = 135,
+         let ctx = this.canvas.getContext('2d');
+         let sx = 135,
              sy = 38;
          game.assets.get('sprites').drawScaled2(ctx, sx,sy,8,8, x,y,8,8);
       }
+    }
+
+    drawFruit(ctx: CanvasRenderingContext2D) {
+      if (this._fruitScoreIndex > -1) {
+  			this.paintPointsEarned(ctx, this._fruitScoreIndex,
+            this._fruit.x, this._fruit.y);
+  			let time: number = game.playTime;
+  			if (time >= this._fruitScoreEndTime) {
+  				this._fruit = null;
+  				this._fruitScoreIndex = -1;
+  				this._fruitScoreEndTime = -1;
+  			}
+  		}
+  		else if (this._fruit) {
+  			this._fruit.paint(ctx);
+  		}
     }
 
     /**
@@ -156,9 +177,9 @@ module pacman {
 
     drawScores(ctx: CanvasRenderingContext2D) {
 
-      var scoreStr = this._score.toString();
-      var x = 55 - scoreStr.length * 8;
-      var y = 10;
+      let scoreStr: string = this._score.toString();
+      let x: number = 55 - scoreStr.length * 8;
+      let y: number = 10;
       this.drawString(x,y, scoreStr, ctx);
 
       scoreStr = this._highScore.toString();
@@ -167,32 +188,32 @@ module pacman {
     }
 
     drawSmallDot(x: number, y: number) {
-      var ctx = this.canvas.getContext('2d');
+      let ctx = this.canvas.getContext('2d');
       ctx.fillRect(x, y, 2, 2);
     }
 
     drawSprite(dx: number, dy: number, sx: number, sy: number) {
-      var image = game.assets.get('sprites');
-      var ctx = this.canvas.getContext('2d');
+      let image = game.assets.get('sprites');
+      let ctx = this.canvas.getContext('2d');
       image.drawScaled2(ctx, sx,sy,16,16, dx,dy,16,16);
     }
 
     drawString(x: number, y: number, text: string|number,
         ctx: CanvasRenderingContext2D = game.canvas.getContext('2d')) {
 
-      var str = text.toString(); // Allow us to pass in stuff like numerics
+      let str = text.toString(); // Allow us to pass in stuff like numerics
 
       // Note we have a gtp.SpriteSheet, not a gtp.BitmapFont, so our
       // calculation of what sub-image to draw is a little convoluted
-      var fontImage = this.assets.get('font');
-      var alphaOffs = 'A'.charCodeAt(0);
-      var numericOffs = '0'.charCodeAt(0);
-      var index: number;
+      let fontImage = this.assets.get('font');
+      let alphaOffs = 'A'.charCodeAt(0);
+      let numericOffs = '0'.charCodeAt(0);
+      let index: number;
 
-      for (var i = 0; i < str.length; i++) {
+      for (let i = 0; i < str.length; i++) {
 
-         var ch = str[i];
-         var chCharCode = str.charCodeAt(i);
+         let ch = str[i];
+         let chCharCode = str.charCodeAt(i);
          if (ch >= 'A' && ch <= 'Z') {
             index = fontImage.colCount + (chCharCode - alphaOffs);
          }
@@ -305,7 +326,7 @@ module pacman {
     loadNextLevel() {
       this.setLoopedSound(null);
   		this._level++;
-  		//this.fruit = null;
+  		this._fruit = null;
   		this._fruitScoreIndex = -1;
   		this._fruitScoreEndTime = -1;
       let state: MazeState = <MazeState>this.state;
@@ -331,9 +352,8 @@ module pacman {
      * @param {int} dy The y-coordinate at which to draw.
      */
     paintPointsEarned(ctx: CanvasRenderingContext2D, ptsIndex: number, dx: number, dy: number) {
-          'use strict';
- //         var y = 9 * ptsIndex;
- //         this._ptsImage.drawScaled2(ctx, 0,y, 17,9, dx,dy, 17,9);
+      let points: gtp.SpriteSheet = game.assets.get('points');
+      points.drawByIndex(ctx, dx, dy, ptsIndex);
     }
 
     /**
@@ -351,15 +371,15 @@ module pacman {
 
       // Have each ghost go to one of four random corners while in scatter
       // mode, but ensure each ghost goes to a different corner.
-      var corners: gtp.Point[] = [
+      let corners: gtp.Point[] = [
         new gtp.Point(2, 1),
         new gtp.Point(2, Maze.TILE_COUNT_HORIZONTAL - 2),
         new gtp.Point(Maze.TILE_COUNT_VERTICAL - 2, 1),
         new gtp.Point(Maze.TILE_COUNT_VERTICAL - 2, Maze.TILE_COUNT_HORIZONTAL - 2)
       ];
-      var cornerSeed: number = gtp.Utils.randomInt(4);
+      let cornerSeed: number = gtp.Utils.randomInt(4);
 
-      for (var i: number = 0; i < this._ghosts.length; i++) {
+      for (let i: number = 0; i < this._ghosts.length; i++) {
         this._ghosts[i].reset();
         this._ghosts[i].setCorner(corners[(cornerSeed + i) % 4]);
       }
@@ -407,8 +427,8 @@ module pacman {
         this._score = 0;
         this._level = 0;
 
-        var levelData = game.assets.get('levels')[level];
-        var mazeState = new pacman.MazeState(levelData);
+        let levelData = game.assets.get('levels')[level];
+        let mazeState = new pacman.MazeState(levelData);
         //this.setState(new gtp.FadeOutInState(this.state, mazeState));
         this.setState(mazeState); // The original did not fade in/out
     }

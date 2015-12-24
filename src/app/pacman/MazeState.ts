@@ -124,7 +124,7 @@ module pacman {
             Maze.TILE_COUNT_VERTICAL * TILE_SIZE;
       ctx.translate(0, mazeY);
 
-      //game.paintFruit(ctx);
+      game.drawFruit(ctx);
 
       var pacman = game.pacman;
       if (this._updateScoreIndex === -1) {

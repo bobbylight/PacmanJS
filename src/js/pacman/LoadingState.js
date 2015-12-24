@@ -29,6 +29,7 @@ var pacman;
                     game.assets.addSpriteSheet('font', 'res/font.png', 9, 7, 0, 0);
                     game.assets.addImage('sprites', 'res/sprite_tiles.png');
                     game.assets.addSpriteSheet('mapTiles', 'res/map_tiles.png', 8, 8, 0, 0);
+                    game.assets.addSpriteSheet('points', 'res/points.png', 18, 9, 0, 0);
                     game.assets.addJson('levels', 'res/levelData.json');
                     game.assets.addSound(pacman.Sounds.CHASING_GHOSTS, 'res/sounds/chasing_ghosts.wav');
                     game.assets.addSound(pacman.Sounds.CHOMP_1, 'res/sounds/chomp_1.wav');

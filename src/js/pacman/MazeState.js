@@ -108,7 +108,7 @@ var pacman;
             var mazeY = game.getHeight() - 2 * TILE_SIZE -
                 pacman_1.Maze.TILE_COUNT_VERTICAL * TILE_SIZE;
             ctx.translate(0, mazeY);
-            //game.paintFruit(ctx);
+            game.drawFruit(ctx);
             var pacman = game.pacman;
             if (this._updateScoreIndex === -1) {
                 if (this._substate !== Substate.GAME_OVER) {

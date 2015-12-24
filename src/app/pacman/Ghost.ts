@@ -246,7 +246,7 @@ module pacman {
 
       let destX: number = this.bounds.x;
       let destY: number = this.bounds.y;
-      let SPRITE_SIZE = 16;
+      let SPRITE_SIZE: number = PacmanGame.SPRITE_SIZE;
 
       switch (this._motionState) {
 

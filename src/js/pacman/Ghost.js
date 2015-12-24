@@ -242,7 +242,7 @@ var pacman;
         Ghost.prototype.paint = function (ctx) {
             var destX = this.bounds.x;
             var destY = this.bounds.y;
-            var SPRITE_SIZE = 16;
+            var SPRITE_SIZE = pacman_1.PacmanGame.SPRITE_SIZE;
             switch (this._motionState) {
                 case MotionState.BLUE:
                     var srcX = (10 + this.getFrame()) * SPRITE_SIZE;

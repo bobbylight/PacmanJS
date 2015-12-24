@@ -25,7 +25,11 @@ var pacman;
                 1000, 1600, 2000, 3000, 5000];
         }
         PacmanGame.prototype.addFruit = function () {
-            // TODO
+            if (!this._fruit) {
+                this._fruit = new pacman.Fruit(); // Made appropriate for current level.
+                this._fruitScoreIndex = -1;
+                this._fruitScoreEndTime = -1;
+            }
         };
         PacmanGame.prototype.checkForCollisions = function () {
             for (var i = 0; i < this._ghosts.length; i++) {
@@ -33,13 +37,13 @@ var pacman;
                     return this._ghosts[i];
                 }
             }
-            // if (this._fruit && this._fruitScoreIndex === -1 &&
-            //     this.pacman.intersects(this._fruit)) {
-            // 	this.increaseScore(this._extraPointsArray[fruit.getPointsIndex()]);
-            // 	this.audio.playSound(Sounds.SOUND_EATING_FRUIT, false);
-            // 	this._fruitScoreIndex = this._fruit.getPointsIndex();
-            // 	this._fruitScoreEndTime = game.playTime + PacmanGame.SCORE_DISPLAY_LENGTH;
-            // }
+            if (this._fruit && this._fruitScoreIndex === -1 &&
+                this.pacman.intersects(this._fruit)) {
+                this.increaseScore(this._extraPointsArray[this._fruit.pointsIndex]);
+                this.audio.playSound(pacman.Sounds.EATING_FRUIT, false);
+                this._fruitScoreIndex = this._fruit.pointsIndex;
+                this._fruitScoreEndTime = game.playTime + PacmanGame.SCORE_DISPLAY_LENGTH;
+            }
             return null;
         };
         /**
@@ -83,6 +87,20 @@ var pacman;
                 var ctx = this.canvas.getContext('2d');
                 var sx = 135, sy = 38;
                 game.assets.get('sprites').drawScaled2(ctx, sx, sy, 8, 8, x, y, 8, 8);
+            }
+        };
+        PacmanGame.prototype.drawFruit = function (ctx) {
+            if (this._fruitScoreIndex > -1) {
+                this.paintPointsEarned(ctx, this._fruitScoreIndex, this._fruit.x, this._fruit.y);
+                var time = game.playTime;
+                if (time >= this._fruitScoreEndTime) {
+                    this._fruit = null;
+                    this._fruitScoreIndex = -1;
+                    this._fruitScoreEndTime = -1;
+                }
+            }
+            else if (this._fruit) {
+                this._fruit.paint(ctx);
             }
         };
         /**
@@ -258,7 +276,7 @@ var pacman;
         PacmanGame.prototype.loadNextLevel = function () {
             this.setLoopedSound(null);
             this._level++;
-            //this.fruit = null;
+            this._fruit = null;
             this._fruitScoreIndex = -1;
             this._fruitScoreEndTime = -1;
             var state = this.state;
@@ -282,9 +300,8 @@ var pacman;
          * @param {int} dy The y-coordinate at which to draw.
          */
         PacmanGame.prototype.paintPointsEarned = function (ctx, ptsIndex, dx, dy) {
-            'use strict';
-            //         var y = 9 * ptsIndex;
-            //         this._ptsImage.drawScaled2(ctx, 0,y, 17,9, dx,dy, 17,9);
+            var points = game.assets.get('points');
+            points.drawByIndex(ctx, dx, dy, ptsIndex);
         };
         /**
          * Plays the next appropriate chomp sound.

@@ -18,6 +18,7 @@
         "src/app/pacman/_BaseState.ts",
         "src/app/pacman/Blinky.ts",
         "src/app/pacman/Direction.ts",
+        "src/app/pacman/Fruit.ts",
         "src/app/pacman/Ghost.ts",
         "src/app/pacman/LoadingState.ts",
         "src/app/pacman/Maze.ts",
