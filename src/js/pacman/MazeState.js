@@ -41,7 +41,7 @@ var pacman;
             this._updateScoreIndex = -1;
             // Prevents the user's "Enter" press to start the game from being
             // picked up by our handleInput().
-            this._lastMazeScreenKeypressTime = gtp.Utils.timestamp() + this.inputRepeatMillis;
+            this._lastMazeScreenKeypressTime = game.playTime + this.inputRepeatMillis;
             this._substate = Substate.READY;
             this._firstTimeThrough = true;
             this._substateStartTime = 0;
@@ -203,7 +203,7 @@ var pacman;
         };
         MazeState.prototype.update = function (delta) {
             _super.prototype.update.call(this, delta);
-            var time = gtp.Utils.timestamp();
+            var time = game.playTime;
             this._handleInput(delta, time);
             switch (this._substate) {
                 case Substate.READY:

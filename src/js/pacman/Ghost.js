@@ -69,10 +69,10 @@ var pacman;
             }
         };
         /**
-         * Moves this ghost in its current direction by the specified amount.
-         *
-         * @param {number} moveAmount The amount to move.
-         */
+        * Moves this ghost in its current direction by the specified amount.
+        *
+        * @param {number} moveAmount The amount to move.
+        */
         Ghost.prototype.continueInCurrentDirection = function (moveAmount) {
             switch (this.direction) {
                 case pacman_1.Direction.NORTH:
@@ -90,12 +90,12 @@ var pacman;
             }
         };
         /**
-         * Returns the length of play time a ghost should stay blue, in
-         * milliseconds.
-         *
-         * @param {number} level The current game level.
-         * @return {numbe} The length of time a ghost should stay blue.
-         */
+        * Returns the length of play time a ghost should stay blue, in
+        * milliseconds.
+        *
+        * @param {number} level The current game level.
+        * @return {numbe} The length of time a ghost should stay blue.
+        */
         Ghost.prototype._getBlueTimeForLevel = function (level) {
             switch (level) {
                 case 0:
@@ -115,11 +115,11 @@ var pacman;
             }
         };
         /**
-         * Returns the amount of time, in milliseconds, that this ghost will wait
-         * for before leaving the penalty box for the first time.
-         *
-         * @return {number} The delay, in milliseconds.
-         */
+        * Returns the amount of time, in milliseconds, that this ghost will wait
+        * for before leaving the penalty box for the first time.
+        *
+        * @return {number} The delay, in milliseconds.
+        */
         Ghost.prototype.getFirstExitDelayNanos = function () {
             return this._exitDelaySeconds * 1000;
         };
@@ -154,7 +154,7 @@ var pacman;
                             break;
                     }
                 }
-                else if (this._motionState === MotionState.BLUE) {
+                else if (motionState === MotionState.BLUE) {
                     var blueTime = this._getBlueTimeForLevel(game.level);
                     var playTime = game.playTime;
                     this.exitBlueTime = playTime + blueTime;
@@ -198,12 +198,12 @@ var pacman;
             configurable: true
         });
         /**
-         * Returns the number of milliseconds that should pass between the times
-         * this ghost moves.  This value is dependant on the ghost's current
-         * state.
-         *
-         * @return The update delay, in milliseconds.
-         */
+        * Returns the number of milliseconds that should pass between the times
+        * this ghost moves.  This value is dependant on the ghost's current
+        * state.
+        *
+        * @return The update delay, in milliseconds.
+        */
         Ghost.prototype.getUpdateDelayMillis = function () {
             switch (this._motionState) {
                 case MotionState.BLUE:
@@ -216,29 +216,29 @@ var pacman;
             }
         };
         /**
-         * Returns whether this ghost is in a "blue" motion state.
-         *
-         * @return {boolean} Whether this ghost is blue.
-         * @see #isEyes()
-         */
+        * Returns whether this ghost is in a "blue" motion state.
+        *
+        * @return {boolean} Whether this ghost is blue.
+        * @see #isEyes()
+        */
         Ghost.prototype.isBlue = function () {
             return this._motionState === MotionState.BLUE;
         };
         /**
-         * Returns whether this ghost is in a "eyes" motion state.
-         *
-         * @return Whether this ghost is in an "eyes" state.
-         * @see #isBlue()
-         */
+        * Returns whether this ghost is in a "eyes" motion state.
+        *
+        * @return Whether this ghost is in an "eyes" state.
+        * @see #isBlue()
+        */
         Ghost.prototype.isEyes = function () {
             return this._motionState === MotionState.EYES ||
                 this._motionState === MotionState.EYES_ENTERING_BOX;
         };
         /**
-         * Paints this sprite at its current location.
-         *
-         * @param {CanvasRenderingContext2D} ctx The rendering context to use.
-         */
+        * Paints this sprite at its current location.
+        *
+        * @param {CanvasRenderingContext2D} ctx The rendering context to use.
+        */
         Ghost.prototype.paint = function (ctx) {
             var destX = this.bounds.x;
             var destY = this.bounds.y;
@@ -270,9 +270,9 @@ var pacman;
             }
         };
         /**
-         * Turns this ghost "blue," if it is not in the penalty box and is not
-         * currently floating eyes.
-         */
+        * Turns this ghost "blue," if it is not in the penalty box and is not
+        * currently floating eyes.
+        */
         Ghost.prototype.possiblyTurnBlue = function () {
             switch (this._motionState) {
                 case MotionState.CHASING_PACMAN:
@@ -286,37 +286,37 @@ var pacman;
             }
         };
         /**
-         * Resets the ghost's internal state so that:
-         *
-         * <ol>
-         *    <li>It is in the penalty box (except for Blinky).
-         *    <li>It's no longer blinking.
-         *    <li>Its direction is set appropriately.
-         * </ol>
-         *
-         * This method should be called on loading a new level, PacMan dying, etc.
-         * Subclasses should be sure to call the super's implementation when
-         * overriding.
-         */
+        * Resets the ghost's internal state so that:
+        *
+        * <ol>
+        *    <li>It is in the penalty box (except for Blinky).
+        *    <li>It's no longer blinking.
+        *    <li>Its direction is set appropriately.
+        * </ol>
+        *
+        * This method should be called on loading a new level, PacMan dying, etc.
+        * Subclasses should be sure to call the super's implementation when
+        * overriding.
+        */
         Ghost.prototype.reset = function () {
             _super.prototype.reset.call(this);
             this._scatterCount = 0;
         };
         /**
-         * Sets the coordinates of the "corner" this ghost goes to when in scatter
-         * mode.
-         *
-         * @param {gtp.Point} corner The corner to go to.
-         */
+        * Sets the coordinates of the "corner" this ghost goes to when in scatter
+        * mode.
+        *
+        * @param {gtp.Point} corner The corner to go to.
+        */
         Ghost.prototype.setCorner = function (corner) {
             this._corner.x = corner.x;
             this._corner.y = corner.y;
         };
         /**
-         * Updates this ghost's position when they are "blue."
-         *
-         * @param {Maze} maze The maze in which the ghost is moving.
-         */
+        * Updates this ghost's position when they are "blue."
+        *
+        * @param {Maze} maze The maze in which the ghost is moving.
+        */
         Ghost.prototype._updatePositionBlue = function (maze) {
             // Logic:
             // If PacMan has a clear shot to us, try to go in a direction other
@@ -385,11 +385,11 @@ var pacman;
             }
         };
         /**
-         * Updates this ghost's position when it is a set of "eyes" heading back
-         * to the penalty box.
-         *
-         * @param maze The maze in which the ghost is moving.
-         */
+        * Updates this ghost's position when it is a set of "eyes" heading back
+        * to the penalty box.
+        *
+        * @param maze The maze in which the ghost is moving.
+        */
         Ghost.prototype._updatePositionEyes = function (maze) {
             // Logic:
             // At intersections, do a breadth-first search to find the shortest
@@ -443,11 +443,11 @@ var pacman;
             }
         };
         /**
-         * Updates this ghost's position when it is a set of "eyes" re-entering
-         * the penalty box.
-         *
-         * @param maze The maze in which the ghost is moving.
-         */
+        * Updates this ghost's position when it is a set of "eyes" re-entering
+        * the penalty box.
+        *
+        * @param maze The maze in which the ghost is moving.
+        */
         Ghost.prototype._updatePositionEyesEnteringBox = function (maze) {
             var moveAmount = 1; //getMoveAmount();
             var y = this.y;
@@ -461,10 +461,10 @@ var pacman;
             }
         };
         /**
-         * Updates a ghost's position according to its AI.
-         *
-         * @param maze The maze in which the ghost is floating.
-         */
+        * Updates a ghost's position according to its AI.
+        *
+        * @param maze The maze in which the ghost is floating.
+        */
         Ghost.prototype.updatePositionImpl = function (maze) {
             switch (this._motionState) {
                 case MotionState.IN_BOX:
@@ -491,10 +491,10 @@ var pacman;
             }
         };
         /**
-         * Updates an actor's position.
-         *
-         * @param maze The maze in which the actor is moving.
-         */
+        * Updates an actor's position.
+        *
+        * @param maze The maze in which the actor is moving.
+        */
         Ghost.prototype.updatePositionInBox = function (maze) {
             var moveAmount = 1; //ghost.getMoveAmount();
             switch (this.direction) {
@@ -525,10 +525,10 @@ var pacman;
             }
         };
         /**
-         * Updates an actor's position.
-         *
-         * @param maze The maze in which the actor is moving.
-         */
+        * Updates an actor's position.
+        *
+        * @param maze The maze in which the actor is moving.
+        */
         Ghost.prototype.updatePositionLeavingBox = function (maze) {
             var moveAmount = 1; //getMoveAmount();
             var x = this.x;
@@ -554,10 +554,10 @@ var pacman;
             }
         };
         /**
-         * Updates an actor's position.
-         *
-         * @param maze The maze in which the actor is moving.
-         */
+        * Updates an actor's position.
+        *
+        * @param maze The maze in which the actor is moving.
+        */
         Ghost.prototype.updatePositionScattering = function (maze) {
             // Logic:
             // At intersections, do a breadth-first search to find the shortest

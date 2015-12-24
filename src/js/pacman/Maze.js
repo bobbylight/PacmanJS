@@ -296,9 +296,9 @@ var pacman;
         Maze.prototype.reset = function (mazeInfo) {
             'use strict';
             var TILE_SIZE = 8;
-            var firstTime = this._data != null;
+            var firstTime = mazeInfo != null;
             // Load (or reset) map data
-            if (mazeInfo) {
+            if (firstTime) {
                 this._origMazeInfo = mazeInfo;
             }
             else {

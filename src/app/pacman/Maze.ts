@@ -333,13 +333,13 @@ module pacman {
        'use strict';
 
        let TILE_SIZE: number = 8;
-       let firstTime: boolean = this._data != null;
+       let firstTime: boolean = mazeInfo != null;
 
        // Load (or reset) map data
-       if (mazeInfo) {
+       if (firstTime) {
          this._origMazeInfo = mazeInfo;
        }
-       else {
+       else { // We're being reset, to load another level
          mazeInfo = this._origMazeInfo;
        }
        let self: Maze = this;
