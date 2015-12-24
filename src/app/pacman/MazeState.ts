@@ -26,8 +26,8 @@ module pacman {
       this._mazeFile = mazeFile;
     }
 
-    private get DYING_FRAME_DELAY_MILLIS(): number {
-      return 7500;
+    private static get DYING_FRAME_DELAY_MILLIS(): number {
+      return 75;
     }
 
     private get _readyDelayMillis(): number {
@@ -175,6 +175,16 @@ module pacman {
       }
     }
 
+    reset() {
+  		this._maze.reset();
+  		game.resetPlayTime;
+      game.pacman.reset();
+      game.resetGhosts(); // Do AFTER resetting playtime!
+  		this._substate = Substate.READY;
+  		this._substateStartTime = 0; // Play time was just reset
+  		this._lastSpriteFrameTime = 0;
+  	}
+
     private _handleInput(delta: number, time: number) {
 
       this.handleDefaultKeys();
@@ -189,8 +199,8 @@ module pacman {
             break;
 
           case Substate.GAME_OVER:
-            if (input.enter()) {
-              game.setState(new pacman.MazeState(this._mazeFile));
+            if (input.enter(true)) {
+              game.setState(new pacman.TitleState(game));
             }
             break;
         }
@@ -221,7 +231,7 @@ module pacman {
             if (this._substate !== Substate.DYING) {
               game.startPacmanDying();
               this._substate = Substate.DYING;
-              this._nextDyingFrameTime = time + this.DYING_FRAME_DELAY_MILLIS;
+              this._nextDyingFrameTime = time + MazeState.DYING_FRAME_DELAY_MILLIS;
               this._lastMazeScreenKeypressTime = time;
             }
           }
@@ -272,7 +282,7 @@ module pacman {
               }
             }
             else {
-              this._nextDyingFrameTime = time + this.DYING_FRAME_DELAY_MILLIS;
+              this._nextDyingFrameTime = time + MazeState.DYING_FRAME_DELAY_MILLIS;
             }
           }
           break;
@@ -303,7 +313,31 @@ module pacman {
       game.updateSpritePositions(this._maze, time);
 
       // If Pacman hit a ghost, decide what to do
-      // TODO
+      let ghostHit: Ghost = game.checkForCollisions();
+      if (ghostHit) {
+
+        switch (ghostHit.motionState) {
+
+          case MotionState.BLUE:
+            this._nextUpdateTime = time + PacmanGame.SCORE_DISPLAY_LENGTH;
+            ghostHit.motionState = MotionState.EYES;
+            this._updateScoreIndex = game.ghostEaten(ghostHit);
+            break;
+
+          case MotionState.EYES:
+          case MotionState.EYES_ENTERING_BOX:
+            // Do nothing
+            break;
+
+          default:
+            if (!game.godMode) {
+              game.startPacmanDying();
+              this._substate = Substate.DYING;
+              this._nextDyingFrameTime = game.playTime + MazeState.DYING_FRAME_DELAY_MILLIS;
+            }
+            break;
+        }
+      }
     }
   }
 }

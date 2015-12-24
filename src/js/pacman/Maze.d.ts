@@ -4,6 +4,7 @@ declare module pacman {
         private _mazeCanvas;
         private _eatenDotCount;
         private _dotCount;
+        private _origMazeInfo;
         closed: MazeNode[];
         open: MazeNode[];
         goalNode: MazeNode;
@@ -85,6 +86,11 @@ declare module pacman {
          * while we're at it.
          */
         private _renderScoresHeaders(ctx);
-        reset(mazeInfo: any): void;
+        /**
+         * Resets this maze.
+         * @param mazeInfo The raw data for this maze.  If this is undefined, it
+         *        is assumed that we are simply resetting to load a new level.
+         */
+        reset(mazeInfo?: number[][]): void;
     }
 }

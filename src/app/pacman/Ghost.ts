@@ -21,7 +21,7 @@ module pacman {
     /**
   	 * The ghost's current motion state.
   	 */
-  	private _motionState: number;
+  	private _motionState: MotionState;
 
   	/**
   	 * The "corner" this ghost will retreat to when in "scatter" mode.
@@ -327,12 +327,14 @@ module pacman {
 
     set motionState(motionState: MotionState) {
 
+      var game = this.game;
+
   		// Ghosts stay in "scatter mode" for varying lengths of time:
   		// The first (just out of the penalty box) and second times, it lasts
   		// for 7 seconds.  The third and fourth times, it lasts for 5 seconds.
   		// Ghosts don't enter scatter mode a 5th time; they just relentlessly
   		// attack PacMan.
-  		if (this._motionState === MotionState.SCATTERING) {
+  		if (motionState === MotionState.SCATTERING) {
   			switch (this._scatterCount++) {
   				case 0:
   				case 1:
@@ -503,64 +505,64 @@ module pacman {
   		// At intersections, do a breadth-first search to find the shortest
   		// path to the penalty box, and head in that direction.
 
-  		// let moveAmount: number = getMoveAmount();
-      //
-  		// if (this.atIntersection(maze)) {
-      //
-  		// 	// NOTE: game.PENALTY_BOX_X is actually in-between two columns, so we
-  		// 	// pick the "farther" one to travel to, so we can be sure that
-  		// 	// the ghost will always enter the box correctly.
-      //
-  		// 	let fromRow: number = this.getRow();
-  		// 	let fromCol: number = this.getColumn();
-  		// 	let toRow: number = (game.PENALTY_BOX_EXIT_Y+16)/TILE_SIZE; // yToRow(game.PENALTY_BOX_EXIT_Y);
-  		// 	let toCol: number = (game.PENALTY_BOX_EXIT_X)/TILE_SIZE; //xToColumn(game.PENALTY_BOX_EXIT_X);
-  		// 	if (fromCol <= toCol) {
-  		// 		toCol++; // Approaching from the left.
-  		// 	}
-      //
-  		// 	let node: MazeNode = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
-  		// 	if (node==null) { // i.e. ghost is actually at the penalty box.
-  		// 		// Should never happen; we should always catch the ghost
-  		// 		// before getting to its destination in the "else" below.
-  		// 		setMotionState(MotionState.EYES_ENTERING_BOX);
-  		// 	}
-  		// 	else {
-  		// 		if (node.col<fromCol) {
-  		// 			setDirection(DIR_LEFT);
-  		// 			incX(-moveAmount);
-  		// 		}
-  		// 		else if (node.col>fromCol) {
-  		// 			setDirection(DIR_RIGHT);
-  		// 			incX(moveAmount);
-  		// 		}
-  		// 		else if (node.row<fromRow) {
-  		// 			setDirection(DIR_UP);
-  		// 			incY(-moveAmount);
-  		// 		}
-  		// 		else if (node.row>fromRow) {
-  		// 			setDirection(DIR_DOWN);
-  		// 			incY(moveAmount);
-  		// 		}
-  		// 	}
-      //
-  		// }
-      //
-  		// // Not at an intersection, so we should be able to keep going
-  		// // in our current direction.
-  		// else {
-      //
-  		// 	let fromRow: number = getRow();
-  		// 	let toRow: number = (game.PENALTY_BOX_EXIT_Y+16)/TILE_SIZE; // yToRow(game.PENALTY_BOX_EXIT_Y);
-      //
-  		// 	if (fromRow==toRow && this.x==game.PENALTY_BOX_EXIT_X) {
-  		// 		setMotionState(MotionState.EYES_ENTERING_BOX);
-  		// 	}
-  		// 	else {
-  		// 		continueInCurrentDirection(moveAmount);
-  		// 	}
-      //
-  		// }
+  		let moveAmount: number = this.moveAmount;
+
+  		if (this.atIntersection(maze)) {
+
+  			// NOTE: game.PENALTY_BOX_X is actually in-between two columns, so we
+  			// pick the "farther" one to travel to, so we can be sure that
+  			// the ghost will always enter the box correctly.
+
+  			let fromRow: number = this.row;
+  			let fromCol: number = this.column;
+  			let toRow: number = Math.floor((game.PENALTY_BOX_EXIT_Y + 8)/ PacmanGame.TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
+  			let toCol: number = Math.floor((game.PENALTY_BOX_EXIT_X)/ PacmanGame.TILE_SIZE); //xToColumn(game.PENALTY_BOX_EXIT_X);
+  			if (fromCol <= toCol) {
+  				toCol++; // Approaching from the left.
+  			}
+
+  			let node: MazeNode = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
+  			if (node==null) { // i.e. ghost is actually at the penalty box.
+  				// Should never happen; we should always catch the ghost
+  				// before getting to its destination in the "else" below.
+          this.motionState = MotionState.EYES_ENTERING_BOX;
+  			}
+  			else {
+  				if (node.col < fromCol) {
+  					this.direction = Direction.WEST;
+  					this.incX(-moveAmount);
+  				}
+  				else if (node.col > fromCol) {
+  					this.direction = Direction.EAST;
+  					this.incX(moveAmount);
+  				}
+  				else if (node.row < fromRow) {
+  					this.direction = Direction.NORTH;
+  					this.incY(-moveAmount);
+  				}
+  				else if (node.row > fromRow) {
+  					this.direction = Direction.SOUTH;
+  					this.incY(moveAmount);
+  				}
+  			}
+
+  		}
+
+  		// Not at an intersection, so we should be able to keep going
+  		// in our current direction.
+  		else {
+
+  			let fromRow: number = this.row;
+  			let toRow: number = Math.floor((game.PENALTY_BOX_EXIT_Y + 8) / PacmanGame.TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
+
+  			if (fromRow === toRow && this.x === game.PENALTY_BOX_EXIT_X) {
+  				this.motionState = MotionState.EYES_ENTERING_BOX;
+  			}
+  			else {
+  				this.continueInCurrentDirection(moveAmount);
+  			}
+
+  		}
 
   	}
 
@@ -576,7 +578,7 @@ module pacman {
   		let moveAmount: number = 1;//getMoveAmount();
 
   		let y: number = this.y;
-  		if (y < game.PENALTY_BOX_EXIT_Y + 3 * game.SPRITE_SIZE / 2) {
+  		if (y < game.PENALTY_BOX_EXIT_Y + 3 * PacmanGame.SPRITE_SIZE / 2) {
   			this.direction = Direction.SOUTH; // May be redundant.
   			this.incY(moveAmount);
   		}

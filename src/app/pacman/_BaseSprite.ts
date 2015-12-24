@@ -11,7 +11,7 @@ module pacman {
     _lastUpdateTime: number;
 
     constructor(frameCount: number) {
-      this.bounds = new gtp.Rectangle();
+      this.bounds = new gtp.Rectangle(0, 0, PacmanGame.SPRITE_SIZE, PacmanGame.SPRITE_SIZE);
       this._intersectBounds = new gtp.Rectangle();
       this.direction = Direction.EAST;
       this._frame = 0;
@@ -124,6 +124,12 @@ module pacman {
        return this._frameCount;
     }
 
+    private get intersectBounds(): gtp.Rectangle {
+  		this._intersectBounds.set(this.bounds.x + 2, this.bounds.y - 2,
+  								this.bounds.w - 4, this.bounds.h - 4);
+  		return this._intersectBounds;
+  	}
+
     get moveAmount(): number {
       return 1; // TODO: Perhaps this is no longer needed?
     }
@@ -204,6 +210,17 @@ module pacman {
     incY(amount: number) {
       this.bounds.y += amount;
     }
+
+    /**
+  	 * Returns whether this sprite intersects another.
+  	 *
+  	 * @param sprite2 The other sprite.
+  	 * @return Whether these two sprites intersect.
+  	 */
+  	intersects(sprite2: _BaseSprite): boolean {
+  		//return bounds.intersects(sprite2.bounds);
+  		return this.intersectBounds.intersects(sprite2.intersectBounds);
+  	}
 
     reset() {
        this._lastUpdateTime = 0;

@@ -7,7 +7,7 @@ declare module pacman {
         /**
          * Returns whether Pacman ins completely dead, or still doing his dying
          * animation.
-         * @return {boolean} Whether Pacman is completely dead.
+         * @return {boolean} Whether Pacman is still in his dying animation.
          */
         incDying(): boolean;
         render(ctx: CanvasRenderingContext2D): void;

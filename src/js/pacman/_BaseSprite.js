@@ -3,7 +3,7 @@ var pacman;
     'use strict';
     var _BaseSprite = (function () {
         function _BaseSprite(frameCount) {
-            this.bounds = new gtp.Rectangle();
+            this.bounds = new gtp.Rectangle(0, 0, pacman.PacmanGame.SPRITE_SIZE, pacman.PacmanGame.SPRITE_SIZE);
             this._intersectBounds = new gtp.Rectangle();
             this.direction = pacman.Direction.EAST;
             this._frame = 0;
@@ -114,6 +114,14 @@ var pacman;
         _BaseSprite.prototype.getFrameCount = function () {
             return this._frameCount;
         };
+        Object.defineProperty(_BaseSprite.prototype, "intersectBounds", {
+            get: function () {
+                this._intersectBounds.set(this.bounds.x + 2, this.bounds.y - 2, this.bounds.w - 4, this.bounds.h - 4);
+                return this._intersectBounds;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(_BaseSprite.prototype, "moveAmount", {
             get: function () {
                 return 1; // TODO: Perhaps this is no longer needed?
@@ -205,6 +213,16 @@ var pacman;
         };
         _BaseSprite.prototype.incY = function (amount) {
             this.bounds.y += amount;
+        };
+        /**
+         * Returns whether this sprite intersects another.
+         *
+         * @param sprite2 The other sprite.
+         * @return Whether these two sprites intersect.
+         */
+        _BaseSprite.prototype.intersects = function (sprite2) {
+            //return bounds.intersects(sprite2.bounds);
+            return this.intersectBounds.intersects(sprite2.intersectBounds);
         };
         _BaseSprite.prototype.reset = function () {
             this._lastUpdateTime = 0;

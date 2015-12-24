@@ -43,7 +43,7 @@ module pacman {
     /**
      * Returns whether Pacman ins completely dead, or still doing his dying
      * animation.
-     * @return {boolean} Whether Pacman is completely dead.
+     * @return {boolean} Whether Pacman is still in his dying animation.
      */
     incDying(): boolean {
       this._dyingFrame = (this._dyingFrame + 1) % 12;
@@ -52,7 +52,7 @@ module pacman {
 
     render(ctx: CanvasRenderingContext2D) {
 
-      var SPRITE_SIZE: number = game.SPRITE_SIZE;
+      var SPRITE_SIZE: number = PacmanGame.SPRITE_SIZE;
 
       var x: number = this.bounds.x;
       var y: number = this.bounds.y;

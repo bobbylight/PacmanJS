@@ -13,6 +13,7 @@ declare module pacman {
         private _chompSound;
         pacman: Pacman;
         private _ghosts;
+        private _extraPointsArray;
         /**
          * Whether the player has earned an extra life (from achieving a
          * certain score).
@@ -29,8 +30,24 @@ declare module pacman {
          * also change the background noise (siren, eyes, etc.).
          */
         private _resettingGhostStates;
+        /**
+         * The index into the "points" image containing the image for an
+         * amount of points being earned, e.g. for eating a ghost.
+         */
+        private _eatenGhostPointsIndex;
+        /**
+         * The playtime (in nanoseconds) after which an eaten fruit's score
+         * should stop displaying.
+         */
+        private _fruitScoreEndTime;
+        /**
+         * The index into scores of the current fruit.
+         */
+        private _fruitScoreIndex;
+        private _godMode;
         constructor(args?: any);
         addFruit(): void;
+        checkForCollisions(): Ghost;
         /**
          * Ensures the background sound effect being played is appropriate for
          * the ghosts' current states.
@@ -53,13 +70,20 @@ declare module pacman {
         drawSmallDot(x: number, y: number): void;
         drawSprite(dx: number, dy: number, sx: number, sy: number): void;
         drawString(x: number, y: number, text: string | number, ctx?: CanvasRenderingContext2D): void;
+        godMode: boolean;
         static EXTRA_LIFE_SCORE: number;
         level: number;
         lives: number;
         PENALTY_BOX_EXIT_X: number;
         PENALTY_BOX_EXIT_Y: number;
-        SPRITE_SIZE: number;
-        TILE_SIZE: number;
+        /**
+         * Amount of time, in milliseconds, that points earned by Pacman should
+         * be displayed (e.g. from eating a ghost or a fruit).
+         */
+        static SCORE_DISPLAY_LENGTH: number;
+        static SPRITE_SIZE: number;
+        static TILE_SIZE: number;
+        ghostEaten(ghost: Ghost): number;
         increaseLives(amount: number): number;
         increaseScore(amount: number): void;
         loadNextLevel(): void;
@@ -90,6 +114,7 @@ declare module pacman {
          * @param state How many ghosts to update.
          */
         ghostUpdateStrategy: GhostUpdateStrategy;
+        toggleGodMode(): boolean;
         startGame(level: number): void;
         startPacmanDying(): void;
         /**

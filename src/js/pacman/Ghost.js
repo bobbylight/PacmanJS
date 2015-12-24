@@ -131,12 +131,13 @@ var pacman;
                 return this._motionState;
             },
             set: function (motionState) {
+                var game = this.game;
                 // Ghosts stay in "scatter mode" for varying lengths of time:
                 // The first (just out of the penalty box) and second times, it lasts
                 // for 7 seconds.  The third and fourth times, it lasts for 5 seconds.
                 // Ghosts don't enter scatter mode a 5th time; they just relentlessly
                 // attack PacMan.
-                if (this._motionState === MotionState.SCATTERING) {
+                if (motionState === MotionState.SCATTERING) {
                     switch (this._scatterCount++) {
                         case 0:
                         case 1:
@@ -393,64 +394,53 @@ var pacman;
             // Logic:
             // At intersections, do a breadth-first search to find the shortest
             // path to the penalty box, and head in that direction.
-            // let moveAmount: number = getMoveAmount();
-            //
-            // if (this.atIntersection(maze)) {
-            //
-            // 	// NOTE: game.PENALTY_BOX_X is actually in-between two columns, so we
-            // 	// pick the "farther" one to travel to, so we can be sure that
-            // 	// the ghost will always enter the box correctly.
-            //
-            // 	let fromRow: number = this.getRow();
-            // 	let fromCol: number = this.getColumn();
-            // 	let toRow: number = (game.PENALTY_BOX_EXIT_Y+16)/TILE_SIZE; // yToRow(game.PENALTY_BOX_EXIT_Y);
-            // 	let toCol: number = (game.PENALTY_BOX_EXIT_X)/TILE_SIZE; //xToColumn(game.PENALTY_BOX_EXIT_X);
-            // 	if (fromCol <= toCol) {
-            // 		toCol++; // Approaching from the left.
-            // 	}
-            //
-            // 	let node: MazeNode = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
-            // 	if (node==null) { // i.e. ghost is actually at the penalty box.
-            // 		// Should never happen; we should always catch the ghost
-            // 		// before getting to its destination in the "else" below.
-            // 		setMotionState(MotionState.EYES_ENTERING_BOX);
-            // 	}
-            // 	else {
-            // 		if (node.col<fromCol) {
-            // 			setDirection(DIR_LEFT);
-            // 			incX(-moveAmount);
-            // 		}
-            // 		else if (node.col>fromCol) {
-            // 			setDirection(DIR_RIGHT);
-            // 			incX(moveAmount);
-            // 		}
-            // 		else if (node.row<fromRow) {
-            // 			setDirection(DIR_UP);
-            // 			incY(-moveAmount);
-            // 		}
-            // 		else if (node.row>fromRow) {
-            // 			setDirection(DIR_DOWN);
-            // 			incY(moveAmount);
-            // 		}
-            // 	}
-            //
-            // }
-            //
-            // // Not at an intersection, so we should be able to keep going
-            // // in our current direction.
-            // else {
-            //
-            // 	let fromRow: number = getRow();
-            // 	let toRow: number = (game.PENALTY_BOX_EXIT_Y+16)/TILE_SIZE; // yToRow(game.PENALTY_BOX_EXIT_Y);
-            //
-            // 	if (fromRow==toRow && this.x==game.PENALTY_BOX_EXIT_X) {
-            // 		setMotionState(MotionState.EYES_ENTERING_BOX);
-            // 	}
-            // 	else {
-            // 		continueInCurrentDirection(moveAmount);
-            // 	}
-            //
-            // }
+            var moveAmount = this.moveAmount;
+            if (this.atIntersection(maze)) {
+                // NOTE: game.PENALTY_BOX_X is actually in-between two columns, so we
+                // pick the "farther" one to travel to, so we can be sure that
+                // the ghost will always enter the box correctly.
+                var fromRow = this.row;
+                var fromCol = this.column;
+                var toRow = Math.floor((game.PENALTY_BOX_EXIT_Y + 8) / pacman_1.PacmanGame.TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
+                var toCol = Math.floor((game.PENALTY_BOX_EXIT_X) / pacman_1.PacmanGame.TILE_SIZE); //xToColumn(game.PENALTY_BOX_EXIT_X);
+                if (fromCol <= toCol) {
+                    toCol++; // Approaching from the left.
+                }
+                var node = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
+                if (node == null) {
+                    // Should never happen; we should always catch the ghost
+                    // before getting to its destination in the "else" below.
+                    this.motionState = MotionState.EYES_ENTERING_BOX;
+                }
+                else {
+                    if (node.col < fromCol) {
+                        this.direction = pacman_1.Direction.WEST;
+                        this.incX(-moveAmount);
+                    }
+                    else if (node.col > fromCol) {
+                        this.direction = pacman_1.Direction.EAST;
+                        this.incX(moveAmount);
+                    }
+                    else if (node.row < fromRow) {
+                        this.direction = pacman_1.Direction.NORTH;
+                        this.incY(-moveAmount);
+                    }
+                    else if (node.row > fromRow) {
+                        this.direction = pacman_1.Direction.SOUTH;
+                        this.incY(moveAmount);
+                    }
+                }
+            }
+            else {
+                var fromRow = this.row;
+                var toRow = Math.floor((game.PENALTY_BOX_EXIT_Y + 8) / pacman_1.PacmanGame.TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
+                if (fromRow === toRow && this.x === game.PENALTY_BOX_EXIT_X) {
+                    this.motionState = MotionState.EYES_ENTERING_BOX;
+                }
+                else {
+                    this.continueInCurrentDirection(moveAmount);
+                }
+            }
         };
         /**
          * Updates this ghost's position when it is a set of "eyes" re-entering
@@ -461,7 +451,7 @@ var pacman;
         Ghost.prototype._updatePositionEyesEnteringBox = function (maze) {
             var moveAmount = 1; //getMoveAmount();
             var y = this.y;
-            if (y < game.PENALTY_BOX_EXIT_Y + 3 * game.SPRITE_SIZE / 2) {
+            if (y < game.PENALTY_BOX_EXIT_Y + 3 * pacman_1.PacmanGame.SPRITE_SIZE / 2) {
                 this.direction = pacman_1.Direction.SOUTH; // May be redundant.
                 this.incY(moveAmount);
             }

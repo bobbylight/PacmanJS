@@ -21,9 +21,26 @@ var pacman;
             this._ghosts = this._createGhostArray();
             this._chompSound = 0;
             this._ghostUpdateStrategy = GhostUpdateStrategy.UPDATE_ALL;
+            this._extraPointsArray = [100, 200, 300, 400, 500, 700, 800,
+                1000, 1600, 2000, 3000, 5000];
         }
         PacmanGame.prototype.addFruit = function () {
             // TODO
+        };
+        PacmanGame.prototype.checkForCollisions = function () {
+            for (var i = 0; i < this._ghosts.length; i++) {
+                if (this.pacman.intersects(this._ghosts[i])) {
+                    return this._ghosts[i];
+                }
+            }
+            // if (this._fruit && this._fruitScoreIndex === -1 &&
+            //     this.pacman.intersects(this._fruit)) {
+            // 	this.increaseScore(this._extraPointsArray[fruit.getPointsIndex()]);
+            // 	this.audio.playSound(Sounds.SOUND_EATING_FRUIT, false);
+            // 	this._fruitScoreIndex = this._fruit.getPointsIndex();
+            // 	this._fruitScoreEndTime = game.playTime + PacmanGame.SCORE_DISPLAY_LENGTH;
+            // }
+            return null;
         };
         /**
          * Ensures the background sound effect being played is appropriate for
@@ -140,6 +157,13 @@ var pacman;
                 x += 9; //CHAR_WIDTH
             }
         };
+        Object.defineProperty(PacmanGame.prototype, "godMode", {
+            get: function () {
+                return this._godMode;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(PacmanGame, "EXTRA_LIFE_SCORE", {
             get: function () {
                 return 10000;
@@ -163,32 +187,63 @@ var pacman;
         });
         Object.defineProperty(PacmanGame.prototype, "PENALTY_BOX_EXIT_X", {
             get: function () {
-                return (this.getWidth() - this.SPRITE_SIZE) / 2;
+                return (this.getWidth() - PacmanGame.SPRITE_SIZE) / 2;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(PacmanGame.prototype, "PENALTY_BOX_EXIT_Y", {
             get: function () {
-                return 12 * this.TILE_SIZE - this.TILE_SIZE / 2;
+                return 12 * PacmanGame.TILE_SIZE - PacmanGame.TILE_SIZE / 2;
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(PacmanGame.prototype, "SPRITE_SIZE", {
+        Object.defineProperty(PacmanGame, "SCORE_DISPLAY_LENGTH", {
+            /**
+             * Amount of time, in milliseconds, that points earned by Pacman should
+             * be displayed (e.g. from eating a ghost or a fruit).
+             */
+            get: function () {
+                return 750;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PacmanGame, "SPRITE_SIZE", {
             get: function () {
                 return 16;
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(PacmanGame.prototype, "TILE_SIZE", {
+        Object.defineProperty(PacmanGame, "TILE_SIZE", {
             get: function () {
                 return 8;
             },
             enumerable: true,
             configurable: true
         });
+        PacmanGame.prototype.ghostEaten = function (ghost) {
+            switch (this._eatenGhostPointsIndex) {
+                case 0:
+                    this._eatenGhostPointsIndex = 1;
+                    break;
+                case 1:
+                    this._eatenGhostPointsIndex = 3;
+                    break;
+                case 3:
+                    this._eatenGhostPointsIndex = 6;
+                    break;
+                default: // Should never happen.
+                case 6:
+                    this._eatenGhostPointsIndex = 8;
+                    break;
+            }
+            this.increaseScore(this._extraPointsArray[this._eatenGhostPointsIndex]);
+            this.audio.playSound(pacman.Sounds.EATING_GHOST);
+            return this._eatenGhostPointsIndex;
+        };
         PacmanGame.prototype.increaseLives = function (amount) {
             return this._lives += amount;
         };
@@ -201,10 +256,21 @@ var pacman;
             }
         };
         PacmanGame.prototype.loadNextLevel = function () {
-            // TODO
+            this.setLoopedSound(null);
+            this._level++;
+            //this.fruit = null;
+            this._fruitScoreIndex = -1;
+            this._fruitScoreEndTime = -1;
+            var state = this.state;
+            state.reset();
         };
         PacmanGame.prototype.makeGhostsBlue = function () {
-            // TODO
+            this._eatenGhostPointsIndex = 0;
+            this._ghosts.forEach(function (ghost) {
+                ghost.possiblyTurnBlue();
+            });
+            // Don't just change to "blue" sound as "eyes" sound trumps "blue".
+            this.checkLoopedSound();
         };
         /**
          * Paints the "points earned," for example, when PacMan eats a ghost or
@@ -275,6 +341,11 @@ var pacman;
             enumerable: true,
             configurable: true
         });
+        PacmanGame.prototype.toggleGodMode = function () {
+            this._godMode = !this._godMode;
+            this.setStatusMessage('God mode ' + (this._godMode ? 'enabled' : 'disabled'));
+            return this._godMode;
+        };
         PacmanGame.prototype.startGame = function (level) {
             this._lives = 3;
             this._score = 0;

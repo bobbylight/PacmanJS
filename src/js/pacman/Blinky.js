@@ -16,7 +16,7 @@ var pacman;
          * Constructor.
          */
         function Blinky(game) {
-            _super.call(this, game, 0 * game.SPRITE_SIZE, 0); // Not initially in the penalty box
+            _super.call(this, game, 0 * pacman.PacmanGame.SPRITE_SIZE, 0); // Not initially in the penalty box
         }
         /**
          * Resets the ghost's internal state so that:

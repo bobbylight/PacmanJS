@@ -17,6 +17,7 @@ declare module pacman {
         column: number;
         getFrame(): number;
         getFrameCount(): number;
+        private intersectBounds;
         moveAmount: number;
         TILE_SIZE: number;
         width: number;
@@ -35,6 +36,13 @@ declare module pacman {
         goUpIfPossible(maze: Maze, moveAmount: number): boolean;
         incX(amount: number): void;
         incY(amount: number): void;
+        /**
+         * Returns whether this sprite intersects another.
+         *
+         * @param sprite2 The other sprite.
+         * @return Whether these two sprites intersect.
+         */
+        intersects(sprite2: _BaseSprite): boolean;
         reset(): void;
         SCREEN_WIDTH: number;
         setLocation(x: number, y: number): void;

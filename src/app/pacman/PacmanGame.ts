@@ -15,6 +15,7 @@ module pacman {
     private _chompSound: number;
     pacman: Pacman;
     private _ghosts: Ghost[];
+    private _extraPointsArray: number[];
 
     /**
   	 * Whether the player has earned an extra life (from achieving a
@@ -36,6 +37,25 @@ module pacman {
   	 */
   	private _resettingGhostStates: boolean;
 
+    /**
+  	 * The index into the "points" image containing the image for an
+  	 * amount of points being earned, e.g. for eating a ghost.
+  	 */
+  	private _eatenGhostPointsIndex: number;
+
+    /**
+  	 * The playtime (in nanoseconds) after which an eaten fruit's score
+  	 * should stop displaying.
+  	 */
+  	private _fruitScoreEndTime: number;
+
+  	/**
+  	 * The index into scores of the current fruit.
+  	 */
+  	private _fruitScoreIndex: number;
+
+    private _godMode: boolean;
+
     constructor(args?: any) {
       super(args);
       this._highScore = 0;
@@ -43,11 +63,33 @@ module pacman {
       this._ghosts = this._createGhostArray();
       this._chompSound = 0;
       this._ghostUpdateStrategy = GhostUpdateStrategy.UPDATE_ALL;
+
+      this._extraPointsArray = [ 100, 200, 300, 400, 500, 700, 800,
+                                1000, 1600, 2000, 3000, 5000 ];
     }
 
     addFruit() {
       // TODO
     }
+
+    checkForCollisions(): Ghost {
+
+  		for (let i: number = 0; i < this._ghosts.length; i++) {
+  			if (this.pacman.intersects(this._ghosts[i])) {
+  				return this._ghosts[i];
+  			}
+  		}
+
+  		// if (this._fruit && this._fruitScoreIndex === -1 &&
+      //     this.pacman.intersects(this._fruit)) {
+  		// 	this.increaseScore(this._extraPointsArray[fruit.getPointsIndex()]);
+  		// 	this.audio.playSound(Sounds.SOUND_EATING_FRUIT, false);
+  		// 	this._fruitScoreIndex = this._fruit.getPointsIndex();
+  		// 	this._fruitScoreEndTime = game.playTime + PacmanGame.SCORE_DISPLAY_LENGTH;
+  		// }
+
+  		return null;
+  	}
 
     /**
   	 * Ensures the background sound effect being played is appropriate for
@@ -184,6 +226,10 @@ module pacman {
       }
     }
 
+    get godMode(): boolean {
+      return this._godMode;
+    }
+
     static get EXTRA_LIFE_SCORE(): number {
       return 10000;
     }
@@ -197,20 +243,51 @@ module pacman {
     }
 
     get PENALTY_BOX_EXIT_X(): number {
-      return (this.getWidth() - this.SPRITE_SIZE) / 2;
+      return (this.getWidth() - PacmanGame.SPRITE_SIZE) / 2;
     }
 
   	get PENALTY_BOX_EXIT_Y(): number {
-      return 12 * this.TILE_SIZE - this.TILE_SIZE / 2;
+      return 12 * PacmanGame.TILE_SIZE - PacmanGame.TILE_SIZE / 2;
     }
 
-    get SPRITE_SIZE(): number {
+    /**
+  	 * Amount of time, in milliseconds, that points earned by Pacman should
+  	 * be displayed (e.g. from eating a ghost or a fruit).
+  	 */
+    static get SCORE_DISPLAY_LENGTH(): number {
+      return 750;
+    }
+
+    static get SPRITE_SIZE(): number {
       return 16;
     }
 
-    get TILE_SIZE(): number {
+    static get TILE_SIZE(): number {
       return 8;
     }
+
+    ghostEaten(ghost: Ghost): number {
+
+  		switch (this._eatenGhostPointsIndex) {
+  			case 0: // 1st ghost eaten
+  				this._eatenGhostPointsIndex = 1;
+  				break;
+  			case 1: // 2nd ghost
+  				this._eatenGhostPointsIndex = 3;
+  				break;
+  			case 3: // 3rd ghost
+  				this._eatenGhostPointsIndex = 6;
+  				break;
+  			default: // Should never happen.
+  			case 6: // 4th ghost
+  				this._eatenGhostPointsIndex = 8;
+  				break;
+  		}
+  		this.increaseScore(this._extraPointsArray[this._eatenGhostPointsIndex]);
+
+  		this.audio.playSound(Sounds.EATING_GHOST);
+  		return this._eatenGhostPointsIndex;
+  	}
 
     increaseLives(amount: number): number {
       return this._lives += amount;
@@ -226,11 +303,22 @@ module pacman {
     }
 
     loadNextLevel() {
-      // TODO
+      this.setLoopedSound(null);
+  		this._level++;
+  		//this.fruit = null;
+  		this._fruitScoreIndex = -1;
+  		this._fruitScoreEndTime = -1;
+      let state: MazeState = <MazeState>this.state;
+      state.reset();
     }
 
     makeGhostsBlue() {
-      // TODO
+      this._eatenGhostPointsIndex = 0;
+      this._ghosts.forEach(function(ghost) {
+        ghost.possiblyTurnBlue();
+      });
+      // Don't just change to "blue" sound as "eyes" sound trumps "blue".
+  		this.checkLoopedSound();
     }
 
     /**
@@ -306,6 +394,12 @@ module pacman {
   	set ghostUpdateStrategy(strategy: GhostUpdateStrategy) {
   		this._ghostUpdateStrategy = strategy;
   	}
+
+    toggleGodMode(): boolean {
+      this._godMode = !this._godMode;
+      this.setStatusMessage('God mode ' + (this._godMode ? 'enabled' : 'disabled'));
+      return this._godMode;
+    }
 
     startGame(level: number) {
 

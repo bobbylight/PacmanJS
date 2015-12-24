@@ -19,9 +19,9 @@ var pacman;
             _super.call(this);
             this._mazeFile = mazeFile;
         }
-        Object.defineProperty(MazeState.prototype, "DYING_FRAME_DELAY_MILLIS", {
+        Object.defineProperty(MazeState, "DYING_FRAME_DELAY_MILLIS", {
             get: function () {
-                return 7500;
+                return 75;
             },
             enumerable: true,
             configurable: true
@@ -152,6 +152,15 @@ var pacman;
                 game.drawString(x, (game.getHeight() - 18) / 2, paused);
             }
         };
+        MazeState.prototype.reset = function () {
+            this._maze.reset();
+            game.resetPlayTime;
+            game.pacman.reset();
+            game.resetGhosts(); // Do AFTER resetting playtime!
+            this._substate = Substate.READY;
+            this._substateStartTime = 0; // Play time was just reset
+            this._lastSpriteFrameTime = 0;
+        };
         MazeState.prototype._handleInput = function (delta, time) {
             this.handleDefaultKeys();
             var input = game.inputManager;
@@ -161,8 +170,8 @@ var pacman;
                         game.pacman.handleInput(this._maze);
                         break;
                     case Substate.GAME_OVER:
-                        if (input.enter()) {
-                            game.setState(new pacman.MazeState(this._mazeFile));
+                        if (input.enter(true)) {
+                            game.setState(new pacman.TitleState(game));
                         }
                         break;
                 }
@@ -185,7 +194,7 @@ var pacman;
                         if (this._substate !== Substate.DYING) {
                             game.startPacmanDying();
                             this._substate = Substate.DYING;
-                            this._nextDyingFrameTime = time + this.DYING_FRAME_DELAY_MILLIS;
+                            this._nextDyingFrameTime = time + MazeState.DYING_FRAME_DELAY_MILLIS;
                             this._lastMazeScreenKeypressTime = time;
                         }
                     }
@@ -229,7 +238,7 @@ var pacman;
                             }
                         }
                         else {
-                            this._nextDyingFrameTime = time + this.DYING_FRAME_DELAY_MILLIS;
+                            this._nextDyingFrameTime = time + MazeState.DYING_FRAME_DELAY_MILLIS;
                         }
                     }
                     break;
@@ -254,7 +263,27 @@ var pacman;
             // Update Pacman's, ghosts', and possibly fruit's positions
             game.updateSpritePositions(this._maze, time);
             // If Pacman hit a ghost, decide what to do
-            // TODO
+            var ghostHit = game.checkForCollisions();
+            if (ghostHit) {
+                switch (ghostHit.motionState) {
+                    case pacman_1.MotionState.BLUE:
+                        this._nextUpdateTime = time + pacman_1.PacmanGame.SCORE_DISPLAY_LENGTH;
+                        ghostHit.motionState = pacman_1.MotionState.EYES;
+                        this._updateScoreIndex = game.ghostEaten(ghostHit);
+                        break;
+                    case pacman_1.MotionState.EYES:
+                    case pacman_1.MotionState.EYES_ENTERING_BOX:
+                        // Do nothing
+                        break;
+                    default:
+                        if (!game.godMode) {
+                            game.startPacmanDying();
+                            this._substate = Substate.DYING;
+                            this._nextDyingFrameTime = game.playTime + MazeState.DYING_FRAME_DELAY_MILLIS;
+                        }
+                        break;
+                }
+            }
         };
         return MazeState;
     })(pacman_1._BaseState);

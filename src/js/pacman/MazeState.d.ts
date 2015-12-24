@@ -11,12 +11,13 @@ declare module pacman {
         private _lastMazeScreenKeypressTime;
         private _lastSpriteFrameTime;
         constructor(mazeFile: string);
-        private DYING_FRAME_DELAY_MILLIS;
+        private static DYING_FRAME_DELAY_MILLIS;
         private _readyDelayMillis;
         init(): void;
         _paintExtraLives(ctx: CanvasRenderingContext2D): void;
         _paintPossibleFruits(ctx: CanvasRenderingContext2D): void;
         render(ctx: CanvasRenderingContext2D): void;
+        reset(): void;
         private _handleInput(delta, time);
         update(delta: number): void;
         private _updateInGameImpl(time);

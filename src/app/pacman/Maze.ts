@@ -9,6 +9,7 @@ module pacman {
     private _mazeCanvas: HTMLCanvasElement;
     private _eatenDotCount: number;
     private _dotCount: number;
+    private _origMazeInfo: number[][];
 
     closed: MazeNode[] = [];
     open: MazeNode[] = [];
@@ -130,9 +131,6 @@ module pacman {
       while (this.open.length > 0) {
 
         let node: MazeNode = this.open.splice(0, 1)[0];
-        if (!node) {
-          debugger;
-        }
         if (node.equals(this.goalNode)) {
           this._data[node.row][node.col] &= 0xff; // Won't be in open or closed lists
           return Maze._constructPath(node);
@@ -326,63 +324,78 @@ module pacman {
        game.drawString(67, 0, 'HIGH SCORE', ctx);
     }
 
-    reset(mazeInfo: any) {
+    /**
+     * Resets this maze.
+     * @param mazeInfo The raw data for this maze.  If this is undefined, it
+     *        is assumed that we are simply resetting to load a new level.
+     */
+    reset(mazeInfo?: number[][]) {
        'use strict';
 
-       let TILE_SIZE = 8;
+       let TILE_SIZE: number = 8;
+       let firstTime: boolean = this._data != null;
 
-       // Load map data
-       let self = this;
+       // Load (or reset) map data
+       if (mazeInfo) {
+         this._origMazeInfo = mazeInfo;
+       }
+       else {
+         mazeInfo = this._origMazeInfo;
+       }
+       let self: Maze = this;
        mazeInfo.forEach(function(rowData: number[]) {
           self._data.push(rowData);
        });
 
-       let mapTiles = game.assets.get('mapTiles');
+       if (firstTime) {
 
-       // Create an image for the maze
-       let mazeY = 2 * TILE_SIZE;
-       this._mazeCanvas = gtp.ImageUtils.createCanvas(game.getWidth(), game.getHeight());
-       let mazeCtx = this._mazeCanvas.getContext('2d');
-       let walkableCount = 0;
-       this._eatenDotCount = 0;
-       this._dotCount = 0;
+         let mapTiles = game.assets.get('mapTiles');
 
-       mazeCtx.fillStyle = '#000000';
-       mazeCtx.fillRect(0, 0, this._mazeCanvas.width, this._mazeCanvas.height);
+         // Create an image for the maze
+         let mazeY = 2 * TILE_SIZE;
+         this._mazeCanvas = gtp.ImageUtils.createCanvas(game.getWidth(), game.getHeight());
+         let mazeCtx = this._mazeCanvas.getContext('2d');
+         let walkableCount = 0;
+         this._eatenDotCount = 0;
+         this._dotCount = 0;
 
-       this._renderScoresHeaders(mazeCtx);
+         mazeCtx.fillStyle = '#000000';
+         mazeCtx.fillRect(0, 0, this._mazeCanvas.width, this._mazeCanvas.height);
 
-       // Render each tile from the map data
-       for (let row = 0; row < this._data.length; row++) {
+         this._renderScoresHeaders(mazeCtx);
 
-          let rowData = this._data[row];
+         // Render each tile from the map data
+         for (let row = 0; row < this._data.length; row++) {
 
-          for (let col = 0; col < rowData.length; col++) {
+            let rowData = this._data[row];
 
-             let tile = rowData[col];
-             if (tile === 0 || tile >= 0xf0) {
-                walkableCount++;
-             }
+            for (let col = 0; col < rowData.length; col++) {
 
-             switch (tile) {
+               let tile = rowData[col];
+               if (tile === 0 || tile >= 0xf0) {
+                  walkableCount++;
+               }
 
-                case Maze.TILE_DOT_SMALL:
-                case Maze.TILE_DOT_BIG:
-                   this._dotCount++;
-                   break;
+               switch (tile) {
 
-                default:
-                   tile--;
-                   let dx = col * TILE_SIZE;
-                   let dy = mazeY + row * TILE_SIZE;
-                   mapTiles.drawByIndex(mazeCtx, dx, dy, tile);
-                   break;
-             }
-          }
-       }
+                  case Maze.TILE_DOT_SMALL:
+                  case Maze.TILE_DOT_BIG:
+                     this._dotCount++;
+                     break;
 
-      if (!this._nodeCache) {
-         this._nodeCache = new gtp.Pool(MazeNode, walkableCount);
+                  default:
+                     tile--;
+                     let dx = col * TILE_SIZE;
+                     let dy = mazeY + row * TILE_SIZE;
+                     mapTiles.drawByIndex(mazeCtx, dx, dy, tile);
+                     break;
+               }
+            }
+         }
+
+        if (!this._nodeCache) {
+           this._nodeCache = new gtp.Pool(MazeNode, walkableCount);
+        }
       }
     }
   }

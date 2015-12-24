@@ -41,14 +41,14 @@ var pacman;
         /**
          * Returns whether Pacman ins completely dead, or still doing his dying
          * animation.
-         * @return {boolean} Whether Pacman is completely dead.
+         * @return {boolean} Whether Pacman is still in his dying animation.
          */
         Pacman.prototype.incDying = function () {
             this._dyingFrame = (this._dyingFrame + 1) % 12;
             return this._dyingFrame !== 0;
         };
         Pacman.prototype.render = function (ctx) {
-            var SPRITE_SIZE = game.SPRITE_SIZE;
+            var SPRITE_SIZE = pacman.PacmanGame.SPRITE_SIZE;
             var x = this.bounds.x;
             var y = this.bounds.y;
             var srcX, srcY;

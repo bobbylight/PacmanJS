@@ -107,9 +107,6 @@ var pacman;
             this._data[fromRow][fromCol] |= 0x100;
             while (this.open.length > 0) {
                 var node = this.open.splice(0, 1)[0];
-                if (!node) {
-                    debugger;
-                }
                 if (node.equals(this.goalNode)) {
                     this._data[node.row][node.col] &= 0xff; // Won't be in open or closed lists
                     return Maze._constructPath(node);
@@ -291,53 +288,68 @@ var pacman;
             game.drawString(16, 0, '1UP', ctx);
             game.drawString(67, 0, 'HIGH SCORE', ctx);
         };
+        /**
+         * Resets this maze.
+         * @param mazeInfo The raw data for this maze.  If this is undefined, it
+         *        is assumed that we are simply resetting to load a new level.
+         */
         Maze.prototype.reset = function (mazeInfo) {
             'use strict';
             var TILE_SIZE = 8;
-            // Load map data
+            var firstTime = this._data != null;
+            // Load (or reset) map data
+            if (mazeInfo) {
+                this._origMazeInfo = mazeInfo;
+            }
+            else {
+                mazeInfo = this._origMazeInfo;
+            }
             var self = this;
             mazeInfo.forEach(function (rowData) {
                 self._data.push(rowData);
             });
-            var mapTiles = game.assets.get('mapTiles');
-            // Create an image for the maze
-            var mazeY = 2 * TILE_SIZE;
-            this._mazeCanvas = gtp.ImageUtils.createCanvas(game.getWidth(), game.getHeight());
-            var mazeCtx = this._mazeCanvas.getContext('2d');
-            var walkableCount = 0;
-            this._eatenDotCount = 0;
-            this._dotCount = 0;
-            mazeCtx.fillStyle = '#000000';
-            mazeCtx.fillRect(0, 0, this._mazeCanvas.width, this._mazeCanvas.height);
-            this._renderScoresHeaders(mazeCtx);
-            // Render each tile from the map data
-            for (var row = 0; row < this._data.length; row++) {
-                var rowData = this._data[row];
-                for (var col = 0; col < rowData.length; col++) {
-                    var tile = rowData[col];
-                    if (tile === 0 || tile >= 0xf0) {
-                        walkableCount++;
-                    }
-                    switch (tile) {
-                        case Maze.TILE_DOT_SMALL:
-                        case Maze.TILE_DOT_BIG:
-                            this._dotCount++;
-                            break;
-                        default:
-                            tile--;
-                            var dx = col * TILE_SIZE;
-                            var dy = mazeY + row * TILE_SIZE;
-                            mapTiles.drawByIndex(mazeCtx, dx, dy, tile);
-                            break;
+            if (firstTime) {
+                var mapTiles = game.assets.get('mapTiles');
+                // Create an image for the maze
+                var mazeY = 2 * TILE_SIZE;
+                this._mazeCanvas = gtp.ImageUtils.createCanvas(game.getWidth(), game.getHeight());
+                var mazeCtx = this._mazeCanvas.getContext('2d');
+                var walkableCount = 0;
+                this._eatenDotCount = 0;
+                this._dotCount = 0;
+                mazeCtx.fillStyle = '#000000';
+                mazeCtx.fillRect(0, 0, this._mazeCanvas.width, this._mazeCanvas.height);
+                this._renderScoresHeaders(mazeCtx);
+                // Render each tile from the map data
+                for (var row = 0; row < this._data.length; row++) {
+                    var rowData = this._data[row];
+                    for (var col = 0; col < rowData.length; col++) {
+                        var tile = rowData[col];
+                        if (tile === 0 || tile >= 0xf0) {
+                            walkableCount++;
+                        }
+                        switch (tile) {
+                            case Maze.TILE_DOT_SMALL:
+                            case Maze.TILE_DOT_BIG:
+                                this._dotCount++;
+                                break;
+                            default:
+                                tile--;
+                                var dx = col * TILE_SIZE;
+                                var dy = mazeY + row * TILE_SIZE;
+                                mapTiles.drawByIndex(mazeCtx, dx, dy, tile);
+                                break;
+                        }
                     }
                 }
-            }
-            if (!this._nodeCache) {
-                this._nodeCache = new gtp.Pool(pacman.MazeNode, walkableCount);
+                if (!this._nodeCache) {
+                    this._nodeCache = new gtp.Pool(pacman.MazeNode, walkableCount);
+                }
             }
         };
         return Maze;
     })();
     pacman.Maze = Maze;
 })(pacman || (pacman = {}));
+
 //# sourceMappingURL=Maze.js.map

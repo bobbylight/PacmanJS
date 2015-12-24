@@ -11,7 +11,7 @@ module pacman {
     	 * Constructor.
     	 */
     	constructor(game: PacmanGame) {
-    		super(game, 0 * game.SPRITE_SIZE, 0); // Not initially in the penalty box
+    		super(game, 0 * PacmanGame.SPRITE_SIZE, 0); // Not initially in the penalty box
     	}
 
     	/**
