@@ -41,7 +41,7 @@ var pacman;
             this._updateScoreIndex = -1;
             // Prevents the user's "Enter" press to start the game from being
             // picked up by our handleInput().
-            this._lastMazeScreenKeypressTime = game.playTime + this.inputRepeatMillis;
+            this._lastMazeScreenKeypressTime = game.playTime + MazeState.INPUT_REPEAT_MILLIS;
             this._substate = Substate.READY;
             this._firstTimeThrough = true;
             this._substateStartTime = 0;
@@ -75,25 +75,25 @@ var pacman;
             switch (game.level) {
                 default:
                 case 7:
-                    game.drawSprite(x - 112, y, 13 * 16, 3 * 16);
+                    game.drawSprite(x - 56, y, 13 * 16, 3 * 16);
                 // Fall through
                 case 6:
-                    game.drawSprite(x - 96, y, 13 * 16, 6 * 16);
+                    game.drawSprite(x - 48, y, 13 * 16, 6 * 16);
                 // Fall through
                 case 5:
-                    game.drawSprite(x - 160, y, 12 * 16, 6 * 16);
+                    game.drawSprite(x - 80, y, 12 * 16, 6 * 16);
                 // Fall through.
                 case 4:
-                    game.drawSprite(x - 128, y, 13 * 16, 2 * 16);
+                    game.drawSprite(x - 64, y, 13 * 16, 2 * 16);
                 // Fall through.
                 case 3:
-                    game.drawSprite(x - 96, y, 13 * 16, 5 * 16);
+                    game.drawSprite(x - 48, y, 13 * 16, 5 * 16);
                 // Fall through.
                 case 2:
-                    game.drawSprite(x - 64, y, 12 * 16, 5 * 16);
+                    game.drawSprite(x - 32, y, 12 * 16, 5 * 16);
                 // Fall through.
                 case 1:
-                    game.drawSprite(x - 32, y, 13 * 16, 4 * 16);
+                    game.drawSprite(x - 16, y, 13 * 16, 4 * 16);
                 // Fall through.
                 case 0:
                     game.drawSprite(x, y, 12 * 16, 4 * 16);
@@ -160,10 +160,20 @@ var pacman;
             this._substate = Substate.READY;
             this._substateStartTime = 0; // Play time was just reset
             this._lastSpriteFrameTime = 0;
+            // Prevents the user's "Enter" press to start the game from being
+            // picked up by our handleInput().
+            this._lastMazeScreenKeypressTime = game.playTime + MazeState.INPUT_REPEAT_MILLIS;
         };
         MazeState.prototype._handleInput = function (delta, time) {
-            this.handleDefaultKeys();
+            this.handleDefaultKeys(time);
             var input = game.inputManager;
+            // Enter -> Pause.  Don't check for pausing on "Game Over" screen as
+            // that will carry over into the next game!
+            if (this._substate !== Substate.GAME_OVER && input.enter(true)) {
+                game.paused = !game.paused;
+                this._lastMazeScreenKeypressTime = time;
+                return;
+            }
             if (!game.paused) {
                 switch (this._substate) {
                     case Substate.IN_GAME:
@@ -177,13 +187,8 @@ var pacman;
                 }
             }
             if (time >= this._lastMazeScreenKeypressTime + MazeState.INPUT_REPEAT_MILLIS) {
-                // Enter -> Pause.  Don't check for pausing on "Game Over" screen as
-                // that will carry over into the next game!
-                if (input.enter() && this._substate !== Substate.GAME_OVER) {
-                    game.paused = !game.paused;
-                    this._lastMazeScreenKeypressTime = time;
-                }
-                else if (!game.paused && this._substate === Substate.IN_GAME &&
+                // Hidden options (Z + keypress)
+                if (!game.paused && this._substate === Substate.IN_GAME &&
                     input.isKeyDown(gtp.Keys.KEY_Z)) {
                     // Z+X => auto-load next level
                     if (input.isKeyDown(gtp.Keys.KEY_X)) {
@@ -200,6 +205,9 @@ var pacman;
                     }
                 }
             }
+            else if (input.isKeyDown(gtp.Keys.KEY_Z)) {
+                console.log('wowza');
+            }
         };
         MazeState.prototype.update = function (delta) {
             _super.prototype.update.call(this, delta);
@@ -215,6 +223,7 @@ var pacman;
                         this._substate = Substate.IN_GAME;
                         this._substateStartTime = time;
                         game.resetPlayTime();
+                        this._lastMazeScreenKeypressTime = game.playTime;
                         game.setLoopedSound(pacman.Sounds.SIREN);
                         this._firstTimeThrough = false;
                     }
@@ -230,7 +239,9 @@ var pacman;
                             }
                             else {
                                 game.resetPlayTime();
+                                this._lastMazeScreenKeypressTime = game.playTime;
                                 game.pacman.reset();
+                                this._lastMazeScreenKeypressTime = game.playTime;
                                 game.resetGhosts(); // Do AFTER resetting play time!
                                 this._substate = Substate.READY;
                                 this._substateStartTime = 0; // Play time was just reset

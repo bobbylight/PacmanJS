@@ -10,6 +10,9 @@ var pacman;
             this._data = [];
             this.reset(mazeInfo);
         }
+        Maze._cloneObjectOfPrimitives = function (obj) {
+            return JSON.parse(JSON.stringify(obj));
+        };
         /**
          * Checks whether a dot is in the maze at the specified location.  If
          * it is, it is removed.  If a dot is removed, the points the player should
@@ -167,8 +170,8 @@ var pacman;
                 }
             }
             // No path found - should never happen
-            throw 'No path found from (' + fromRow + ', ', fromCol + ') to (' +
-                toRow + ', ' + toCol + ')';
+            throw new Error('No path found from (' + fromRow + ', ' + fromCol +
+                ') to (' + toRow + ', ' + toCol + ')');
         };
         /**
          * Returns the "previous" column, taking wrapping (from the tunnels) into
@@ -295,19 +298,15 @@ var pacman;
          */
         Maze.prototype.reset = function (mazeInfo) {
             'use strict';
-            var TILE_SIZE = 8;
+            var TILE_SIZE = pacman.PacmanGame.TILE_SIZE;
             var firstTime = mazeInfo != null;
             // Load (or reset) map data
             if (firstTime) {
-                this._origMazeInfo = mazeInfo;
+                // First time through, we cache a pristine view of our maze data
+                this._origMazeInfo = Maze._cloneObjectOfPrimitives(mazeInfo);
             }
-            else {
-                mazeInfo = this._origMazeInfo;
-            }
-            var self = this;
-            mazeInfo.forEach(function (rowData) {
-                self._data.push(rowData);
-            });
+            // Next, we create a working copy of our maze data, since we mutate it
+            this._data = Maze._cloneObjectOfPrimitives(this._origMazeInfo);
             if (firstTime) {
                 var mapTiles = game.assets.get('mapTiles');
                 // Create an image for the maze

@@ -20,9 +20,13 @@ module pacman {
      */
     private _nodeCache: gtp.Pool<MazeNode>;
 
-    constructor(mazeInfo: any) {
+    constructor(mazeInfo: number[][]) {
       this._data = [];
       this.reset(mazeInfo);
+    }
+
+    private static _cloneObjectOfPrimitives(obj: any): any {
+      return JSON.parse(JSON.stringify(obj));
     }
 
     /**
@@ -200,8 +204,8 @@ module pacman {
       }
 
       // No path found - should never happen
-      throw 'No path found from (' + fromRow + ', ', fromCol + ') to (' +
-          toRow + ', ' + toCol + ')';
+      throw new Error('No path found from (' + fromRow + ', ' + fromCol +
+          ') to (' + toRow + ', ' + toCol + ')');
     }
 
     /**
@@ -332,20 +336,16 @@ module pacman {
     reset(mazeInfo?: number[][]) {
        'use strict';
 
-       let TILE_SIZE: number = 8;
+       let TILE_SIZE: number = PacmanGame.TILE_SIZE;
        let firstTime: boolean = mazeInfo != null;
 
        // Load (or reset) map data
        if (firstTime) {
-         this._origMazeInfo = mazeInfo;
+         // First time through, we cache a pristine view of our maze data
+         this._origMazeInfo = Maze._cloneObjectOfPrimitives(mazeInfo);
        }
-       else { // We're being reset, to load another level
-         mazeInfo = this._origMazeInfo;
-       }
-       let self: Maze = this;
-       mazeInfo.forEach(function(rowData: number[]) {
-          self._data.push(rowData);
-       });
+       // Next, we create a working copy of our maze data, since we mutate it
+       this._data = Maze._cloneObjectOfPrimitives(this._origMazeInfo);
 
        if (firstTime) {
 

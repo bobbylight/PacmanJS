@@ -12,7 +12,8 @@ declare module pacman {
          * A cache of nodes to speed up search operations.
          */
         private _nodeCache;
-        constructor(mazeInfo: any);
+        constructor(mazeInfo: number[][]);
+        private static _cloneObjectOfPrimitives(obj);
         /**
          * Checks whether a dot is in the maze at the specified location.  If
          * it is, it is removed.  If a dot is removed, the points the player should

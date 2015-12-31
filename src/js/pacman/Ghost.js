@@ -182,7 +182,7 @@ var pacman;
                             }
                             break;
                         default:
-                            throw 'Unexpected state: ' + this._motionState;
+                            throw new Error('Unexpected state: ' + this._motionState);
                     }
                     this._motionState = motionState;
                 }

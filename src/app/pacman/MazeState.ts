@@ -10,7 +10,7 @@ module pacman {
 
   export class MazeState extends _BaseState {
 
-    private _mazeFile: string;
+    private _mazeFile: number[][];
     private _maze: Maze;
     private _firstTimeThrough: boolean;
     private _updateScoreIndex: number;
@@ -21,7 +21,7 @@ module pacman {
     private _lastMazeScreenKeypressTime: number;
     private _lastSpriteFrameTime: number;
 
-    constructor(mazeFile: string) {
+    constructor(mazeFile: number[][]) {
       super();
       this._mazeFile = mazeFile;
     }
@@ -45,7 +45,7 @@ module pacman {
 
       // Prevents the user's "Enter" press to start the game from being
   		// picked up by our handleInput().
-  		this._lastMazeScreenKeypressTime = game.playTime + this.inputRepeatMillis;
+  		this._lastMazeScreenKeypressTime = game.playTime + MazeState.INPUT_REPEAT_MILLIS;
 
   		this._substate = Substate.READY;
   		this._firstTimeThrough = true;
@@ -87,25 +87,25 @@ module pacman {
       switch (game.level) {
          default:
          case 7: // Key
-            game.drawSprite(x-112,y, 13*16,3*16);
+            game.drawSprite(x-56,y, 13*16,3*16);
             // Fall through
          case 6: // Space Invaders ship
-            game.drawSprite(x-96,y, 13*16,6*16);
+            game.drawSprite(x-48,y, 13*16,6*16);
             // Fall through
          case 5: // Green thing (grapes?)
-            game.drawSprite(x-160,y, 12*16,6*16);
+            game.drawSprite(x-80,y, 12*16,6*16);
             // Fall through.
          case 4: // Apple
-            game.drawSprite(x-128,y, 13*16,2*16);
+            game.drawSprite(x-64,y, 13*16,2*16);
             // Fall through.
          case 3: // Yellow bell
-            game.drawSprite(x-96,y, 13*16,5*16);
+            game.drawSprite(x-48,y, 13*16,5*16);
             // Fall through.
          case 2: // Peach
-            game.drawSprite(x-64,y, 12*16,5*16);
+            game.drawSprite(x-32,y, 12*16,5*16);
             // Fall through.
          case 1: // Strawberry
-            game.drawSprite(x-32,y, 13*16,4*16);
+            game.drawSprite(x-16,y, 13*16,4*16);
             // Fall through.
          case 0: // Cherry
             game.drawSprite(x,y, 12*16,4*16);
@@ -183,12 +183,24 @@ module pacman {
   		this._substate = Substate.READY;
   		this._substateStartTime = 0; // Play time was just reset
   		this._lastSpriteFrameTime = 0;
+
+      // Prevents the user's "Enter" press to start the game from being
+  		// picked up by our handleInput().
+  		this._lastMazeScreenKeypressTime = game.playTime + MazeState.INPUT_REPEAT_MILLIS;
   	}
 
     private _handleInput(delta: number, time: number) {
 
-      this.handleDefaultKeys();
+      this.handleDefaultKeys(time);
       let input: gtp.InputManager = game.inputManager;
+
+      // Enter -> Pause.  Don't check for pausing on "Game Over" screen as
+      // that will carry over into the next game!
+      if (this._substate !== Substate.GAME_OVER && input.enter(true)) {
+        game.paused = !game.paused;
+        this._lastMazeScreenKeypressTime = time;
+        return;
+      }
 
       if (!game.paused) {
 
@@ -209,15 +221,8 @@ module pacman {
 
       if (time >= this._lastMazeScreenKeypressTime + MazeState.INPUT_REPEAT_MILLIS) {
 
-        // Enter -> Pause.  Don't check for pausing on "Game Over" screen as
-        // that will carry over into the next game!
-        if (input.enter() && this._substate !== Substate.GAME_OVER) {
-          game.paused = !game.paused;
-          this._lastMazeScreenKeypressTime = time;
-        }
-
         // Hidden options (Z + keypress)
-        else if (!game.paused && this._substate === Substate.IN_GAME &&
+        if (!game.paused && this._substate === Substate.IN_GAME &&
             input.isKeyDown(gtp.Keys.KEY_Z)) {
 
           // Z+X => auto-load next level
@@ -238,6 +243,9 @@ module pacman {
         }
 
       }
+      else if (input.isKeyDown(gtp.Keys.KEY_Z)) {
+        console.log('wowza');
+      }
     }
 
     update(delta: number) {
@@ -257,6 +265,7 @@ module pacman {
             this._substate = Substate.IN_GAME;
             this._substateStartTime = time;
             game.resetPlayTime();
+            this._lastMazeScreenKeypressTime = game.playTime;
             game.setLoopedSound(pacman.Sounds.SIREN);
             this._firstTimeThrough = false;
           }
@@ -274,7 +283,9 @@ module pacman {
               }
               else {
                 game.resetPlayTime();
+                this._lastMazeScreenKeypressTime = game.playTime;
                 game.pacman.reset();
+                this._lastMazeScreenKeypressTime = game.playTime;
                 game.resetGhosts(); // Do AFTER resetting play time!
                 this._substate = Substate.READY;
                 this._substateStartTime = 0; // Play time was just reset
