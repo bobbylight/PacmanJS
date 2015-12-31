@@ -24,9 +24,9 @@ npm install
 bower install
 ```
 
-The source code lives in `src/`.  You can build both the development and
+The source code lives in `src/app`.  You can build both the development and
 production (minified) versions of the game by running `gulp`.  The development
-version will be built in `src/` and the production version in `dist/`.
+version will be built in `src/js` and the production version in `dist/`.
 
 ## What's unimplemented/buggy
 
