@@ -72,6 +72,7 @@ declare module pacman {
         drawSmallDot(x: number, y: number): void;
         drawSprite(dx: number, dy: number, sx: number, sy: number): void;
         drawString(x: number, y: number, text: string | number, ctx?: CanvasRenderingContext2D): void;
+        getGhost(index: number): Ghost;
         godMode: boolean;
         static EXTRA_LIFE_SCORE: number;
         level: number;

@@ -1,6 +1,11 @@
 module pacman {
   'use strict';
 
+  /**
+	 * The default high score displayed in the game.
+	 */
+	let DEFAULT_HIGH_SCORE: number = 50000;
+
   export enum GhostUpdateStrategy {
     UPDATE_ALL, UPDATE_NONE, UPDATE_ONE
   }
@@ -59,7 +64,7 @@ module pacman {
 
     constructor(args?: any) {
       super(args);
-      this._highScore = 0;
+      this._highScore = DEFAULT_HIGH_SCORE;
       this.pacman = new Pacman();
       this._ghosts = this._createGhostArray();
       this._chompSound = 0;
@@ -132,7 +137,7 @@ module pacman {
   		this._resettingGhostStates = true;
   		ghosts.push(new Blinky(this));
       // ghosts.push(new Pinky());
-      // ghosts.push(new Inky());
+      ghosts.push(new Inky(this));
       // ghosts.push(new Clyde());
   		this._resettingGhostStates = false;
   		return ghosts;
@@ -247,6 +252,10 @@ module pacman {
       }
     }
 
+    getGhost(index: number): Ghost {
+      return this._ghosts[index];
+    }
+
     get godMode(): boolean {
       return this._godMode;
     }
@@ -315,7 +324,12 @@ module pacman {
     }
 
     increaseScore(amount: number) {
+
       this._score += amount;
+      if (this._score > this._highScore) {
+        this._highScore = this._score;
+      }
+
       if (!this._earnedExtraLife && this._score >= PacmanGame.EXTRA_LIFE_SCORE) {
         this.audio.playSound(Sounds.EXTRA_LIFE);
         this.increaseLives(1);

@@ -241,7 +241,6 @@ var pacman;
                                 game.resetPlayTime();
                                 this._lastMazeScreenKeypressTime = game.playTime;
                                 game.pacman.reset();
-                                this._lastMazeScreenKeypressTime = game.playTime;
                                 game.resetGhosts(); // Do AFTER resetting play time!
                                 this._substate = Substate.READY;
                                 this._substateStartTime = 0; // Play time was just reset

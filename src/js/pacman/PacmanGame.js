@@ -6,6 +6,10 @@ var __extends = (this && this.__extends) || function (d, b) {
 var pacman;
 (function (pacman) {
     'use strict';
+    /**
+       * The default high score displayed in the game.
+       */
+    var DEFAULT_HIGH_SCORE = 50000;
     (function (GhostUpdateStrategy) {
         GhostUpdateStrategy[GhostUpdateStrategy["UPDATE_ALL"] = 0] = "UPDATE_ALL";
         GhostUpdateStrategy[GhostUpdateStrategy["UPDATE_NONE"] = 1] = "UPDATE_NONE";
@@ -16,7 +20,7 @@ var pacman;
         __extends(PacmanGame, _super);
         function PacmanGame(args) {
             _super.call(this, args);
-            this._highScore = 0;
+            this._highScore = DEFAULT_HIGH_SCORE;
             this.pacman = new pacman.Pacman();
             this._ghosts = this._createGhostArray();
             this._chompSound = 0;
@@ -76,7 +80,7 @@ var pacman;
             this._resettingGhostStates = true;
             ghosts.push(new pacman.Blinky(this));
             // ghosts.push(new Pinky());
-            // ghosts.push(new Inky());
+            ghosts.push(new pacman.Inky(this));
             // ghosts.push(new Clyde());
             this._resettingGhostStates = false;
             return ghosts;
@@ -175,6 +179,9 @@ var pacman;
                 x += 9; //CHAR_WIDTH
             }
         };
+        PacmanGame.prototype.getGhost = function (index) {
+            return this._ghosts[index];
+        };
         Object.defineProperty(PacmanGame.prototype, "godMode", {
             get: function () {
                 return this._godMode;
@@ -267,6 +274,9 @@ var pacman;
         };
         PacmanGame.prototype.increaseScore = function (amount) {
             this._score += amount;
+            if (this._score > this._highScore) {
+                this._highScore = this._score;
+            }
             if (!this._earnedExtraLife && this._score >= PacmanGame.EXTRA_LIFE_SCORE) {
                 this.audio.playSound(pacman.Sounds.EXTRA_LIFE);
                 this.increaseLives(1);

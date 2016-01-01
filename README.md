@@ -30,10 +30,7 @@ version will be built in `src/js` and the production version in `dist/`.
 
 ## What's unimplemented/buggy
 
-* Blinky is the only ghost currently implemented
+* Blinky and Inky are the only ghosts currently implemented (missing Pinky and Clyde)
 * "READY!" state does not hold for 2.5 seconds when a new level starts
-* Black in Pacman/ghost/eyes sprites should be translucent, not black
-* High score is not preserved between games
 * Sound effects don't always stop/restart properly when the game is paused
-* Seems like there's a bug in Blinky's movement?  e.g. when hovering in a
-  corner before chasing Pacman
+* Title screen not complete (missing Pacman & ghost, high scores)

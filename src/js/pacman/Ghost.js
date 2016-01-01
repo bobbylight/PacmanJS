@@ -496,11 +496,11 @@ var pacman;
         * @param maze The maze in which the actor is moving.
         */
         Ghost.prototype.updatePositionInBox = function (maze) {
-            var moveAmount = 1; //ghost.getMoveAmount();
+            var moveAmount = 0.5; //ghost.getMoveAmount();
             switch (this.direction) {
                 case pacman_1.Direction.WEST: // Never happens
                 case pacman_1.Direction.NORTH:
-                    if (this.y > 224) {
+                    if (this.y > 112) {
                         this.incY(-moveAmount);
                     }
                     else {
@@ -509,7 +509,7 @@ var pacman;
                     break;
                 case pacman_1.Direction.EAST: // Never happens
                 case pacman_1.Direction.SOUTH:
-                    if (this.y < 240) {
+                    if (this.y < 120) {
                         this.incY(moveAmount);
                     }
                     else {

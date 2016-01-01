@@ -14,17 +14,6 @@ module pacman {
     		super(game, 0 * PacmanGame.SPRITE_SIZE, 0); // Not initially in the penalty box
     	}
 
-    	/**
-    	 * Resets the ghost's internal state so that:
-    	 *
-    	 * <ol>
-    	 *    <li>It is in the penalty box (except for Blinky).
-    	 *    <li>It's no longer blinking.
-    	 *    <li>Its direction is set appropriately.
-    	 * </ol>
-    	 *
-    	 * This method should be called on loading a new level, PacMan dying, etc.
-    	 */
     	reset() {
     		super.reset();
     		this.direction = Direction.WEST;
@@ -53,22 +42,22 @@ module pacman {
   			let toCol: number = game.pacman.column;
   			let node: MazeNode = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
 
-  			if (node==null) { // Happens only with "God Mode" enabled.
+  			if (node == null) { // Happens only with "God Mode" enabled.
   				this.changeDirectionFallback(maze);
   			}
-  			else if (node.col<fromCol) {
+  			else if (node.col < fromCol) {
   				this.direction = Direction.WEST;
   				this.incX(-moveAmount);
   			}
-  			else if (node.col>fromCol) {
+  			else if (node.col > fromCol) {
   				this.direction = Direction.EAST;
   				this.incX(moveAmount);
   			}
-  			else if (node.row<fromRow) {
+  			else if (node.row < fromRow) {
   				this.direction = Direction.NORTH;
   				this.incY(-moveAmount);
   			}
-  			else if (node.row>fromRow) {
+  			else if (node.row > fromRow) {
   				this.direction = Direction.SOUTH;
   				this.incY(moveAmount);
   			}

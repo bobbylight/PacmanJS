@@ -27,7 +27,7 @@ var pacman;
                     self._loadingImage = game.assets.get('loading');
                     game.assets.addImage('title', 'res/title.png');
                     game.assets.addSpriteSheet('font', 'res/font.png', 9, 7, 0, 0);
-                    game.assets.addImage('sprites', 'res/sprite_tiles.png');
+                    game.assets.addImage('sprites', 'res/sprite_tiles.png', true);
                     game.assets.addSpriteSheet('mapTiles', 'res/map_tiles.png', 8, 8, 0, 0);
                     game.assets.addSpriteSheet('points', 'res/points.png', 18, 9, 0, 0);
                     game.assets.addJson('levels', 'res/levelData.json');

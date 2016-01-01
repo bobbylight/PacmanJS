@@ -20,6 +20,7 @@
         "src/app/pacman/Direction.ts",
         "src/app/pacman/Fruit.ts",
         "src/app/pacman/Ghost.ts",
+        "src/app/pacman/Inky.ts",
         "src/app/pacman/LoadingState.ts",
         "src/app/pacman/Maze.ts",
         "src/app/pacman/MazeNode.ts",

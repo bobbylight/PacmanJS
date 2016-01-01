@@ -18,17 +18,6 @@ var pacman;
         function Blinky(game) {
             _super.call(this, game, 0 * pacman.PacmanGame.SPRITE_SIZE, 0); // Not initially in the penalty box
         }
-        /**
-         * Resets the ghost's internal state so that:
-         *
-         * <ol>
-         *    <li>It is in the penalty box (except for Blinky).
-         *    <li>It's no longer blinking.
-         *    <li>Its direction is set appropriately.
-         * </ol>
-         *
-         * This method should be called on loading a new level, PacMan dying, etc.
-         */
         Blinky.prototype.reset = function () {
             _super.prototype.reset.call(this);
             this.direction = pacman.Direction.WEST;

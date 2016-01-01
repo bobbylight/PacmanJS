@@ -288,11 +288,11 @@ module pacman {
         case MotionState.CHASING_PACMAN:
         case MotionState.SCATTERING:
         case MotionState.BLUE:
-        this.motionState = MotionState.BLUE;
-        return true;
+          this.motionState = MotionState.BLUE;
+          return true;
         default:
-        // Do nothing; in other states, we don't turn blue.
-        return false;
+          // Do nothing; in other states, we don't turn blue.
+          return false;
       }
     }
 
@@ -338,17 +338,17 @@ module pacman {
         switch (this._scatterCount++) {
           case 0:
           case 1:
-          this._exitScatteringTime = game.playTime + 7000;
-          this._motionState = motionState;
-          break;
+            this._exitScatteringTime = game.playTime + 7000;
+            this._motionState = motionState;
+            break;
           case 2:
           case 3:
-          this._exitScatteringTime = game.playTime + 5000;
-          this._motionState = motionState;
-          break;
+            this._exitScatteringTime = game.playTime + 5000;
+            this._motionState = motionState;
+            break;
           default:
-          this._motionState = MotionState.CHASING_PACMAN;
-          break;
+            this._motionState = MotionState.CHASING_PACMAN;
+            break;
         }
       }
 
@@ -360,27 +360,27 @@ module pacman {
         // include the blue time.
         switch (this._motionState) {
           case MotionState.CHASING_PACMAN:
-          this._previousState = this._motionState;
-          this.startScatteringTime += blueTime;
-          break;
+            this._previousState = this._motionState;
+            this.startScatteringTime += blueTime;
+            break;
           case MotionState.SCATTERING:
-          this._previousState = this._motionState;
-          this._exitScatteringTime += blueTime;
-          break;
+            this._previousState = this._motionState;
+            this._exitScatteringTime += blueTime;
+            break;
           case MotionState.BLUE:
-          // Keep previous "previousState".
-          let prevBlueTimeRemaining: number = this.exitBlueTime - playTime;
-          switch (this._previousState) {
-            case MotionState.CHASING_PACMAN:
-            this.startScatteringTime += prevBlueTimeRemaining + blueTime;
+            // Keep previous "previousState".
+            let prevBlueTimeRemaining: number = this.exitBlueTime - playTime;
+            switch (this._previousState) {
+              case MotionState.CHASING_PACMAN:
+                this.startScatteringTime += prevBlueTimeRemaining + blueTime;
+                break;
+              case MotionState.SCATTERING:
+                this._exitScatteringTime += prevBlueTimeRemaining + blueTime;
+                break;
+            }
             break;
-            case MotionState.SCATTERING:
-            this._exitScatteringTime += prevBlueTimeRemaining + blueTime;
-            break;
-          }
-          break;
           default:
-          throw  new Error('Unexpected state: ' + this._motionState);
+            throw  new Error('Unexpected state: ' + this._motionState);
         }
         this._motionState = motionState;
       }
@@ -598,26 +598,26 @@ module pacman {
 
       switch (this._motionState) {
         case MotionState.IN_BOX:
-        this.updatePositionInBox(maze);
-        break;
+          this.updatePositionInBox(maze);
+          break;
         case MotionState.LEAVING_BOX:
-        this.updatePositionLeavingBox(maze);
-        break;
+          this.updatePositionLeavingBox(maze);
+          break;
         case MotionState.SCATTERING:
-        this.updatePositionScattering(maze);
-        break;
+          this.updatePositionScattering(maze);
+          break;
         case MotionState.CHASING_PACMAN:
-        this.updatePositionChasingPacman(maze);
-        break;
+          this.updatePositionChasingPacman(maze);
+          break;
         case MotionState.BLUE:
-        this._updatePositionBlue(maze);
-        break;
+          this._updatePositionBlue(maze);
+          break;
         case MotionState.EYES:
-        this._updatePositionEyes(maze);
-        break;
+          this._updatePositionEyes(maze);
+          break;
         case MotionState.EYES_ENTERING_BOX:
-        this._updatePositionEyesEnteringBox(maze);
-        break;
+          this._updatePositionEyesEnteringBox(maze);
+          break;
       }
 
     }
@@ -630,27 +630,27 @@ module pacman {
     */
     updatePositionInBox(maze: Maze) {
 
-      let moveAmount: number = 1;//ghost.getMoveAmount();
+      let moveAmount: number = 0.5;//ghost.getMoveAmount();
 
       switch (this.direction) {
         case Direction.WEST: // Never happens
         case Direction.NORTH:
-        if (this.y > 224) {
-          this.incY(-moveAmount);
-        }
-        else {
-          this.direction = Direction.SOUTH;
-        }
-        break;
+          if (this.y > 112) {
+            this.incY(-moveAmount);
+          }
+          else {
+            this.direction = Direction.SOUTH;
+          }
+          break;
         case Direction.EAST: // Never happens
         case Direction.SOUTH:
-        if (this.y < 240) {
-          this.incY(moveAmount);
-        }
-        else {
-          this.direction = Direction.NORTH;
-        }
-        break;
+          if (this.y < 120) {
+            this.incY(moveAmount);
+          }
+          else {
+            this.direction = Direction.NORTH;
+          }
+          break;
       }
 
       // Use game.playTime to ensure proper exit delay, even if game is
