@@ -11,7 +11,7 @@ module pacman {
   	 * Constructor.
   	 */
   	constructor(game: PacmanGame) {
-  		super(game, 1 * PacmanGame.SPRITE_SIZE, 9);
+  		super(game, 1 * PacmanGame.SPRITE_SIZE, 8);
   	}
 
   	reset() {

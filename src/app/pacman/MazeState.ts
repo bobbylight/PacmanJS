@@ -59,15 +59,15 @@ module pacman {
 
       // The indentation on either side of the status stuff at the bottom
       // (extra life count, possible fruits, etc.).
-      let BOTTOM_INDENT = 24;
-      let TILE_SIZE = 8;
+      const BOTTOM_INDENT: number = 24;
+      const TILE_SIZE: number = 8;
 
-      let lives = game.lives;
+      const lives: number = game.lives;
       if (lives > 0) {
-         let x = BOTTOM_INDENT;
-         let y = game.getHeight() - 2 * TILE_SIZE;
-         let w = 2 * TILE_SIZE;
-         for (let i = 0; i < lives; i++) {
+         let x: number = BOTTOM_INDENT;
+         const y: number = game.getHeight() - 2 * TILE_SIZE;
+         const w: number = 2 * TILE_SIZE;
+         for (let i: number = 0; i < lives; i++) {
             game.drawSprite(x, y, 12*16, 3*16);
             x += w;
          }

@@ -137,18 +137,18 @@ module pacman {
   		let ghosts: Ghost[] = [];
   		this._resettingGhostStates = true;
   		ghosts.push(new Blinky(this));
-      // ghosts.push(new Pinky());
+      ghosts.push(new Pinky(this));
       ghosts.push(new Inky(this));
-      // ghosts.push(new Clyde());
+      ghosts.push(new Clyde(this));
   		this._resettingGhostStates = false;
   		return ghosts;
   	}
 
     drawBigDot(x: number, y: number) {
-      let ms = this.playTime;
+      const ms: number = this.playTime;
       if (ms < 0 || (ms % 500) > 250) {
-         let ctx = this.canvas.getContext('2d');
-         let sx = 135,
+         const ctx = this.canvas.getContext('2d');
+         const sx = 135,
              sy = 38;
          game.assets.get('sprites').drawScaled2(ctx, sx,sy,8,8, x,y,8,8);
       }

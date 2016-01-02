@@ -42,12 +42,12 @@ module pacman {
   			let col: number = this.column;
   			return row<30 && maze.isWalkable(row + 1, col);
   		}
-  		return this.direction == Direction.NORTH || this.direction == Direction.SOUTH;
+  		return this.direction === Direction.NORTH || this.direction === Direction.SOUTH;
   	}
 
   	getCanMoveLeft(maze: Maze) {
   		let x: number = this.bounds.x;
-  		if (x<0) {
+  		if (x < 0) {
   			return true; // Going through tunnel.
   		}
   		x +=  this.TILE_SIZE / 2;
@@ -59,7 +59,7 @@ module pacman {
         let col: number = this.column;
         return col>0 && maze.isWalkable(row, col - 1);
   		}
-      return this.direction == Direction.EAST || this.direction == Direction.WEST;
+      return this.direction === Direction.EAST || this.direction === Direction.WEST;
   	}
 
   	getCanMoveRight(maze: Maze) {
@@ -74,14 +74,17 @@ module pacman {
   		if (xRemainder === 0 && yRemainder === 0) {
         let row: number = this.row;
   			let col: number = this.column;
-  			return col<27 && maze.isWalkable(row, col + 1);
+  			return col < 27 && maze.isWalkable(row, col + 1);
   		}
-      return this.direction == Direction.EAST || this.direction == Direction.WEST;
+      return this.direction === Direction.EAST || this.direction === Direction.WEST;
   	}
 
   	getCanMoveUp(maze: Maze) {
   		let x: number = this.centerX;
   		let y: number = this.centerY;
+      if ((x % 1) !== 0 || (y % 1) !== 0) {
+        debugger;
+      }
   		let xRemainder: number = x % this.TILE_SIZE;
   		let yRemainder: number = y % this.TILE_SIZE;//(y-TILE_SIZE) % this.TILE_SIZE;
   		if (xRemainder === 0 && yRemainder === 0) {

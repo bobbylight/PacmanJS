@@ -80,7 +80,7 @@ declare module pacman {
         *
         * @return {number} The delay, in milliseconds.
         */
-        getFirstExitDelayNanos(): number;
+        private _getFirstExitDelayMillis();
         getFrameCount(): number;
         motionState: MotionState;
         /**

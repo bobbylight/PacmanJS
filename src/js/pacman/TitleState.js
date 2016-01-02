@@ -171,4 +171,5 @@ var pacman;
     })(pacman_1._BaseState);
     pacman_1.TitleState = TitleState;
 })(pacman || (pacman = {}));
+
 //# sourceMappingURL=TitleState.js.map

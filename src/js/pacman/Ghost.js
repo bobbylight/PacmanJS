@@ -6,6 +6,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 var pacman;
 (function (pacman_1) {
     'use strict';
+    var GHOST_IN_BOX_SPEED = 0.5;
     (function (MotionState) {
         MotionState[MotionState["IN_BOX"] = 0] = "IN_BOX";
         MotionState[MotionState["LEAVING_BOX"] = 1] = "LEAVING_BOX";
@@ -120,7 +121,7 @@ var pacman;
         *
         * @return {number} The delay, in milliseconds.
         */
-        Ghost.prototype.getFirstExitDelayNanos = function () {
+        Ghost.prototype._getFirstExitDelayMillis = function () {
             return this._exitDelaySeconds * 1000;
         };
         Ghost.prototype.getFrameCount = function () {
@@ -449,7 +450,7 @@ var pacman;
         * @param maze The maze in which the ghost is moving.
         */
         Ghost.prototype._updatePositionEyesEnteringBox = function (maze) {
-            var moveAmount = 1; //getMoveAmount();
+            var moveAmount = GHOST_IN_BOX_SPEED; //getMoveAmount();
             var y = this.y;
             if (y < game.PENALTY_BOX_EXIT_Y + 3 * pacman_1.PacmanGame.SPRITE_SIZE / 2) {
                 this.direction = pacman_1.Direction.SOUTH; // May be redundant.
@@ -457,7 +458,6 @@ var pacman;
             }
             else {
                 this.motionState = MotionState.LEAVING_BOX;
-                ;
             }
         };
         /**
@@ -496,7 +496,7 @@ var pacman;
         * @param maze The maze in which the actor is moving.
         */
         Ghost.prototype.updatePositionInBox = function (maze) {
-            var moveAmount = 0.5; //ghost.getMoveAmount();
+            var moveAmount = GHOST_IN_BOX_SPEED; //ghost.getMoveAmount();
             switch (this.direction) {
                 case pacman_1.Direction.WEST: // Never happens
                 case pacman_1.Direction.NORTH:
@@ -519,9 +519,8 @@ var pacman;
             }
             // Use game.playTime to ensure proper exit delay, even if game is
             // paused, etc.
-            if (game.playTime >= this.getFirstExitDelayNanos()) {
+            if (game.playTime >= this._getFirstExitDelayMillis()) {
                 this.motionState = MotionState.LEAVING_BOX;
-                ;
             }
         };
         /**
@@ -530,7 +529,7 @@ var pacman;
         * @param maze The maze in which the actor is moving.
         */
         Ghost.prototype.updatePositionLeavingBox = function (maze) {
-            var moveAmount = 1; //getMoveAmount();
+            var moveAmount = GHOST_IN_BOX_SPEED; //getMoveAmount();
             var x = this.x;
             if (x < game.PENALTY_BOX_EXIT_X) {
                 this.direction = pacman_1.Direction.EAST; // May be redundant
@@ -543,9 +542,11 @@ var pacman;
             else {
                 var y = this.y - moveAmount;
                 this.y = y;
-                if (y === game.PENALTY_BOX_EXIT_Y) {
+                // "<=" instead of "===" just in case we have rounding errors (which we
+                // shouldn't, but still)
+                if (y <= game.PENALTY_BOX_EXIT_Y) {
+                    y = game.PENALTY_BOX_EXIT_Y; // Should be unnecessary
                     this.motionState = MotionState.SCATTERING;
-                    ;
                     this.direction = pacman_1.Direction.WEST;
                 }
                 else {

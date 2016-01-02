@@ -30,6 +30,12 @@ version will be built in `src/js` and the production version in `dist/`.
 
 ## What's unimplemented/buggy
 
-* Blinky and Inky are the only ghosts currently implemented (missing Pinky and Clyde)
+Relatively in the order in which I want to fix things:
+
 * "READY!" state does not hold for 2.5 seconds when a new level starts
+* Fruit in a maze is not reset on game over/restart
 * Sound effects don't always stop/restart properly when the game is paused
+* Intermissions are not yet implemented
+* Ghost AI is approximate to, but not exactly, the actual algorithms
+* Blinky does not turn into Cruise Elroy, or increase in speed, as a level
+  goes on

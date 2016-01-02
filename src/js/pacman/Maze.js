@@ -343,4 +343,5 @@ var pacman;
     })();
     pacman.Maze = Maze;
 })(pacman || (pacman = {}));
+
 //# sourceMappingURL=Maze.js.map

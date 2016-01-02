@@ -1,6 +1,8 @@
 module pacman {
   'use strict';
 
+  const GHOST_IN_BOX_SPEED = 0.5;
+
   export enum MotionState {
     IN_BOX = 0,
     LEAVING_BOX = 1,
@@ -83,50 +85,50 @@ module pacman {
 
     changeDirectionFallback(maze: Maze) {
 
-      let moveAmount: number = this.moveAmount;
-      let temp: number = gtp.Utils.randomInt(4);
+      const moveAmount: number = this.moveAmount;
+      const temp: number = gtp.Utils.randomInt(4);
 
       switch (temp) {
 
         case 0:
-        if (!this.goUpIfPossible(maze, moveAmount)) {
-          if (!this.goLeftIfPossible(maze, moveAmount)) {
-            if (!this.goRightIfPossible(maze, moveAmount)) {
-              this.goDownIfPossible(maze, moveAmount);
+          if (!this.goUpIfPossible(maze, moveAmount)) {
+            if (!this.goLeftIfPossible(maze, moveAmount)) {
+              if (!this.goRightIfPossible(maze, moveAmount)) {
+                this.goDownIfPossible(maze, moveAmount);
+              }
             }
           }
-        }
-        break;
+          break;
 
         case 1:
-        if (!this.goLeftIfPossible(maze, moveAmount)) {
-          if (!this.goUpIfPossible(maze, moveAmount)) {
-            if (!this.goDownIfPossible(maze, moveAmount)) {
-              this.goRightIfPossible(maze, moveAmount);
+          if (!this.goLeftIfPossible(maze, moveAmount)) {
+            if (!this.goUpIfPossible(maze, moveAmount)) {
+              if (!this.goDownIfPossible(maze, moveAmount)) {
+                this.goRightIfPossible(maze, moveAmount);
+              }
             }
           }
-        }
-        break;
+          break;
 
         case 2:
-        if (!this.goDownIfPossible(maze, moveAmount)) {
-          if (!this.goLeftIfPossible(maze, moveAmount)) {
-            if (!this.goRightIfPossible(maze, moveAmount)) {
-              this.goUpIfPossible(maze, moveAmount);
+          if (!this.goDownIfPossible(maze, moveAmount)) {
+            if (!this.goLeftIfPossible(maze, moveAmount)) {
+              if (!this.goRightIfPossible(maze, moveAmount)) {
+                this.goUpIfPossible(maze, moveAmount);
+              }
             }
           }
-        }
-        break;
+          break;
 
         case 3:
-        if (!this.goRightIfPossible(maze, moveAmount)) {
-          if (!this.goUpIfPossible(maze, moveAmount)) {
-            if (!this.goDownIfPossible(maze, moveAmount)) {
-              this.goLeftIfPossible(maze, moveAmount);
+          if (!this.goRightIfPossible(maze, moveAmount)) {
+            if (!this.goUpIfPossible(maze, moveAmount)) {
+              if (!this.goDownIfPossible(maze, moveAmount)) {
+                this.goLeftIfPossible(maze, moveAmount);
+              }
             }
           }
-        }
-        break;
+          break;
       }
 
     }
@@ -139,17 +141,17 @@ module pacman {
     continueInCurrentDirection(moveAmount: number) {
       switch (this.direction) {
         case Direction.NORTH:
-        this.incY(-moveAmount);
-        break;
+          this.incY(-moveAmount);
+          break;
         case Direction.WEST:
-        this.incX(-moveAmount);
-        break;
+          this.incX(-moveAmount);
+          break;
         case Direction.SOUTH:
-        this.incY(moveAmount);
-        break;
+          this.incY(moveAmount);
+          break;
         case Direction.EAST:
-        this.incX(moveAmount);
-        break;
+          this.incX(moveAmount);
+          break;
       }
     }
 
@@ -185,7 +187,7 @@ module pacman {
     *
     * @return {number} The delay, in milliseconds.
     */
-    getFirstExitDelayNanos(): number {
+    private _getFirstExitDelayMillis(): number {
       return this._exitDelaySeconds * 1000;
     }
 
@@ -575,7 +577,7 @@ module pacman {
     */
     private _updatePositionEyesEnteringBox(maze: Maze) {
 
-      let moveAmount: number = 1;//getMoveAmount();
+      let moveAmount: number = GHOST_IN_BOX_SPEED;//getMoveAmount();
 
       let y: number = this.y;
       if (y < game.PENALTY_BOX_EXIT_Y + 3 * PacmanGame.SPRITE_SIZE / 2) {
@@ -583,7 +585,7 @@ module pacman {
         this.incY(moveAmount);
       }
       else {
-        this.motionState = MotionState.LEAVING_BOX;;
+        this.motionState = MotionState.LEAVING_BOX;
       }
 
     }
@@ -630,7 +632,7 @@ module pacman {
     */
     updatePositionInBox(maze: Maze) {
 
-      let moveAmount: number = 0.5;//ghost.getMoveAmount();
+      let moveAmount: number = GHOST_IN_BOX_SPEED;//ghost.getMoveAmount();
 
       switch (this.direction) {
         case Direction.WEST: // Never happens
@@ -655,8 +657,8 @@ module pacman {
 
       // Use game.playTime to ensure proper exit delay, even if game is
       // paused, etc.
-      if (game.playTime >= this.getFirstExitDelayNanos()) {
-        this.motionState = MotionState.LEAVING_BOX;;
+      if (game.playTime >= this._getFirstExitDelayMillis()) {
+        this.motionState = MotionState.LEAVING_BOX;
       }
 
     }
@@ -669,7 +671,7 @@ module pacman {
     */
     updatePositionLeavingBox(maze: Maze) {
 
-      let moveAmount: number = 1;//getMoveAmount();
+      let moveAmount: number = GHOST_IN_BOX_SPEED;//getMoveAmount();
 
       let x: number = this.x;
       if (x < game.PENALTY_BOX_EXIT_X) {
@@ -683,8 +685,11 @@ module pacman {
       else {
         let y: number = this.y - moveAmount;
         this.y = y;
-        if (y === game.PENALTY_BOX_EXIT_Y) {
-          this.motionState = MotionState.SCATTERING;;
+        // "<=" instead of "===" just in case we have rounding errors (which we
+        // shouldn't, but still)
+        if (y <= game.PENALTY_BOX_EXIT_Y) {
+          y = game.PENALTY_BOX_EXIT_Y; // Should be unnecessary
+          this.motionState = MotionState.SCATTERING;
           this.direction = Direction.WEST;
         }
         else {
@@ -723,15 +728,15 @@ module pacman {
             this.direction = Direction.WEST;
             this.incX(-moveAmount);
           }
-          else if (node.col>fromCol) {
+          else if (node.col > fromCol) {
             this.direction = Direction.EAST;
             this.incX(moveAmount);
           }
-          else if (node.row<fromRow) {
+          else if (node.row < fromRow) {
             this.direction = Direction.NORTH;
             this.incY(-moveAmount);
           }
-          else if (node.row>fromRow) {
+          else if (node.row > fromRow) {
             this.direction = Direction.SOUTH;
             this.incY(moveAmount);
           }

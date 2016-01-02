@@ -16,7 +16,7 @@ var pacman;
          * Constructor.
          */
         function Inky(game) {
-            _super.call(this, game, 1 * pacman.PacmanGame.SPRITE_SIZE, 9);
+            _super.call(this, game, 1 * pacman.PacmanGame.SPRITE_SIZE, 8);
         }
         Inky.prototype.reset = function () {
             _super.prototype.reset.call(this);

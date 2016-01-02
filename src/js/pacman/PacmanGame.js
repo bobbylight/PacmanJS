@@ -80,9 +80,9 @@ var pacman;
             var ghosts = [];
             this._resettingGhostStates = true;
             ghosts.push(new pacman.Blinky(this));
-            // ghosts.push(new Pinky());
+            ghosts.push(new pacman.Pinky(this));
             ghosts.push(new pacman.Inky(this));
-            // ghosts.push(new Clyde());
+            ghosts.push(new pacman.Clyde(this));
             this._resettingGhostStates = false;
             return ghosts;
         };
@@ -436,4 +436,5 @@ var pacman;
     })(gtp.Game);
     pacman.PacmanGame = PacmanGame;
 })(pacman || (pacman = {}));
+
 //# sourceMappingURL=PacmanGame.js.map

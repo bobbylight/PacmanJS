@@ -32,7 +32,7 @@ var pacman;
                 var col = this.column;
                 return row < 30 && maze.isWalkable(row + 1, col);
             }
-            return this.direction == pacman.Direction.NORTH || this.direction == pacman.Direction.SOUTH;
+            return this.direction === pacman.Direction.NORTH || this.direction === pacman.Direction.SOUTH;
         };
         _BaseSprite.prototype.getCanMoveLeft = function (maze) {
             var x = this.bounds.x;
@@ -48,7 +48,7 @@ var pacman;
                 var col = this.column;
                 return col > 0 && maze.isWalkable(row, col - 1);
             }
-            return this.direction == pacman.Direction.EAST || this.direction == pacman.Direction.WEST;
+            return this.direction === pacman.Direction.EAST || this.direction === pacman.Direction.WEST;
         };
         _BaseSprite.prototype.getCanMoveRight = function (maze) {
             var x = this.bounds.x;
@@ -64,11 +64,14 @@ var pacman;
                 var col = this.column;
                 return col < 27 && maze.isWalkable(row, col + 1);
             }
-            return this.direction == pacman.Direction.EAST || this.direction == pacman.Direction.WEST;
+            return this.direction === pacman.Direction.EAST || this.direction === pacman.Direction.WEST;
         };
         _BaseSprite.prototype.getCanMoveUp = function (maze) {
             var x = this.centerX;
             var y = this.centerY;
+            if ((x % 1) !== 0 || (y % 1) !== 0) {
+                debugger;
+            }
             var xRemainder = x % this.TILE_SIZE;
             var yRemainder = y % this.TILE_SIZE; //(y-TILE_SIZE) % this.TILE_SIZE;
             if (xRemainder === 0 && yRemainder === 0) {
