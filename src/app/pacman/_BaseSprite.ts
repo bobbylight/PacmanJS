@@ -102,7 +102,7 @@ module pacman {
 
     get column(): number {
 
-      var col: number = Math.floor(this.centerX / this.TILE_SIZE);
+      let col: number = Math.floor(this.centerX / this.TILE_SIZE);
 
       // Do "bounds checking" to correct for when sprites are going through
       // tunnels

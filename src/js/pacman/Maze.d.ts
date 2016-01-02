@@ -82,12 +82,6 @@ declare module pacman {
         isWalkable(row: number, col: number): boolean;
         render(ctx: CanvasRenderingContext2D): void;
         /**
-         * Note this should really be somewhere else, but since we're painting the
-         * maze as one single image, we might as well do this type of static text
-         * while we're at it.
-         */
-        private _renderScoresHeaders(ctx);
-        /**
          * Resets this maze.
          * @param mazeInfo The raw data for this maze.  If this is undefined, it
          *        is assumed that we are simply resetting to load a new level.

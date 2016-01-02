@@ -14,8 +14,9 @@ module pacman {
 		}
 
 		createScreenshot(): HTMLCanvasElement {
-			var canvas = gtp.ImageUtils.createCanvas(game.getWidth(), game.getHeight());
-			var ctx = canvas.getContext('2d');
+			const canvas: HTMLCanvasElement = gtp.ImageUtils.createCanvas(
+				game.getWidth(), game.getHeight());
+			const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
 			this.render(ctx);
 			return canvas;
 		}
@@ -27,7 +28,7 @@ module pacman {
 		handleDefaultKeys(time?: number) {
 
 			time = time || this.game.playTime;
-			var im = this.game.inputManager;
+			const im: gtp.InputManager = this.game.inputManager;
 
 			if (time > (this._lastConfigKeypressTime + _BaseState.INPUT_REPEAT_MILLIS)) {
 

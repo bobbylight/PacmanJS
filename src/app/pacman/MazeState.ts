@@ -34,7 +34,7 @@ module pacman {
       return this._firstTimeThrough ? 4500 : 2000;
     }
 
-    init() {
+    enter() {
 
       game.pacman.reset();
       game.resetGhosts();
@@ -59,15 +59,15 @@ module pacman {
 
       // The indentation on either side of the status stuff at the bottom
       // (extra life count, possible fruits, etc.).
-      var BOTTOM_INDENT = 24;
-      var TILE_SIZE = 8;
+      let BOTTOM_INDENT = 24;
+      let TILE_SIZE = 8;
 
-      var lives = game.lives;
+      let lives = game.lives;
       if (lives > 0) {
-         var x = BOTTOM_INDENT;
-         var y = game.getHeight() - 2 * TILE_SIZE;
-         var w = 2 * TILE_SIZE;
-         for (var i = 0; i < lives; i++) {
+         let x = BOTTOM_INDENT;
+         let y = game.getHeight() - 2 * TILE_SIZE;
+         let w = 2 * TILE_SIZE;
+         for (let i = 0; i < lives; i++) {
             game.drawSprite(x, y, 12*16, 3*16);
             x += w;
          }
@@ -78,11 +78,11 @@ module pacman {
 
       // The indentation on either side of the status stuff at the bottom
       // (extra life count, possible fruits, etc.).
-      var BOTTOM_INDENT = 24;
-      var TILE_SIZE = 8;
+      let BOTTOM_INDENT = 24;
+      let TILE_SIZE = 8;
 
-      var x = game.getWidth() - BOTTOM_INDENT - 2 * TILE_SIZE;
-      var y = game.getHeight() - 2 * TILE_SIZE;
+      let x = game.getWidth() - BOTTOM_INDENT - 2 * TILE_SIZE;
+      let y = game.getHeight() - 2 * TILE_SIZE;
 
       switch (game.level) {
          default:
@@ -118,23 +118,23 @@ module pacman {
       super.render(ctx);
       this._maze.render(ctx);
 
-      // "window.pacman" because of hoisting of pacman var below
-      var TILE_SIZE = 8;
-      var mazeY = game.getHeight() - 2*TILE_SIZE -
+      // "window.pacman" because of hoisting of pacman let below
+      let TILE_SIZE = 8;
+      let mazeY = game.getHeight() - 2*TILE_SIZE -
             Maze.TILE_COUNT_VERTICAL * TILE_SIZE;
       ctx.translate(0, mazeY);
 
       game.drawFruit(ctx);
 
-      var pacman = game.pacman;
+      let pacman = game.pacman;
       if (this._updateScoreIndex === -1) {
          if (this._substate !== Substate.GAME_OVER) {
             pacman.render(ctx);
          }
       }
       else {
-         var x = pacman.bounds.x;
-         var y = pacman.bounds.y;
+         let x = pacman.bounds.x;
+         let y = pacman.bounds.y;
          game.paintPointsEarned(ctx, this._updateScoreIndex, x, y);
       }
 
@@ -149,8 +149,8 @@ module pacman {
       if (this._substate === Substate.READY) {
         // These calculations should be fast enough, especially considering
   			// that "READY!" is only displayed for about 4 seconds.
-  			var ready: string = 'READY!';
-  			var x: number = (game.getWidth() - ready.length * 9) / 2;
+  			let ready: string = 'READY!';
+  			let x: number = (game.getWidth() - ready.length * 9) / 2;
   			// Give "Ready!" a little nudge to the right.  This is because the
   			// ending '!' doesn't fill up the standard 8 pixels for a character,
   			// so "READY!" looks slightly too far to the left without it.
@@ -158,8 +158,8 @@ module pacman {
         game.drawString(x, 160, ready);
       }
       else if (this._substate === Substate.GAME_OVER) {
-        var gameOver: string = 'GAME OVER';
-  			var x: number = (game.getWidth() - gameOver.length * 9) / 2;
+        let gameOver: string = 'GAME OVER';
+  			let x: number = (game.getWidth() - gameOver.length * 9) / 2;
   			game.drawString(x, 160, gameOver);
       }
 
@@ -169,8 +169,8 @@ module pacman {
         ctx.fillRect(0, 0, game.getWidth(), game.getHeight());
         ctx.globalAlpha = 1;
         ctx.fillRect(50, 100, game.getWidth() - 100, game.getHeight() - 200);
-        var paused: string = 'PAUSED';
-        var x: number = (game.getWidth() - paused.length * 9) / 2;
+        let paused: string = 'PAUSED';
+        let x: number = (game.getWidth() - paused.length * 9) / 2;
         game.drawString(x, (game.getHeight() - 18) / 2, paused);
       }
     }
@@ -251,7 +251,7 @@ module pacman {
     update(delta: number) {
       super.update(delta);
 
-      var time: number = game.playTime;
+      let time: number = game.playTime;
       this._handleInput(delta, time);
 
       switch (this._substate) {

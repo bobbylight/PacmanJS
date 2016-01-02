@@ -69,6 +69,7 @@ declare module pacman {
          */
         drawGhosts(ctx: CanvasRenderingContext2D): void;
         drawScores(ctx: CanvasRenderingContext2D): void;
+        drawScoresHeaders(ctx: CanvasRenderingContext2D): void;
         drawSmallDot(x: number, y: number): void;
         drawSprite(dx: number, dy: number, sx: number, sy: number): void;
         drawString(x: number, y: number, text: string | number, ctx?: CanvasRenderingContext2D): void;

@@ -21,8 +21,8 @@ module pacman {
         if (!this.assetsLoaded) {
 
            this.assetsLoaded = true;
-           var game = this.game;
-           var self = this;
+           let game = this.game;
+           let self = this;
 
            // Load assets used by this state first
            game.assets.addImage('loading', 'res/loadingMessage.png');
@@ -52,14 +52,14 @@ module pacman {
 
                  // Convert level data from hex strings to numbers
                  function hexStrToInt(str: string) : number { return parseInt(str, 16); }
-                 var levelData = game.assets.get('levels');
-                 for (var i = 0; i < levelData.length; i++) {
-                    for (var row = 0; row < levelData[i].length; row++) {
+                 let levelData = game.assets.get('levels');
+                 for (let i: number = 0; i < levelData.length; i++) {
+                    for (let row: number = 0; row < levelData[i].length; row++) {
                        levelData[i][row] = levelData[i][row].map(hexStrToInt);
                     }
                  }
 
-                 var skipTitle = gtp.Utils.getRequestParam('skipTitle');
+                 let skipTitle = gtp.Utils.getRequestParam('skipTitle');
                  if (skipTitle !== null) { // Allow empty strings
                     this.getGame().startNewGame();
                  }

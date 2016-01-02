@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var pacman;
-(function (pacman) {
+(function (pacman_1) {
     'use strict';
     var TitleState = (function (_super) {
         __extends(TitleState, _super);
@@ -14,39 +14,34 @@ var pacman;
              */
         function TitleState(args) {
             _super.call(this, args);
+            // Initialize our sprites not just in enter() so they are positioned
+            // correctly while FadeOutInState is running
+            this._initSprites();
         }
-        TitleState.prototype.init = function () {
-            _super.prototype.init.call(this);
+        TitleState.prototype.enter = function () {
+            _super.prototype.enter.call(this, game);
             game.canvas.addEventListener('touchstart', this.handleStart, false);
-            this._delay = new gtp.Delay({ millis: [600, 400] });
-            this._blink = true;
             this._choice = 0;
+            this._lastKeypressTime = game.playTime;
+            this._initSprites();
+        };
+        TitleState.prototype._initSprites = function () {
+            var pacman = game.pacman;
+            pacman.setLocation(game.getWidth() / 2, 240);
+            pacman.direction = pacman_1.Direction.EAST;
+            var ghost = game.getGhost(0);
+            ghost.setLocation(game.getWidth() / 2 - 3 * pacman_1.PacmanGame.SPRITE_SIZE, 240);
+            ghost.direction = pacman_1.Direction.EAST;
         };
         TitleState.prototype.leaving = function (game) {
             game.canvas.removeEventListener('touchstart', this.handleStart, false);
         };
+        TitleState.prototype.getGame = function () {
+            return this.game;
+        };
         TitleState.prototype.handleStart = function () {
             console.log('Yee, touch detected!');
             this._startGame();
-        };
-        TitleState.prototype.update = function (delta) {
-            this.handleDefaultKeys();
-            if (this._delay.update(delta)) {
-                this._delay.reset();
-                this._blink = !this._blink;
-            }
-            var im = game.inputManager;
-            if (im.up(true)) {
-                this._choice = Math.abs(this._choice - 1);
-                game.audio.playSound(pacman.Sounds.TOKEN);
-            }
-            else if (im.down(true)) {
-                this._choice = (this._choice + 1) % 2;
-                game.audio.playSound(pacman.Sounds.TOKEN);
-            }
-            else if (im.enter(true)) {
-                this._startGame();
-            }
         };
         TitleState.prototype.render = function (ctx) {
             var SCREEN_WIDTH = game.getWidth(), SCREEN_HEIGHT = game.getHeight(), charWidth = 9;
@@ -63,6 +58,9 @@ var pacman;
             game.drawSmallDot(x + 3, y + 2);
             y += 9;
             game.drawBigDot(x, y);
+            // Draw the sprites
+            game.pacman.render(ctx);
+            game.getGhost(0).paint(ctx);
             if (!game.audio.isInitialized()) {
                 this._renderNoSoundMessage();
             }
@@ -91,6 +89,9 @@ var pacman;
             game.clearScreen('rgb(0,0,0)');
             var SCREEN_WIDTH = game.getWidth();
             var charWidth = 9;
+            // Render the "scores" stuff at the top.
+            game.drawScores(ctx);
+            game.drawScoresHeaders(ctx);
             // Title image
             var titleImage = game.assets.get('title');
             var x = (SCREEN_WIDTH - titleImage.width) / 2;
@@ -124,12 +125,50 @@ var pacman;
         TitleState.prototype._startGame = function () {
             game.startGame(this._choice);
         };
-        TitleState.prototype.getGame = function () {
-            return this.game;
+        TitleState.prototype.update = function (delta) {
+            this.handleDefaultKeys();
+            var playTime = game.playTime;
+            if (playTime > this._lastKeypressTime + pacman_1._BaseState.INPUT_REPEAT_MILLIS + 100) {
+                var im = game.inputManager;
+                if (im.up()) {
+                    this._choice = Math.abs(this._choice - 1);
+                    game.audio.playSound(pacman_1.Sounds.TOKEN);
+                    this._lastKeypressTime = playTime;
+                }
+                else if (im.down()) {
+                    this._choice = (this._choice + 1) % 2;
+                    game.audio.playSound(pacman_1.Sounds.TOKEN);
+                    this._lastKeypressTime = playTime;
+                }
+                else if (im.enter(true)) {
+                    this._startGame();
+                }
+            }
+            var pacman = game.pacman;
+            var ghost = game.getGhost(0);
+            // Update the animated Pacman
+            var moveAmount = pacman.moveAmount;
+            if (pacman.direction === pacman_1.Direction.WEST) {
+                moveAmount = -moveAmount;
+            }
+            pacman.incX(moveAmount);
+            moveAmount = ghost.moveAmount;
+            if (ghost.direction === pacman_1.Direction.WEST) {
+                moveAmount = -moveAmount;
+            }
+            ghost.incX(moveAmount);
+            // Check whether it's time to turn around
+            if (pacman.x + pacman.width >= this.game.getWidth() - 30) {
+                pacman.direction = ghost.direction = pacman_1.Direction.WEST;
+            }
+            else if (ghost.x <= 30) {
+                pacman.direction = ghost.direction = pacman_1.Direction.EAST;
+            }
+            pacman.updateFrame();
+            ghost.updateFrame();
         };
         return TitleState;
-    })(pacman._BaseState);
-    pacman.TitleState = TitleState;
+    })(pacman_1._BaseState);
+    pacman_1.TitleState = TitleState;
 })(pacman || (pacman = {}));
-
 //# sourceMappingURL=TitleState.js.map

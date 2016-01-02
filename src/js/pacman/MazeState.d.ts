@@ -13,7 +13,7 @@ declare module pacman {
         constructor(mazeFile: number[][]);
         private static DYING_FRAME_DELAY_MILLIS;
         private _readyDelayMillis;
-        init(): void;
+        enter(): void;
         _paintExtraLives(ctx: CanvasRenderingContext2D): void;
         _paintPossibleFruits(ctx: CanvasRenderingContext2D): void;
         render(ctx: CanvasRenderingContext2D): void;

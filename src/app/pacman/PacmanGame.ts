@@ -69,6 +69,7 @@ module pacman {
       this._ghosts = this._createGhostArray();
       this._chompSound = 0;
       this._ghostUpdateStrategy = GhostUpdateStrategy.UPDATE_ALL;
+      this._score = 0; // For title screen
 
       this._extraPointsArray = [ 100, 200, 300, 400, 500, 700, 800,
                                 1000, 1600, 2000, 3000, 5000 ];
@@ -190,6 +191,11 @@ module pacman {
       scoreStr = this._highScore.toString();
       x = 132 - scoreStr.length * 8;
       this.drawString(x,y, scoreStr, ctx);
+    }
+
+    drawScoresHeaders(ctx: CanvasRenderingContext2D) {
+       this.drawString(16, 0, '1UP', ctx);
+       this.drawString(67, 0, 'HIGH SCORE', ctx);
     }
 
     drawSmallDot(x: number, y: number) {

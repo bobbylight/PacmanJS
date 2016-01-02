@@ -33,4 +33,3 @@ version will be built in `src/js` and the production version in `dist/`.
 * Blinky and Inky are the only ghosts currently implemented (missing Pinky and Clyde)
 * "READY!" state does not hold for 2.5 seconds when a new level starts
 * Sound effects don't always stop/restart properly when the game is paused
-* Title screen not complete (missing Pacman & ghost, high scores)

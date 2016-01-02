@@ -33,7 +33,7 @@ var pacman;
             enumerable: true,
             configurable: true
         });
-        MazeState.prototype.init = function () {
+        MazeState.prototype.enter = function () {
             game.pacman.reset();
             game.resetGhosts();
             this._maze = new pacman_1.Maze(this._mazeFile);
@@ -103,7 +103,7 @@ var pacman;
         MazeState.prototype.render = function (ctx) {
             _super.prototype.render.call(this, ctx);
             this._maze.render(ctx);
-            // "window.pacman" because of hoisting of pacman var below
+            // "window.pacman" because of hoisting of pacman let below
             var TILE_SIZE = 8;
             var mazeY = game.getHeight() - 2 * TILE_SIZE -
                 pacman_1.Maze.TILE_COUNT_VERTICAL * TILE_SIZE;

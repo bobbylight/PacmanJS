@@ -319,16 +319,6 @@ module pacman {
     }
 
     /**
-     * Note this should really be somewhere else, but since we're painting the
-     * maze as one single image, we might as well do this type of static text
-     * while we're at it.
-     */
-    private _renderScoresHeaders(ctx: CanvasRenderingContext2D) {
-       game.drawString(16, 0, '1UP', ctx);
-       game.drawString(67, 0, 'HIGH SCORE', ctx);
-    }
-
-    /**
      * Resets this maze.
      * @param mazeInfo The raw data for this maze.  If this is undefined, it
      *        is assumed that we are simply resetting to load a new level.
@@ -362,7 +352,7 @@ module pacman {
          mazeCtx.fillStyle = '#000000';
          mazeCtx.fillRect(0, 0, this._mazeCanvas.width, this._mazeCanvas.height);
 
-         this._renderScoresHeaders(mazeCtx);
+         game.drawScoresHeaders(mazeCtx);
 
          // Render each tile from the map data
          for (let row = 0; row < this._data.length; row++) {
@@ -385,9 +375,11 @@ module pacman {
 
                   default:
                      tile--;
-                     let dx = col * TILE_SIZE;
-                     let dy = mazeY + row * TILE_SIZE;
-                     mapTiles.drawByIndex(mazeCtx, dx, dy, tile);
+                     if (tile > -1) {
+                       let dx = col * TILE_SIZE;
+                       let dy = mazeY + row * TILE_SIZE;
+                       mapTiles.drawByIndex(mazeCtx, dx, dy, tile);
+                     }
                      break;
                }
             }

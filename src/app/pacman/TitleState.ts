@@ -3,9 +3,8 @@ module pacman {
 
   export class TitleState extends _BaseState {
 
-    private _delay: gtp.Delay;
-    private _blink: boolean;
     private _choice: number;
+    private _lastKeypressTime: number;
 
     /**
 		 * State that renders the title screen.
@@ -13,18 +12,37 @@ module pacman {
 		 */
       constructor(args?: pacman.PacmanGame | gtp.BaseStateArgs) {
         super(args);
+        // Initialize our sprites not just in enter() so they are positioned
+        // correctly while FadeOutInState is running
+        this._initSprites();
       }
 
-      init() {
-        super.init();
+      enter() {
+
+        super.enter(game);
+
         game.canvas.addEventListener('touchstart', this.handleStart, false);
-        this._delay = new gtp.Delay({ millis: [ 600, 400 ] });
-        this._blink = true;
         this._choice = 0;
+        this._lastKeypressTime = game.playTime;
+
+        this._initSprites();
+      }
+
+      private _initSprites() {
+        const pacman: Pacman = game.pacman;
+        pacman.setLocation(game.getWidth() / 2, 240);
+        pacman.direction = Direction.EAST;
+        const ghost: Ghost = game.getGhost(0);
+        ghost.setLocation(game.getWidth() / 2 - 3 * PacmanGame.SPRITE_SIZE, 240);
+        ghost.direction = Direction.EAST;
       }
 
       leaving(game: gtp.Game) {
         game.canvas.removeEventListener('touchstart', this.handleStart, false);
+      }
+
+      private getGame(): PacmanGame {
+        return <PacmanGame>this.game;
       }
 
       handleStart() {
@@ -32,42 +50,18 @@ module pacman {
         this._startGame();
       }
 
-      update(delta: number) {
-
-        this.handleDefaultKeys();
-
-        if (this._delay.update(delta)) {
-           this._delay.reset();
-           this._blink = !this._blink;
-        }
-
-        var im = game.inputManager;
-        if (im.up(true)) {
-           this._choice = Math.abs(this._choice - 1);
-           game.audio.playSound(pacman.Sounds.TOKEN);
-        }
-        else if (im.down(true)) {
-           this._choice = (this._choice + 1) % 2;
-           game.audio.playSound(pacman.Sounds.TOKEN);
-        }
-        else if (im.enter(true)) {
-           this._startGame();
-        }
-
-      }
-
       render(ctx: CanvasRenderingContext2D) {
 
-        var SCREEN_WIDTH = game.getWidth(),
-            SCREEN_HEIGHT = game.getHeight(),
-            charWidth = 9;
+        let SCREEN_WIDTH: number = game.getWidth(),
+            SCREEN_HEIGHT: number = game.getHeight(),
+            charWidth: number = 9;
 
         this._renderStaticStuff(ctx);
 
         // Draw the menu "choice" arrow
         // " - 5" to account for differently sized choices
-        var x = (SCREEN_WIDTH - charWidth * 15) / 2 - 5;
-        var y = (SCREEN_HEIGHT - 15 * 2) / 2;
+        let x: number = (SCREEN_WIDTH - charWidth * 15) / 2 - 5;
+        let y: number = (SCREEN_HEIGHT - 15 * 2) / 2;
         this.getGame().drawString(x, y + this._choice * 15, '>');
 
         // Draw the small and big dots
@@ -77,6 +71,10 @@ module pacman {
         game.drawSmallDot(x + 3, y + 2);
         y += 9;
         game.drawBigDot(x, y);
+
+        // Draw the sprites
+        game.pacman.render(ctx);
+        game.getGhost(0).paint(ctx);
 
         if (!game.audio.isInitialized()) {
            this._renderNoSoundMessage();
@@ -89,11 +87,11 @@ module pacman {
 
       _renderNoSoundMessage() {
 
-        var w = game.getWidth();
+        let w: number = game.getWidth();
 
-        var text = 'SOUND IS DISABLED AS';
-        var x = (w - this._stringWidth(text)) / 2;
-        var y = game.getHeight() - 20 - 9*3;
+        let text: string = 'SOUND IS DISABLED AS';
+        let x: number = (w - this._stringWidth(text)) / 2;
+        let y: number = game.getHeight() - 20 - 9*3;
         this.getGame().drawString(x, y, text);
         text = 'YOUR BROWSER DOES NOT';
         x = ( w - this._stringWidth(text)) / 2;
@@ -108,20 +106,24 @@ module pacman {
       // TODO: Move this stuff into an image that gets rendered each frame?
       _renderStaticStuff(ctx: CanvasRenderingContext2D) {
 
-        var game = this.game;
+        const game: gtp.Game = this.game;
         game.clearScreen('rgb(0,0,0)');
-        var SCREEN_WIDTH = game.getWidth();
-        var charWidth = 9;
+        const SCREEN_WIDTH: number = game.getWidth();
+        const charWidth: number = 9;
 
+        // Render the "scores" stuff at the top.
+        (<PacmanGame>game).drawScores(ctx);
+        (<PacmanGame>game).drawScoresHeaders(ctx);
+        
         // Title image
-        var titleImage = game.assets.get('title');
-        var x = (SCREEN_WIDTH - titleImage.width) / 2;
-        var y = titleImage.height * 1.2;
+        let titleImage = game.assets.get('title');
+        let x: number = (SCREEN_WIDTH - titleImage.width) / 2;
+        let y: number = titleImage.height * 1.2;
         titleImage.draw(ctx, x, y);
 
         // Game menu
-        var temp = 'STANDARD MAZE';
-        var charCount = temp.length - 1; // "-1" for selection arrow
+        let temp: string = 'STANDARD MAZE';
+        let charCount: number = temp.length - 1; // "-1" for selection arrow
         // " - 5" to account for differently sized choices
         x = (SCREEN_WIDTH - charWidth * charCount) / 2 - 5;
         y = (game.getHeight() - 15 * 2) / 2;
@@ -151,8 +153,55 @@ module pacman {
         game.startGame(this._choice);
       }
 
-      private getGame(): PacmanGame {
-        return <PacmanGame>this.game;
+      update(delta: number) {
+
+        this.handleDefaultKeys();
+
+        let playTime: number = game.playTime;
+        if (playTime > this._lastKeypressTime + _BaseState.INPUT_REPEAT_MILLIS + 100) {
+
+          let im: gtp.InputManager = game.inputManager;
+
+          if (im.up()) {
+             this._choice = Math.abs(this._choice - 1);
+             game.audio.playSound(Sounds.TOKEN);
+             this._lastKeypressTime = playTime;
+          }
+          else if (im.down()) {
+             this._choice = (this._choice + 1) % 2;
+             game.audio.playSound(Sounds.TOKEN);
+             this._lastKeypressTime = playTime;
+          }
+          else if (im.enter(true)) {
+             this._startGame();
+          }
+        }
+
+        let pacman: Pacman = game.pacman;
+        let ghost: Ghost = game.getGhost(0);
+
+    		// Update the animated Pacman
+    		let moveAmount: number = pacman.moveAmount;
+    		if (pacman.direction === Direction.WEST) {
+    			moveAmount = -moveAmount;
+    		}
+    		pacman.incX(moveAmount);
+    		moveAmount = ghost.moveAmount;
+    		if (ghost.direction === Direction.WEST) {
+    			moveAmount = -moveAmount;
+    		}
+    		ghost.incX(moveAmount);
+
+    		// Check whether it's time to turn around
+        if (pacman.x + pacman.width >= this.game.getWidth() - 30) {
+          pacman.direction = ghost.direction = Direction.WEST;
+    		}
+    		else if (ghost.x <= 30) {
+          pacman.direction = ghost.direction = Direction.EAST;
+    		}
+
+    		pacman.updateFrame();
+    		ghost.updateFrame();
       }
   }
 }
