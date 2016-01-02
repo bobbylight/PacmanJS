@@ -154,7 +154,7 @@ var pacman;
         };
         MazeState.prototype.reset = function () {
             this._maze.reset();
-            game.resetPlayTime;
+            game.resetPlayTime();
             game.pacman.reset();
             game.resetGhosts(); // Do AFTER resetting playtime!
             this._substate = Substate.READY;
@@ -205,14 +205,12 @@ var pacman;
                     }
                 }
             }
-            else if (input.isKeyDown(gtp.Keys.KEY_Z)) {
-                console.log('wowza');
-            }
         };
         MazeState.prototype.update = function (delta) {
             _super.prototype.update.call(this, delta);
+            // playTime may reset in handleInput, so we fetch it again afterward
+            this._handleInput(delta, game.playTime);
             var time = game.playTime;
-            this._handleInput(delta, time);
             switch (this._substate) {
                 case Substate.READY:
                     if (this._firstTimeThrough && this._substateStartTime === 0) {

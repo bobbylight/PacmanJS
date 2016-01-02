@@ -177,7 +177,7 @@ module pacman {
 
     reset() {
   		this._maze.reset();
-  		game.resetPlayTime;
+  		game.resetPlayTime();
       game.pacman.reset();
       game.resetGhosts(); // Do AFTER resetting playtime!
   		this._substate = Substate.READY;
@@ -243,16 +243,14 @@ module pacman {
         }
 
       }
-      else if (input.isKeyDown(gtp.Keys.KEY_Z)) {
-        console.log('wowza');
-      }
     }
 
     update(delta: number) {
       super.update(delta);
 
-      let time: number = game.playTime;
-      this._handleInput(delta, time);
+      // playTime may reset in handleInput, so we fetch it again afterward
+      this._handleInput(delta, game.playTime);
+      const time: number = game.playTime;
 
       switch (this._substate) {
 
