@@ -55,7 +55,7 @@ module pacman {
       this._lastSpriteFrameTime = 0;
     }
 
-    _paintExtraLives(ctx: CanvasRenderingContext2D) {
+    private _paintExtraLives(ctx: CanvasRenderingContext2D) {
 
       // The indentation on either side of the status stuff at the bottom
       // (extra life count, possible fruits, etc.).
@@ -74,12 +74,12 @@ module pacman {
       }
   }
 
-    _paintPossibleFruits(ctx: CanvasRenderingContext2D) {
+    private _paintPossibleFruits(ctx: CanvasRenderingContext2D) {
 
       // The indentation on either side of the status stuff at the bottom
       // (extra life count, possible fruits, etc.).
-      let BOTTOM_INDENT = 24;
-      let TILE_SIZE = 8;
+      const BOTTOM_INDENT: number = 12;
+      const TILE_SIZE: number = PacmanGame.TILE_SIZE;
 
       let x = game.getWidth() - BOTTOM_INDENT - 2 * TILE_SIZE;
       let y = game.getHeight() - 2 * TILE_SIZE;
@@ -87,10 +87,10 @@ module pacman {
       switch (game.level) {
          default:
          case 7: // Key
-            game.drawSprite(x-56,y, 13*16,3*16);
+            game.drawSprite(x-112,y, 13*16,3*16);
             // Fall through
          case 6: // Space Invaders ship
-            game.drawSprite(x-48,y, 13*16,6*16);
+            game.drawSprite(x-96,y, 13*16,6*16);
             // Fall through
          case 5: // Green thing (grapes?)
             game.drawSprite(x-80,y, 12*16,6*16);

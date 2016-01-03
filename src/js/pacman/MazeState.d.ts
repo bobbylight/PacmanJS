@@ -14,8 +14,8 @@ declare module pacman {
         private static DYING_FRAME_DELAY_MILLIS;
         private _readyDelayMillis;
         enter(): void;
-        _paintExtraLives(ctx: CanvasRenderingContext2D): void;
-        _paintPossibleFruits(ctx: CanvasRenderingContext2D): void;
+        private _paintExtraLives(ctx);
+        private _paintPossibleFruits(ctx);
         render(ctx: CanvasRenderingContext2D): void;
         reset(): void;
         private _handleInput(delta, time);

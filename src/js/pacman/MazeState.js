@@ -68,17 +68,17 @@ var pacman;
         MazeState.prototype._paintPossibleFruits = function (ctx) {
             // The indentation on either side of the status stuff at the bottom
             // (extra life count, possible fruits, etc.).
-            var BOTTOM_INDENT = 24;
-            var TILE_SIZE = 8;
+            var BOTTOM_INDENT = 12;
+            var TILE_SIZE = pacman_1.PacmanGame.TILE_SIZE;
             var x = game.getWidth() - BOTTOM_INDENT - 2 * TILE_SIZE;
             var y = game.getHeight() - 2 * TILE_SIZE;
             switch (game.level) {
                 default:
                 case 7:
-                    game.drawSprite(x - 56, y, 13 * 16, 3 * 16);
+                    game.drawSprite(x - 112, y, 13 * 16, 3 * 16);
                 // Fall through
                 case 6:
-                    game.drawSprite(x - 48, y, 13 * 16, 6 * 16);
+                    game.drawSprite(x - 96, y, 13 * 16, 6 * 16);
                 // Fall through
                 case 5:
                     game.drawSprite(x - 80, y, 12 * 16, 6 * 16);
