@@ -14,6 +14,8 @@
    var tsconfig = tsc.createProject('tsconfig.json');
    var sourcemaps = require('gulp-sourcemaps');
    var tslint = require('gulp-tslint');
+   var replace = require('gulp-replace');
+   var dateFormat = require('dateformat');
 
    gulp.task('clean', function() {
       return del([
@@ -30,6 +32,8 @@
             inlinejs: [ uglify ]
             //, html: [ minifyHtml({ empty: true }) ]
          }))
+         .pipe(replace('<%=build.date%>',
+            dateFormat(new Date(), 'dddd, mmmm dS, yyyy, h:MM:ss TT')))
          .pipe(gulp.dest('dist/'));
    });
 

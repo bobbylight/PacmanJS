@@ -5,6 +5,7 @@
    <title>Pacman</title>
    <meta charset="UTF-8">
    <link rel='stylesheet' type='text/css' href='css/all.css'>
+   <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 
    <!-- build:js js/pacman.min.js -->
    <script src='js/pacman.js'></script>
@@ -58,21 +59,40 @@
 
 <body onload='init("parent")'>
 
-   <h1>Pacman in your browser!</h1>
+  <div class='content'>
 
-   <div id='parent'></div>
+    <h1>Pacman in your browser!</h1>
 
-   <h3>Controls:</h3>
-   <ol>
-      <li><b>Enter:</b> Start game / Pause
-      <li><b>Arrow Keys:</b> Move around
-   </ol>
+    <div id='parent'></div>
 
-   <h3>Cheats:</h3>
-   <ol>
-      <li><em>Coming soon!</em>
-   </ol>
+    <div class='panel'>
 
+      <div class='panel-header'>
+        <h3>How to Play</h3>
+      </div>
+
+      <div class='info'>
+
+        <h4>Controls:</h4>
+        <ol>
+          <li><b>Enter:</b> Start game / Pause
+          <li><b>Arrow Keys:</b> Move around
+        </ol>
+
+        <h4>Cheats:</h4>
+        <ul>
+          <li><b>Z + X</b>: Next level
+          <li><b>Z + C</b>: Commit suicide
+        </ul>
+
+      </div>
+
+      <div class='panel-footer'>
+        Build date: <%=build.date%>
+      </div>
+    </div>
+
+  </div>
 </body>
 
 </html>

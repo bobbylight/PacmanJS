@@ -32,7 +32,8 @@ version will be built in `src/js` and the production version in `dist/`.
 
 Relatively in the order in which I want to fix things:
 
-* Slight visual glitch in bitmap font rendering in IE and Edge
+* "Key" fruit not rendered properly in gutter
+* God mode needs implementing
 * Fruit in a maze is not reset on game over/restart
 * Sound effects don't always stop/restart properly when the game is paused
 * Intermissions are not yet implemented
