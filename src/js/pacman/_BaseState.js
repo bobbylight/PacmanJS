@@ -14,13 +14,8 @@ var pacman;
          */
         function _BaseState(args) {
             _super.call(this, args);
+            this._lastConfigKeypressTime = gtp.Utils.timestamp();
         }
-        _BaseState.prototype.createScreenshot = function () {
-            var canvas = gtp.ImageUtils.createCanvas(game.getWidth(), game.getHeight());
-            var ctx = canvas.getContext('2d');
-            this.render(ctx);
-            return canvas;
-        };
         Object.defineProperty(_BaseState, "INPUT_REPEAT_MILLIS", {
             get: function () {
                 return 200;
@@ -28,12 +23,19 @@ var pacman;
             enumerable: true,
             configurable: true
         });
-        _BaseState.prototype.handleDefaultKeys = function (time) {
-            time = time || this.game.playTime;
+        _BaseState.prototype.handleDefaultKeys = function () {
+            // We use a timestamp instead of game.playTime since game.playTime gets
+            // reset, which messes us up
+            var time = gtp.Utils.timestamp(); // this.game.playTime;
             var im = this.game.inputManager;
             if (time > (this._lastConfigKeypressTime + _BaseState.INPUT_REPEAT_MILLIS)) {
+                // Audio stuff
+                if (im.isKeyDown(gtp.Keys.KEY_M, true)) {
+                    game.toggleMuted();
+                    this._lastConfigKeypressTime = time;
+                }
                 // Debugging actions
-                if (im.shift()) {
+                if (im.isKeyDown(gtp.Keys.KEY_Z)) {
                     // Increase canvas size
                     if (im.isKeyDown(gtp.Keys.KEY_P, true)) {
                         if (!game.canvas.style.width) {
@@ -57,10 +59,6 @@ var pacman;
                         game.canvas.style.width = (parseInt(game.canvas.style.width.substring(0, game.canvas.style.width.length - 2), 10) - 1) + 'px';
                         game.canvas.style.height = (parseInt(game.canvas.style.height.substring(0, game.canvas.style.height.length - 2), 10) - 1) + 'px';
                         game.setStatusMessage('Canvas size now: (' + game.canvas.style.width + ', ' + game.canvas.style.height + ')');
-                        this._lastConfigKeypressTime = time;
-                    }
-                    else if (im.isKeyDown(gtp.Keys.KEY_M, true)) {
-                        game.toggleMuted();
                         this._lastConfigKeypressTime = time;
                     }
                     else if (im.isKeyDown(gtp.Keys.KEY_G, true)) {

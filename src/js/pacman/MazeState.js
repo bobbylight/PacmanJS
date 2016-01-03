@@ -165,7 +165,7 @@ var pacman;
             this._lastMazeScreenKeypressTime = game.playTime + MazeState.INPUT_REPEAT_MILLIS;
         };
         MazeState.prototype._handleInput = function (delta, time) {
-            this.handleDefaultKeys(time);
+            this.handleDefaultKeys();
             var input = game.inputManager;
             // Enter -> Pause.  Don't check for pausing on "Game Over" screen as
             // that will carry over into the next game!

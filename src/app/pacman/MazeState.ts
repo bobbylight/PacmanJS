@@ -191,7 +191,7 @@ module pacman {
 
     private _handleInput(delta: number, time: number) {
 
-      this.handleDefaultKeys(time);
+      this.handleDefaultKeys();
       let input: gtp.InputManager = game.inputManager;
 
       // Enter -> Pause.  Don't check for pausing on "Game Over" screen as

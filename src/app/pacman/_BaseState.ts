@@ -11,29 +11,30 @@ module pacman {
 		 */
 		constructor(args?: gtp.Game | gtp.BaseStateArgs) {
 			super(args);
-		}
-
-		createScreenshot(): HTMLCanvasElement {
-			const canvas: HTMLCanvasElement = gtp.ImageUtils.createCanvas(
-				game.getWidth(), game.getHeight());
-			const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-			this.render(ctx);
-			return canvas;
+			this._lastConfigKeypressTime = gtp.Utils.timestamp();
 		}
 
 		static get INPUT_REPEAT_MILLIS(): number {
       return 200;
     }
 
-		handleDefaultKeys(time?: number) {
+		protected handleDefaultKeys() {
 
-			time = time || this.game.playTime;
+			// We use a timestamp instead of game.playTime since game.playTime gets
+			// reset, which messes us up
+			const time: number = gtp.Utils.timestamp();// this.game.playTime;
 			const im: gtp.InputManager = this.game.inputManager;
 
 			if (time > (this._lastConfigKeypressTime + _BaseState.INPUT_REPEAT_MILLIS)) {
 
+				// Audio stuff
+				if (im.isKeyDown(gtp.Keys.KEY_M, true)) {
+					game.toggleMuted();
+					this._lastConfigKeypressTime = time;
+				}
+
 				// Debugging actions
-				if (im.shift()) {
+				if (im.isKeyDown(gtp.Keys.KEY_Z)) {
 
 					// Increase canvas size
 					if (im.isKeyDown(gtp.Keys.KEY_P, true)) {
@@ -60,12 +61,6 @@ module pacman {
 						game.canvas.style.width = (parseInt(game.canvas.style.width.substring(0, game.canvas.style.width.length - 2), 10) - 1) + 'px';
 						game.canvas.style.height = (parseInt(game.canvas.style.height.substring(0, game.canvas.style.height.length - 2), 10) - 1) + 'px';
 						game.setStatusMessage('Canvas size now: (' + game.canvas.style.width + ', ' + game.canvas.style.height + ')');
-						this._lastConfigKeypressTime = time;
-					}
-
-					// Audio stuff
-					else if (im.isKeyDown(gtp.Keys.KEY_M, true)) {
-						game.toggleMuted();
 						this._lastConfigKeypressTime = time;
 					}
 
