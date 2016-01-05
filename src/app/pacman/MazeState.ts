@@ -19,7 +19,6 @@ module pacman {
     private _nextUpdateTime: number;
     private _nextDyingFrameTime: number;
     private _lastMazeScreenKeypressTime: number;
-    private _lastSpriteFrameTime: number;
 
     constructor(mazeFile: number[][]) {
       super();
@@ -310,12 +309,7 @@ module pacman {
       this._nextUpdateTime = 0;
       this._updateScoreIndex = -1;
 
-      // Don't update sprite frame at each rendered frame; that would be
-      // too fast
-      if (time >= this._lastSpriteFrameTime + 100) {
-        this._lastSpriteFrameTime = time;
-        game.updateSpriteFrames();
-      }
+      this._updateSpriteFrames();
 
       // Update Pacman's, ghosts', and possibly fruit's positions
       game.updateSpritePositions(this._maze, time);

@@ -298,6 +298,7 @@ var pacman;
             }
             // Next, we create a working copy of our maze data, since we mutate it
             this._data = Maze._cloneObjectOfPrimitives(this._origMazeInfo);
+            this._eatenDotCount = 0;
             if (firstTime) {
                 var mapTiles = game.assets.get('mapTiles');
                 // Create an image for the maze
@@ -305,7 +306,6 @@ var pacman;
                 this._mazeCanvas = gtp.ImageUtils.createCanvas(game.getWidth(), game.getHeight());
                 var mazeCtx = this._mazeCanvas.getContext('2d');
                 var walkableCount = 0;
-                this._eatenDotCount = 0;
                 this._dotCount = 0;
                 mazeCtx.fillStyle = '#000000';
                 mazeCtx.fillRect(0, 0, this._mazeCanvas.width, this._mazeCanvas.height);

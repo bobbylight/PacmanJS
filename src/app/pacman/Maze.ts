@@ -336,17 +336,17 @@ module pacman {
        }
        // Next, we create a working copy of our maze data, since we mutate it
        this._data = Maze._cloneObjectOfPrimitives(this._origMazeInfo);
+       this._eatenDotCount = 0;
 
        if (firstTime) {
 
-         let mapTiles = game.assets.get('mapTiles');
+         const mapTiles: gtp.SpriteSheet = game.assets.get('mapTiles');
 
          // Create an image for the maze
-         let mazeY = 2 * TILE_SIZE;
+         const mazeY: number = 2 * TILE_SIZE;
          this._mazeCanvas = gtp.ImageUtils.createCanvas(game.getWidth(), game.getHeight());
          let mazeCtx = this._mazeCanvas.getContext('2d');
          let walkableCount = 0;
-         this._eatenDotCount = 0;
          this._dotCount = 0;
 
          mazeCtx.fillStyle = '#000000';
@@ -355,11 +355,11 @@ module pacman {
          game.drawScoresHeaders(mazeCtx);
 
          // Render each tile from the map data
-         for (let row = 0; row < this._data.length; row++) {
+         for (let row: number = 0; row < this._data.length; row++) {
 
-            let rowData = this._data[row];
+            const rowData: number[] = this._data[row];
 
-            for (let col = 0; col < rowData.length; col++) {
+            for (let col: number = 0; col < rowData.length; col++) {
 
                let tile = rowData[col];
                if (tile === 0 || tile >= 0xf0) {

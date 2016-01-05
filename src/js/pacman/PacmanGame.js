@@ -391,9 +391,9 @@ var pacman;
             this.setLoopedSound(null);
             this.audio.playSound(pacman.Sounds.DIES);
             this.pacman.startDying();
-            // this.fruit = null;
-            // this._fruitScoreIndex = -1;
-            // this._fruitScoreEndTime = -1;
+            this._fruit = null;
+            this._fruitScoreIndex = -1;
+            this._fruitScoreEndTime = -1;
         };
         /**
          * Goes to the next animation frame for pacman, the ghosts and the

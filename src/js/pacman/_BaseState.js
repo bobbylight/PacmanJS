@@ -15,6 +15,7 @@ var pacman;
         function _BaseState(args) {
             _super.call(this, args);
             this._lastConfigKeypressTime = gtp.Utils.timestamp();
+            this._lastSpriteFrameTime = 0;
         }
         Object.defineProperty(_BaseState, "INPUT_REPEAT_MILLIS", {
             get: function () {
@@ -66,6 +67,15 @@ var pacman;
                         this._lastConfigKeypressTime = time;
                     }
                 }
+            }
+        };
+        _BaseState.prototype._updateSpriteFrames = function () {
+            var time = game.playTime;
+            // Don't update sprite frame at each rendered frame; that would be
+            // too fast
+            if (time >= this._lastSpriteFrameTime + 100) {
+                this._lastSpriteFrameTime = time;
+                game.updateSpriteFrames();
             }
         };
         return _BaseState;

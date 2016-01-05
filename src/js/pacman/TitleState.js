@@ -164,8 +164,7 @@ var pacman;
             else if (ghost.x <= 30) {
                 pacman.direction = ghost.direction = pacman_1.Direction.EAST;
             }
-            pacman.updateFrame();
-            ghost.updateFrame();
+            this._updateSpriteFrames();
         };
         return TitleState;
     })(pacman_1._BaseState);

@@ -114,7 +114,7 @@ module pacman {
         // Render the "scores" stuff at the top.
         (<PacmanGame>game).drawScores(ctx);
         (<PacmanGame>game).drawScoresHeaders(ctx);
-        
+
         // Title image
         let titleImage = game.assets.get('title');
         let x: number = (SCREEN_WIDTH - titleImage.width) / 2;
@@ -200,8 +200,7 @@ module pacman {
           pacman.direction = ghost.direction = Direction.EAST;
     		}
 
-    		pacman.updateFrame();
-    		ghost.updateFrame();
+        this._updateSpriteFrames();
       }
   }
 }

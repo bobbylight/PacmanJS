@@ -9,7 +9,6 @@ declare module pacman {
         private _nextUpdateTime;
         private _nextDyingFrameTime;
         private _lastMazeScreenKeypressTime;
-        private _lastSpriteFrameTime;
         constructor(mazeFile: number[][]);
         private static DYING_FRAME_DELAY_MILLIS;
         private _readyDelayMillis;

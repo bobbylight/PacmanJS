@@ -4,6 +4,7 @@ module pacman {
 	export class _BaseState extends gtp.State {
 
 		private _lastConfigKeypressTime: number;
+		protected _lastSpriteFrameTime: number;
 
 		/**
 		 * Functionality common amongst all states in this game.
@@ -12,6 +13,7 @@ module pacman {
 		constructor(args?: gtp.Game | gtp.BaseStateArgs) {
 			super(args);
 			this._lastConfigKeypressTime = gtp.Utils.timestamp();
+			this._lastSpriteFrameTime = 0;
 		}
 
 		static get INPUT_REPEAT_MILLIS(): number {
@@ -73,6 +75,17 @@ module pacman {
 			}
 
 		}
+
+		protected _updateSpriteFrames() {
+			var time = game.playTime;
+			// Don't update sprite frame at each rendered frame; that would be
+      // too fast
+      if (time >= this._lastSpriteFrameTime + 100) {
+        this._lastSpriteFrameTime = time;
+        game.updateSpriteFrames();
+      }
+		}
+
 	}
 
 }
