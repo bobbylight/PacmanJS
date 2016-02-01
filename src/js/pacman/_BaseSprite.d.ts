@@ -1,11 +1,11 @@
 declare module pacman {
     abstract class _BaseSprite {
         bounds: gtp.Rectangle;
-        _intersectBounds: gtp.Rectangle;
+        private _intersectBounds;
         direction: Direction;
         _frame: number;
-        _frameCount: number;
-        _lastUpdateTime: number;
+        private _frameCount;
+        private _lastUpdateTime;
         constructor(frameCount: number);
         atIntersection(maze: Maze): boolean;
         getCanMoveDown(maze: Maze): boolean;

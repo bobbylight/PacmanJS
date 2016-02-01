@@ -116,10 +116,10 @@ module pacman {
         toCol: number): MazeNode {
 
       let self: Maze = this;
-      this.open.forEach(function(node: MazeNode) {
+      this.open.forEach((node: MazeNode) => {
         self._data[node.row][node.col] &= 0xff;
       });
-      this.closed.forEach(function(node: MazeNode) {
+      this.closed.forEach((node: MazeNode) => {
         self._data[node.row][node.col] &= 0xff;
       });
 

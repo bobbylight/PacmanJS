@@ -1,7 +1,7 @@
 declare module pacman {
     class LoadingState extends _BaseState {
-        assetsLoaded: boolean;
-        _loadingImage: any;
+        private _assetsLoaded;
+        private _loadingImage;
         /**
              * State that renders while resources are loading.
              * @constructor

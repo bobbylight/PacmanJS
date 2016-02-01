@@ -79,7 +79,7 @@ var pacman;
                 var col = this.column;
                 return row > 0 && maze.isWalkable(row - 1, col);
             }
-            return this.direction == pacman.Direction.NORTH || this.direction == pacman.Direction.SOUTH;
+            return this.direction === pacman.Direction.NORTH || this.direction === pacman.Direction.SOUTH;
         };
         Object.defineProperty(_BaseSprite.prototype, "centerX", {
             get: function () {

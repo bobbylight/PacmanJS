@@ -3,8 +3,8 @@ module pacman {
 
   export class LoadingState extends _BaseState {
 
-    assetsLoaded: boolean;
-    _loadingImage: any;
+    private _assetsLoaded: boolean;
+    private _loadingImage: any;
 
     /**
 		 * State that renders while resources are loading.
@@ -12,21 +12,22 @@ module pacman {
 		 */
       constructor(args?: gtp.Game | gtp.BaseStateArgs) {
         super(args);
+        this._assetsLoaded = false;
       }
 
       update(delta: number) {
 
         this.handleDefaultKeys();
 
-        if (!this.assetsLoaded) {
+        if (!this._assetsLoaded) {
 
-           this.assetsLoaded = true;
-           let game = this.game;
-           let self = this;
+           this._assetsLoaded = true;
+           const game: gtp.Game = this.game;
+           const self: LoadingState = this;
 
            // Load assets used by this state first
            game.assets.addImage('loading', 'res/loadingMessage.png');
-           game.assets.onLoad(function() {
+           game.assets.onLoad(() => {
 
               self._loadingImage = game.assets.get('loading');
 
@@ -48,20 +49,21 @@ module pacman {
               game.assets.addSound(pacman.Sounds.OPENING, 'res/sounds/opening.wav');
               game.assets.addSound(pacman.Sounds.SIREN, 'res/sounds/siren.wav');
               game.assets.addSound(pacman.Sounds.TOKEN, 'res/sounds/token.wav');
-              game.assets.onLoad(function() {
+              game.assets.onLoad(() => {
 
                  // Convert level data from hex strings to numbers
                  function hexStrToInt(str: string) : number { return parseInt(str, 16); }
-                 let levelData = game.assets.get('levels');
+                 const levelData = game.assets.get('levels');
                  for (let i: number = 0; i < levelData.length; i++) {
                     for (let row: number = 0; row < levelData[i].length; row++) {
                        levelData[i][row] = levelData[i][row].map(hexStrToInt);
                     }
                  }
 
-                 let skipTitle = gtp.Utils.getRequestParam('skipTitle');
+                 const skipTitle: string = gtp.Utils.getRequestParam('skipTitle');
                  if (skipTitle !== null) { // Allow empty strings
-                    this.getGame().startNewGame();
+                    const pacmanGame = <pacman.PacmanGame>self.game;
+                    pacmanGame.startGame(0);
                  }
                  else {
                     game.setState(new gtp.FadeOutInState(self, new pacman.TitleState()));

@@ -14,11 +14,12 @@ var pacman;
              */
         function LoadingState(args) {
             _super.call(this, args);
+            this._assetsLoaded = false;
         }
         LoadingState.prototype.update = function (delta) {
             this.handleDefaultKeys();
-            if (!this.assetsLoaded) {
-                this.assetsLoaded = true;
+            if (!this._assetsLoaded) {
+                this._assetsLoaded = true;
                 var game_1 = this.game;
                 var self_1 = this;
                 // Load assets used by this state first
@@ -54,7 +55,8 @@ var pacman;
                         }
                         var skipTitle = gtp.Utils.getRequestParam('skipTitle');
                         if (skipTitle !== null) {
-                            this.getGame().startNewGame();
+                            var pacmanGame = self_1.game;
+                            pacmanGame.startGame(0);
                         }
                         else {
                             game_1.setState(new gtp.FadeOutInState(self_1, new pacman.TitleState()));

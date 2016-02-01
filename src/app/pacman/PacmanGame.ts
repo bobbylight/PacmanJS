@@ -176,7 +176,7 @@ module pacman {
   	 * @param ctx The context with which to paint.
   	 */
   	drawGhosts(ctx: CanvasRenderingContext2D) {
-  		this._ghosts.forEach(function(ghost) {
+      this._ghosts.forEach((ghost: Ghost) => {
         ghost.paint(ctx);
       });
   	}
@@ -355,7 +355,7 @@ module pacman {
 
     makeGhostsBlue() {
       this._eatenGhostPointsIndex = 0;
-      this._ghosts.forEach(function(ghost) {
+      this._ghosts.forEach((ghost: Ghost) => {
         ghost.possiblyTurnBlue();
       });
       // Don't just change to "blue" sound as "eyes" sound trumps "blue".
@@ -468,7 +468,7 @@ module pacman {
   	 */
   	updateSpriteFrames() {
   		this.pacman.updateFrame();
-      this._ghosts.forEach(function(ghost: Ghost) {
+      this._ghosts.forEach((ghost: Ghost) => {
         ghost.updateFrame();
       });
   	}
@@ -490,7 +490,7 @@ module pacman {
 
   		switch (this._ghostUpdateStrategy) {
   			case GhostUpdateStrategy.UPDATE_ALL:
-          this._ghosts.forEach(function(ghost: Ghost) {
+          this._ghosts.forEach((ghost: Ghost) => {
             ghost.updatePosition(maze, time);
           });
   				break;

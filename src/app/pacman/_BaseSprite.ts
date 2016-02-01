@@ -4,11 +4,11 @@ module pacman {
   export abstract class _BaseSprite {
 
     bounds: gtp.Rectangle;
-    _intersectBounds: gtp.Rectangle;
+    private _intersectBounds: gtp.Rectangle;
     direction: Direction;
     _frame: number;
-    _frameCount: number;
-    _lastUpdateTime: number;
+    private _frameCount: number;
+    private _lastUpdateTime: number;
 
     constructor(frameCount: number) {
       this.bounds = new gtp.Rectangle(0, 0, PacmanGame.SPRITE_SIZE, PacmanGame.SPRITE_SIZE);
@@ -40,7 +40,7 @@ module pacman {
   		if (xRemainder === 0 && yRemainder === 0) {
   			let row: number = this.row;
   			let col: number = this.column;
-  			return row<30 && maze.isWalkable(row + 1, col);
+  			return row < 30 && maze.isWalkable(row + 1, col);
   		}
   		return this.direction === Direction.NORTH || this.direction === Direction.SOUTH;
   	}
@@ -92,7 +92,7 @@ module pacman {
   			let col: number = this.column;
   			return row>0 && maze.isWalkable(row - 1, col);
   		}
-      return this.direction == Direction.NORTH || this.direction == Direction.SOUTH;
+      return this.direction === Direction.NORTH || this.direction === Direction.SOUTH;
   	}
 
     get centerX(): number {
