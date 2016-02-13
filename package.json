@@ -1,18 +1,25 @@
 {
   "name": "pacman-html5",
+  "description": "Pacman written in TypeScript",
   "version": "0.1.0",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/bobbylight/PacmanJS.git"
   },
+  "scripts": {
+    "start": "electron src/js/electron-main.js"
+  },
   "devDependencies": {
     "dateformat": "^1.0.12",
     "del": "^2.1.0",
+    "electron": "^0.4.1",
+    "electron-prebuilt": "^0.36.7",
     "gulp": "^3.9.0",
     "gulp-concat-css": "^2.2.0",
     "gulp-cssmin": "^0.1.7",
     "gulp-debug": "^2.1.2",
+    "gulp-electron": "0.0.10",
     "gulp-jshint": "^2.0.0",
     "gulp-replace": "^0.5.4",
     "gulp-rev": "^6.0.1",

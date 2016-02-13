@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "declaration": true,
+        "declaration": false,
         "noImplicitAny": true,
         "removeComments": false,
         "preserveConstEnums": true,
@@ -31,7 +31,8 @@
         "src/app/pacman/Pinky.ts",
         "src/app/pacman/Sounds.ts",
         "src/app/pacman/TitleState.ts",
-        "bower_components/gtp/dist-all/gtp-all.d.ts"
+        "bower_components/gtp/dist-all/gtp-all.d.ts",
+        "src/typings/tsd.d.ts"
     ],
     "atom": {
         "rewriteTsconfig": true

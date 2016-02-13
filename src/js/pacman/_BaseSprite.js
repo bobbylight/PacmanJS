@@ -70,7 +70,7 @@ var pacman;
             var x = this.centerX;
             var y = this.centerY;
             if ((x % 1) !== 0 || (y % 1) !== 0) {
-                debugger;
+                console.error('Unexpected condition: x === ' + x + ', y === ' + y);
             }
             var xRemainder = x % this.TILE_SIZE;
             var yRemainder = y % this.TILE_SIZE; //(y-TILE_SIZE) % this.TILE_SIZE;

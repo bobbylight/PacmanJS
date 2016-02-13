@@ -2,9 +2,9 @@ var pacman;
 (function (pacman) {
     'use strict';
     /**
-       * A "node" used in the breadth-first path searches supported by a
+     * A "node" used in the breadth-first path searches supported by a
      * <code>Maze</code>.  It represents a location in the maze.
-       */
+     */
     var MazeNode = (function () {
         function MazeNode(row, col) {
             if (row === void 0) { row = 0; }
@@ -21,7 +21,7 @@ var pacman;
             this.parent = parent;
         };
         MazeNode.prototype.toString = function () {
-            return "[MazeNode: (" + this.row + "," + this.col + ")]";
+            return '[MazeNode: (' + this.row + ',' + this.col + ')]';
         };
         return MazeNode;
     })();

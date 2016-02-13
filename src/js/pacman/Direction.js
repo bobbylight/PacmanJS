@@ -15,14 +15,14 @@ var pacman;
             if (str === void 0) { str = 'SOUTH'; }
             switch (str.toUpperCase()) {
                 case 'NORTH':
-                    return pacman.Direction.NORTH;
+                    return Direction.NORTH;
                 case 'EAST':
-                    return pacman.Direction.EAST;
+                    return Direction.EAST;
                 case 'WEST':
-                    return pacman.Direction.WEST;
+                    return Direction.WEST;
                 case 'SOUTH':
                 default:
-                    return pacman.Direction.SOUTH;
+                    return Direction.SOUTH;
             }
         };
         return DirectionUtil;

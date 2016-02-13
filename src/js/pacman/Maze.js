@@ -53,13 +53,13 @@ var pacman;
          */
         Maze._constructPath = function (node) {
             /*
-            LinkedList<Node> path = new LinkedList<Node>();
-            while (node.parent!=null) {
-                path.addFirst(node);
-                node = node.parent;
-            }
-            return path;
-            */
+             LinkedList<Node> path = new LinkedList<Node>();
+             while (node.parent!=null) {
+             path.addFirst(node);
+             node = node.parent;
+             }
+             return path;
+             */
             var prev = null;
             while (node.parent) {
                 prev = node;

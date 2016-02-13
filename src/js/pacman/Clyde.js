@@ -7,7 +7,7 @@ var pacman;
 (function (pacman) {
     'use strict';
     /**
-    * Clyde, the orange ghost.
+     * Clyde, the orange ghost.
      */
     var Clyde = (function (_super) {
         __extends(Clyde, _super);

@@ -9,9 +9,9 @@ var pacman;
     var LoadingState = (function (_super) {
         __extends(LoadingState, _super);
         /**
-             * State that renders while resources are loading.
-             * @constructor
-             */
+         * State that renders while resources are loading.
+         * @constructor
+         */
         function LoadingState(args) {
             _super.call(this, args);
             this._assetsLoaded = false;

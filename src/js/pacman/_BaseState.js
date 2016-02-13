@@ -39,27 +39,29 @@ var pacman;
                 if (im.isKeyDown(gtp.Keys.KEY_Z)) {
                     // Increase canvas size
                     if (im.isKeyDown(gtp.Keys.KEY_P, true)) {
-                        if (!game.canvas.style.width) {
-                            game.canvas.style.width = game.canvas.width + 'px';
+                        var style = game.canvas.style;
+                        if (!style.width) {
+                            style.width = game.canvas.width + 'px';
                         }
-                        if (!game.canvas.style.height) {
-                            game.canvas.style.height = game.canvas.height + 'px';
+                        if (!style.height) {
+                            style.height = game.canvas.height + 'px';
                         }
-                        game.canvas.style.width = (parseInt(game.canvas.style.width.substring(0, game.canvas.style.width.length - 2), 10) + 1) + 'px';
-                        game.canvas.style.height = (parseInt(game.canvas.style.height.substring(0, game.canvas.style.height.length - 2), 10) + 1) + 'px';
-                        game.setStatusMessage('Canvas size now: (' + game.canvas.style.width + ', ' + game.canvas.style.height + ')');
+                        style.width = (parseInt(style.width.substring(0, style.width.length - 2), 10) + 1) + 'px';
+                        style.height = (parseInt(style.height.substring(0, style.height.length - 2), 10) + 1) + 'px';
+                        game.setStatusMessage('Canvas size now: (' + style.width + ', ' + style.height + ')');
                         this._lastConfigKeypressTime = time;
                     }
                     else if (im.isKeyDown(gtp.Keys.KEY_L, true)) {
-                        if (!game.canvas.style.width) {
-                            game.canvas.style.width = game.canvas.width + 'px';
+                        var style = game.canvas.style;
+                        if (!style.width) {
+                            style.width = game.canvas.width + 'px';
                         }
-                        if (!game.canvas.style.height) {
-                            game.canvas.style.height = game.canvas.height + 'px';
+                        if (!style.height) {
+                            style.height = game.canvas.height + 'px';
                         }
-                        game.canvas.style.width = (parseInt(game.canvas.style.width.substring(0, game.canvas.style.width.length - 2), 10) - 1) + 'px';
-                        game.canvas.style.height = (parseInt(game.canvas.style.height.substring(0, game.canvas.style.height.length - 2), 10) - 1) + 'px';
-                        game.setStatusMessage('Canvas size now: (' + game.canvas.style.width + ', ' + game.canvas.style.height + ')');
+                        style.width = (parseInt(style.width.substring(0, style.width.length - 2), 10) - 1) + 'px';
+                        style.height = (parseInt(style.height.substring(0, style.height.length - 2), 10) - 1) + 'px';
+                        game.setStatusMessage('Canvas size now: (' + style.width + ', ' + style.height + ')');
                         this._lastConfigKeypressTime = time;
                     }
                     else if (im.isKeyDown(gtp.Keys.KEY_G, true)) {

@@ -9,9 +9,9 @@ var pacman;
     var TitleState = (function (_super) {
         __extends(TitleState, _super);
         /**
-             * State that renders the title screen.
-             * @constructor
-             */
+         * State that renders the title screen.
+         * @constructor
+         */
         function TitleState(args) {
             _super.call(this, args);
             // Initialize our sprites not just in enter() so they are positioned

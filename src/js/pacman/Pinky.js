@@ -7,8 +7,8 @@ var pacman;
 (function (pacman_1) {
     'use strict';
     /**
-    * Pinky, the pink ghost.  If PacMan is "visible" to Pinky (i.e., in the
-    * same row or column), he'll chase him
+     * Pinky, the pink ghost.  If PacMan is "visible" to Pinky (i.e., in the
+     * same row or column), he'll chase him
      */
     var Pinky = (function (_super) {
         __extends(Pinky, _super);

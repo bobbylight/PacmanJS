@@ -7,8 +7,8 @@ var pacman;
 (function (pacman) {
     'use strict';
     /**
-       * The default high score displayed in the game.
-       */
+     * The default high score displayed in the game.
+     */
     var DEFAULT_HIGH_SCORE = 50000;
     (function (GhostUpdateStrategy) {
         GhostUpdateStrategy[GhostUpdateStrategy["UPDATE_ALL"] = 0] = "UPDATE_ALL";

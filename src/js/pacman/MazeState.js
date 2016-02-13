@@ -181,7 +181,7 @@ var pacman;
                         break;
                     case Substate.GAME_OVER:
                         if (input.enter(true)) {
-                            game.setState(new pacman.TitleState(game));
+                            game.setState(new pacman_1.TitleState(game));
                         }
                         break;
                 }
@@ -215,14 +215,14 @@ var pacman;
                 case Substate.READY:
                     if (this._firstTimeThrough && this._substateStartTime === 0) {
                         this._substateStartTime = time;
-                        game.audio.playSound(pacman.Sounds.OPENING);
+                        game.audio.playSound(pacman_1.Sounds.OPENING);
                     }
                     if (time >= this._substateStartTime + this._readyDelayMillis) {
                         this._substate = Substate.IN_GAME;
                         this._substateStartTime = time;
                         game.resetPlayTime();
                         this._lastMazeScreenKeypressTime = game.playTime;
-                        game.setLoopedSound(pacman.Sounds.SIREN);
+                        game.setLoopedSound(pacman_1.Sounds.SIREN);
                         this._firstTimeThrough = false;
                     }
                     break;
