@@ -1,3 +1,7 @@
+interface Window {
+    process: any;
+}
+
 module pacman {
     'use strict';
 
@@ -22,6 +26,17 @@ module pacman {
         private _fruit: Fruit;
         private _ghosts: Ghost[];
         private _extraPointsArray: number[];
+
+        /**
+         * Whether this game is being played as a desktop game (e.g. in electron).
+         */
+        private _desktopGame: boolean;
+
+        /**
+         * How we're stretching the game's canvas to fit the window.  This field is only used when the
+         * game is being played in desktop mode (e.g. in electron).
+         */
+        private _stretchMode: gtp.StretchMode;
 
         /**
          * Whether the player has earned an extra life (from achieving a
@@ -70,9 +85,12 @@ module pacman {
             this._chompSound = 0;
             this._ghostUpdateStrategy = GhostUpdateStrategy.UPDATE_ALL;
             this._score = 0; // For title screen
+            this._desktopGame = args.desktopGame ? args.desktopGame : this._isRunningInElectron();
 
             this._extraPointsArray = [ 100, 200, 300, 400, 500, 700, 800,
                 1000, 1600, 2000, 3000, 5000 ];
+
+            this._possiblyRegisterDesktopModeListeners();
         }
 
         addFruit() {
@@ -343,6 +361,19 @@ module pacman {
             }
         }
 
+        /**
+         * Returns whether this game is being played on the desktop, as opposed to in a browser.
+         *
+         * @returns {boolean} Whether this game is being played on the desktop.
+         */
+        isDesktopGame(): boolean {
+            return this._desktopGame;
+        }
+
+        private _isRunningInElectron(): boolean {
+            return window && window.process && window.process.type;
+        }
+
         loadNextLevel() {
             this.setLoopedSound(null);
             this._level++;
@@ -383,6 +414,18 @@ module pacman {
             this.audio.playSound(this._chompSound === 0 ?
                 Sounds.CHOMP_1 : Sounds.CHOMP_2);
             this._chompSound = (this._chompSound + 1) % 2;
+        }
+
+        /**
+         * Registers events that are specific to the desktop mode of the game.
+         */
+        private _possiblyRegisterDesktopModeListeners() {
+            if (this.isDesktopGame()) {
+
+                window.addEventListener('resize', () => {
+                    gtp.CanvasResizer.resize(this.canvas, this._stretchMode);
+                });
+            }
         }
 
         resetGhosts() {
@@ -435,12 +478,6 @@ module pacman {
             this._ghostUpdateStrategy = strategy;
         }
 
-        toggleGodMode(): boolean {
-            this._godMode = !this._godMode;
-            this.setStatusMessage('God mode ' + (this._godMode ? 'enabled' : 'disabled'));
-            return this._godMode;
-        }
-
         startGame(level: number) {
 
             this._lives = 3;
@@ -460,6 +497,31 @@ module pacman {
             this._fruit = null;
             this._fruitScoreIndex = -1;
             this._fruitScoreEndTime = -1;
+        }
+
+        toggleGodMode(): boolean {
+            this._godMode = !this._godMode;
+            this.setStatusMessage('God mode ' + (this._godMode ? 'enabled' : 'disabled'));
+            return this._godMode;
+        }
+
+        toggleStretchMode() {
+            if (game.isDesktopGame()) {
+                switch (this._stretchMode) {
+                    default:
+                    case gtp.StretchMode.STRETCH_NONE:
+                        this._stretchMode = gtp.StretchMode.STRETCH_FILL;
+                        break;
+                    case gtp.StretchMode.STRETCH_FILL:
+                        this._stretchMode = gtp.StretchMode.STRETCH_PROPORTIONAL;
+                        break;
+                    case gtp.StretchMode.STRETCH_PROPORTIONAL:
+                        this._stretchMode = gtp.StretchMode.STRETCH_NONE;
+                        break;
+                }
+                this.setStatusMessage('Stretch mode: ' + gtp.StretchMode[this._stretchMode]);
+                gtp.CanvasResizer.resize(this.canvas, this._stretchMode);
+            }
         }
 
         /**

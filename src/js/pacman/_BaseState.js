@@ -68,6 +68,9 @@ var pacman;
                         game.toggleGodMode();
                         this._lastConfigKeypressTime = time;
                     }
+                    else if (im.isKeyDown(gtp.Keys.KEY_S, true)) {
+                        game.toggleStretchMode();
+                    }
                 }
             }
         };

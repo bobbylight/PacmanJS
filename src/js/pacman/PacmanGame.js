@@ -26,8 +26,10 @@ var pacman;
             this._chompSound = 0;
             this._ghostUpdateStrategy = GhostUpdateStrategy.UPDATE_ALL;
             this._score = 0; // For title screen
+            this._desktopGame = args.desktopGame ? args.desktopGame : this._isRunningInElectron();
             this._extraPointsArray = [100, 200, 300, 400, 500, 700, 800,
                 1000, 1600, 2000, 3000, 5000];
+            this._possiblyRegisterDesktopModeListeners();
         }
         PacmanGame.prototype.addFruit = function () {
             if (!this._fruit) {
@@ -288,6 +290,17 @@ var pacman;
                 this._earnedExtraLife = true;
             }
         };
+        /**
+         * Returns whether this game is being played on the desktop, as opposed to in a browser.
+         *
+         * @returns {boolean} Whether this game is being played on the desktop.
+         */
+        PacmanGame.prototype.isDesktopGame = function () {
+            return this._desktopGame;
+        };
+        PacmanGame.prototype._isRunningInElectron = function () {
+            return window && window.process && window.process.type;
+        };
         PacmanGame.prototype.loadNextLevel = function () {
             this.setLoopedSound(null);
             this._level++;
@@ -325,6 +338,17 @@ var pacman;
             this.audio.playSound(this._chompSound === 0 ?
                 pacman.Sounds.CHOMP_1 : pacman.Sounds.CHOMP_2);
             this._chompSound = (this._chompSound + 1) % 2;
+        };
+        /**
+         * Registers events that are specific to the desktop mode of the game.
+         */
+        PacmanGame.prototype._possiblyRegisterDesktopModeListeners = function () {
+            var _this = this;
+            if (this.isDesktopGame()) {
+                window.addEventListener('resize', function () {
+                    gtp.CanvasResizer.resize(_this.canvas, _this._stretchMode);
+                });
+            }
         };
         PacmanGame.prototype.resetGhosts = function () {
             this._resettingGhostStates = true;
@@ -373,11 +397,6 @@ var pacman;
             enumerable: true,
             configurable: true
         });
-        PacmanGame.prototype.toggleGodMode = function () {
-            this._godMode = !this._godMode;
-            this.setStatusMessage('God mode ' + (this._godMode ? 'enabled' : 'disabled'));
-            return this._godMode;
-        };
         PacmanGame.prototype.startGame = function (level) {
             this._lives = 3;
             this._score = 0;
@@ -394,6 +413,29 @@ var pacman;
             this._fruit = null;
             this._fruitScoreIndex = -1;
             this._fruitScoreEndTime = -1;
+        };
+        PacmanGame.prototype.toggleGodMode = function () {
+            this._godMode = !this._godMode;
+            this.setStatusMessage('God mode ' + (this._godMode ? 'enabled' : 'disabled'));
+            return this._godMode;
+        };
+        PacmanGame.prototype.toggleStretchMode = function () {
+            if (game.isDesktopGame()) {
+                switch (this._stretchMode) {
+                    default:
+                    case gtp.StretchMode.STRETCH_NONE:
+                        this._stretchMode = gtp.StretchMode.STRETCH_FILL;
+                        break;
+                    case gtp.StretchMode.STRETCH_FILL:
+                        this._stretchMode = gtp.StretchMode.STRETCH_PROPORTIONAL;
+                        break;
+                    case gtp.StretchMode.STRETCH_PROPORTIONAL:
+                        this._stretchMode = gtp.StretchMode.STRETCH_NONE;
+                        break;
+                }
+                this.setStatusMessage('Stretch mode: ' + gtp.StretchMode[this._stretchMode]);
+                gtp.CanvasResizer.resize(this.canvas, this._stretchMode);
+            }
         };
         /**
          * Goes to the next animation frame for pacman, the ghosts and the
