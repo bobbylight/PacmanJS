@@ -10,7 +10,7 @@
     // Keep a global reference of the window object, if you don't, the window will
     // be closed automatically when the JavaScript object is garbage collected.
     var mainWindow;
-    function createWindow() {
+    var createWindow = function () {
         // Create the browser window.
         mainWindow = new electron.BrowserWindow({
             width: 224, height: 288,
@@ -28,7 +28,7 @@
             // when you should delete the corresponding element.
             mainWindow = null;
         });
-    }
+    };
     // This method will be called when Electron has finished
     // initialization and is ready to create browser windows.
     app.on('ready', createWindow);

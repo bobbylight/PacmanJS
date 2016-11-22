@@ -167,7 +167,7 @@ var pacman;
             this._updateSpriteFrames();
         };
         return TitleState;
-    })(pacman_1._BaseState);
+    }(pacman_1._BaseState));
     pacman_1.TitleState = TitleState;
 })(pacman || (pacman = {}));
 

@@ -6,29 +6,25 @@ possible.  Feel free to [try it out in its current state](http://bobbylight.gith
 Licensed under [an MIT license](LICENSE.txt).
 
 ## Hacking
-This game depends on `gulp` for its builds and `bower` for its runtime dependencies.  It also uses `tsd`
-for TypeScript definition files for libraries it uses. To install these if you don't already have them:
+This game depends on `gulp` for its builds. To install it if you don't already have it:
 
 ```shell
 npm install -g gulp
-npm install -g bower
-npm install -g tsd
 ```
 
-Next, check out the project, install `gulp` locally, and run `bower` to pull
-down all dependencies, then run `tsd` to get the type definitions:
+To install and compile:
 
 ```shell
 git clone https://github.com/bobbylight/PacmanJS.git
 cd PacmanJS
 npm install
-bower install
-tsd install
+gulp
 ```
 
 The source code lives in `src/app`.  You can build both the development and
 production (minified) versions of the game by running `gulp`.  The development
-version will be built in `src/js` and the production version in `dist/`.
+version will be built in `src/js` and the production version in `dist/`.  Use
+`gulp watch` for rapid development.
 
 ## What's unimplemented/buggy
 

@@ -84,7 +84,7 @@ var pacman;
             }
         };
         return _BaseState;
-    })(gtp.State);
+    }(gtp.State));
     pacman._BaseState = _BaseState;
 })(pacman || (pacman = {}));
 

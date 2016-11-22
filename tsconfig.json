@@ -1,40 +1,30 @@
 {
     "compilerOptions": {
-        "target": "es5",
+
+        "allowJs": false,
+        "allowUnreachableCode": false,
+        "allowUnusedLabels": false,
         "declaration": false,
+        "forceConsistentCasingInFileNames": true,
         "noImplicitAny": true,
-        "removeComments": false,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        //"noUnusedParameters": true,
         "preserveConstEnums": true,
+        "removeComments": false,
+
+        "target": "es5",
+
         "outDir": "src/js/",
-        "sourceMap": true
+        "sourceMap": true,
+
+        "typeRoots": [
+            "./node_modules/@types",
+            // Short-term workaround to get gtp's type declarations picked up
+            "./node_modules/gtp"
+        ]
     },
-    "filesGlob": [
-        "src/app/**/*.ts",
-        "bower_components/gtp/dist-all/gtp-all.d.ts"
-    ],
-    "files": [
-        "src/app/pacman.ts",
-        "src/app/pacman/_BaseSprite.ts",
-        "src/app/pacman/_BaseState.ts",
-        "src/app/pacman/Blinky.ts",
-        "src/app/pacman/Clyde.ts",
-        "src/app/pacman/Direction.ts",
-        "src/app/pacman/Fruit.ts",
-        "src/app/pacman/Ghost.ts",
-        "src/app/pacman/Inky.ts",
-        "src/app/pacman/LoadingState.ts",
-        "src/app/pacman/Maze.ts",
-        "src/app/pacman/MazeNode.ts",
-        "src/app/pacman/MazeState.ts",
-        "src/app/pacman/Pacman.ts",
-        "src/app/pacman/PacmanGame.ts",
-        "src/app/pacman/Pinky.ts",
-        "src/app/pacman/Sounds.ts",
-        "src/app/pacman/TitleState.ts",
-        "bower_components/gtp/dist-all/gtp-all.d.ts",
-        "src/typings/tsd.d.ts"
-    ],
-    "atom": {
-        "rewriteTsconfig": true
-    }
+    "include": [
+        "src/app/**/*.ts"
+    ]
 }

@@ -251,7 +251,7 @@ var pacman;
             }
         };
         return _BaseSprite;
-    })();
+    }());
     pacman._BaseSprite = _BaseSprite;
 })(pacman || (pacman = {}));
 

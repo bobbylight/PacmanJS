@@ -16,6 +16,9 @@ var pacman;
             _super.call(this, args);
             this._assetsLoaded = false;
         }
+        LoadingState.hexStrToInt = function (str) {
+            return parseInt(str, 16);
+        };
         LoadingState.prototype.update = function (delta) {
             this.handleDefaultKeys();
             if (!this._assetsLoaded) {
@@ -46,11 +49,10 @@ var pacman;
                     game_1.assets.addSound(pacman.Sounds.TOKEN, 'res/sounds/token.wav');
                     game_1.assets.onLoad(function () {
                         // Convert level data from hex strings to numbers
-                        function hexStrToInt(str) { return parseInt(str, 16); }
                         var levelData = game_1.assets.get('levels');
                         for (var i = 0; i < levelData.length; i++) {
                             for (var row = 0; row < levelData[i].length; row++) {
-                                levelData[i][row] = levelData[i][row].map(hexStrToInt);
+                                levelData[i][row] = levelData[i][row].map(LoadingState.hexStrToInt);
                             }
                         }
                         var skipTitle = gtp.Utils.getRequestParam('skipTitle');
@@ -66,7 +68,7 @@ var pacman;
             }
         };
         return LoadingState;
-    })(pacman._BaseState);
+    }(pacman._BaseState));
     pacman.LoadingState = LoadingState;
 })(pacman || (pacman = {}));
 

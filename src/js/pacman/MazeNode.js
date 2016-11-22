@@ -24,7 +24,7 @@ var pacman;
             return '[MazeNode: (' + this.row + ',' + this.col + ')]';
         };
         return MazeNode;
-    })();
+    }());
     pacman.MazeNode = MazeNode;
 })(pacman || (pacman = {}));
 

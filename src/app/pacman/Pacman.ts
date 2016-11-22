@@ -52,12 +52,12 @@ module pacman {
 
         render(ctx: CanvasRenderingContext2D) {
 
-            var SPRITE_SIZE: number = PacmanGame.SPRITE_SIZE;
+            const SPRITE_SIZE: number = PacmanGame.SPRITE_SIZE;
 
-            var x: number = this.bounds.x;
-            var y: number = this.bounds.y;
+            const x: number = this.bounds.x;
+            const y: number = this.bounds.y;
 
-            var srcX: number,
+            let srcX: number,
                 srcY: number;
             if (this._dyingFrame > 0) {
                 srcX = SPRITE_SIZE * this._dyingFrame;
@@ -92,7 +92,7 @@ module pacman {
 
         updatePositionImpl(maze: Maze) {
 
-            var moveAmount: number = this.moveAmount;
+            const moveAmount: number = this.moveAmount;
 
             switch (this.direction) {
                 case Direction.WEST:

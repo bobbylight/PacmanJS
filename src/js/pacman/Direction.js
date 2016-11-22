@@ -26,7 +26,7 @@ var pacman;
             }
         };
         return DirectionUtil;
-    })();
+    }());
     pacman.DirectionUtil = DirectionUtil;
 })(pacman || (pacman = {}));
 

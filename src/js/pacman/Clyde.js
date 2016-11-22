@@ -43,7 +43,7 @@ var pacman;
             }
         };
         return Clyde;
-    })(pacman.Ghost);
+    }(pacman.Ghost));
     pacman.Clyde = Clyde;
 })(pacman || (pacman = {}));
 

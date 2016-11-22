@@ -15,6 +15,10 @@ module pacman {
             this._assetsLoaded = false;
         }
 
+        private static hexStrToInt(str: string): number {
+            return parseInt(str, 16);
+        }
+
         update(delta: number) {
 
             this.handleDefaultKeys();
@@ -52,11 +56,10 @@ module pacman {
                     game.assets.onLoad(() => {
 
                         // Convert level data from hex strings to numbers
-                        function hexStrToInt(str: string): number { return parseInt(str, 16); }
                         const levelData: any[][] = game.assets.get('levels');
                         for (let i: number = 0; i < levelData.length; i++) {
                             for (let row: number = 0; row < levelData[i].length; row++) {
-                                levelData[i][row] = levelData[i][row].map(hexStrToInt);
+                                levelData[i][row] = levelData[i][row].map(LoadingState.hexStrToInt);
                             }
                         }
 

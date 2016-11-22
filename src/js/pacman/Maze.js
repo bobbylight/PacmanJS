@@ -340,7 +340,7 @@ var pacman;
             }
         };
         return Maze;
-    })();
+    }());
     pacman.Maze = Maze;
 })(pacman || (pacman = {}));
 

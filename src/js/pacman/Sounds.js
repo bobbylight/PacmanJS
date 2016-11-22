@@ -21,7 +21,7 @@ var pacman;
         Sounds.SIREN = 'siren';
         Sounds.TOKEN = 'token';
         return Sounds;
-    })();
+    }());
     pacman.Sounds = Sounds;
 })(pacman || (pacman = {}));
 

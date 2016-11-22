@@ -475,7 +475,7 @@ var pacman;
             this.pacman.updatePosition(maze, time);
         };
         return PacmanGame;
-    })(gtp.Game);
+    }(gtp.Game));
     pacman.PacmanGame = PacmanGame;
 })(pacman || (pacman = {}));
 

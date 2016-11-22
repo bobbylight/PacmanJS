@@ -69,7 +69,7 @@ var pacman;
             }
         };
         return Blinky;
-    })(pacman.Ghost);
+    }(pacman.Ghost));
     pacman.Blinky = Blinky;
 })(pacman || (pacman = {}));
 

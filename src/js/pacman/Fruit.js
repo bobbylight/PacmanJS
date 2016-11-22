@@ -62,7 +62,7 @@ var pacman;
         Fruit.ROWS = [4, 4, 5, 5, 2, 6, 6, 3];
         Fruit.PTS_INDEX = [0, 2, 4, 5, 10, 7, 9, 11];
         return Fruit;
-    })(pacman._BaseSprite);
+    }(pacman._BaseSprite));
     pacman.Fruit = Fruit;
 })(pacman || (pacman = {}));
 

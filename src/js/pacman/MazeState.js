@@ -6,13 +6,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 var pacman;
 (function (pacman_1) {
     'use strict';
-    var Substate;
-    (function (Substate) {
-        Substate[Substate["READY"] = 0] = "READY";
-        Substate[Substate["IN_GAME"] = 1] = "IN_GAME";
-        Substate[Substate["DYING"] = 2] = "DYING";
-        Substate[Substate["GAME_OVER"] = 3] = "GAME_OVER";
-    })(Substate || (Substate = {}));
     var MazeState = (function (_super) {
         __extends(MazeState, _super);
         function MazeState(mazeFile) {
@@ -42,7 +35,7 @@ var pacman;
             // Prevents the user's "Enter" press to start the game from being
             // picked up by our handleInput().
             this._lastMazeScreenKeypressTime = game.playTime + MazeState.INPUT_REPEAT_MILLIS;
-            this._substate = Substate.READY;
+            this._substate = 'READY';
             this._firstTimeThrough = true;
             this._substateStartTime = 0;
             this._nextDyingFrameTime = 0;
@@ -111,7 +104,7 @@ var pacman;
             game.drawFruit(ctx);
             var pacman = game.pacman;
             if (this._updateScoreIndex === -1) {
-                if (this._substate !== Substate.GAME_OVER) {
+                if (this._substate !== 'GAME_OVER') {
                     pacman.render(ctx);
                 }
             }
@@ -125,7 +118,7 @@ var pacman;
             game.drawScores(ctx);
             this._paintExtraLives(ctx);
             this._paintPossibleFruits(ctx);
-            if (this._substate === Substate.READY) {
+            if (this._substate === 'READY') {
                 // These calculations should be fast enough, especially considering
                 // that "READY!" is only displayed for about 4 seconds.
                 var ready = 'READY!';
@@ -136,7 +129,7 @@ var pacman;
                 x += 3;
                 game.drawString(x, 160, ready);
             }
-            else if (this._substate === Substate.GAME_OVER) {
+            else if (this._substate === 'GAME_OVER') {
                 var gameOver = 'GAME OVER';
                 var x = (game.getWidth() - gameOver.length * 9) / 2;
                 game.drawString(x, 160, gameOver);
@@ -157,7 +150,7 @@ var pacman;
             game.resetPlayTime();
             game.pacman.reset();
             game.resetGhosts(); // Do AFTER resetting playtime!
-            this._substate = Substate.READY;
+            this._substate = 'READY';
             this._substateStartTime = 0; // Play time was just reset
             this._lastSpriteFrameTime = 0;
             // Prevents the user's "Enter" press to start the game from being
@@ -169,17 +162,17 @@ var pacman;
             var input = game.inputManager;
             // Enter -> Pause.  Don't check for pausing on "Game Over" screen as
             // that will carry over into the next game!
-            if (this._substate !== Substate.GAME_OVER && input.enter(true)) {
+            if (this._substate !== 'GAME_OVER' && input.enter(true)) {
                 game.paused = !game.paused;
                 this._lastMazeScreenKeypressTime = time;
                 return;
             }
             if (!game.paused) {
                 switch (this._substate) {
-                    case Substate.IN_GAME:
+                    case 'IN_GAME':
                         game.pacman.handleInput(this._maze);
                         break;
-                    case Substate.GAME_OVER:
+                    case 'GAME_OVER':
                         if (input.enter(true)) {
                             game.setState(new pacman_1.TitleState(game));
                         }
@@ -188,7 +181,7 @@ var pacman;
             }
             if (time >= this._lastMazeScreenKeypressTime + MazeState.INPUT_REPEAT_MILLIS) {
                 // Hidden options (Z + keypress)
-                if (!game.paused && this._substate === Substate.IN_GAME &&
+                if (!game.paused && this._substate === 'IN_GAME' &&
                     input.isKeyDown(gtp.Keys.KEY_Z)) {
                     // Z+X => auto-load next level
                     if (input.isKeyDown(gtp.Keys.KEY_X)) {
@@ -196,9 +189,9 @@ var pacman;
                         this._lastMazeScreenKeypressTime = time;
                     }
                     else if (input.isKeyDown(gtp.Keys.KEY_C)) {
-                        if (this._substate !== Substate.DYING) {
+                        if (this._substate !== 'DYING') {
                             game.startPacmanDying();
-                            this._substate = Substate.DYING;
+                            this._substate = 'DYING';
                             this._nextDyingFrameTime = time + MazeState.DYING_FRAME_DELAY_MILLIS;
                             this._lastMazeScreenKeypressTime = time;
                         }
@@ -212,13 +205,13 @@ var pacman;
             this._handleInput(delta, game.playTime);
             var time = game.playTime;
             switch (this._substate) {
-                case Substate.READY:
+                case 'READY':
                     if (this._firstTimeThrough && this._substateStartTime === 0) {
                         this._substateStartTime = time;
                         game.audio.playSound(pacman_1.Sounds.OPENING);
                     }
                     if (time >= this._substateStartTime + this._readyDelayMillis) {
-                        this._substate = Substate.IN_GAME;
+                        this._substate = 'IN_GAME';
                         this._substateStartTime = time;
                         game.resetPlayTime();
                         this._lastMazeScreenKeypressTime = game.playTime;
@@ -226,21 +219,21 @@ var pacman;
                         this._firstTimeThrough = false;
                     }
                     break;
-                case Substate.IN_GAME:
+                case 'IN_GAME':
                     this._updateInGameImpl(time);
                     break;
-                case Substate.DYING:
+                case 'DYING':
                     if (time >= this._nextDyingFrameTime) {
                         if (!game.pacman.incDying()) {
                             if (game.increaseLives(-1) <= 0) {
-                                this._substate = Substate.GAME_OVER;
+                                this._substate = 'GAME_OVER';
                             }
                             else {
                                 game.resetPlayTime();
                                 this._lastMazeScreenKeypressTime = game.playTime;
                                 game.pacman.reset();
                                 game.resetGhosts(); // Do AFTER resetting play time!
-                                this._substate = Substate.READY;
+                                this._substate = 'READY';
                                 this._substateStartTime = 0; // Play time was just reset
                                 this._lastSpriteFrameTime = 0;
                             }
@@ -250,7 +243,7 @@ var pacman;
                         }
                     }
                     break;
-                case Substate.GAME_OVER:
+                case 'GAME_OVER':
                     // Do nothing
                     break;
             }
@@ -281,7 +274,7 @@ var pacman;
                     default:
                         if (!game.godMode) {
                             game.startPacmanDying();
-                            this._substate = Substate.DYING;
+                            this._substate = 'DYING';
                             this._nextDyingFrameTime = game.playTime + MazeState.DYING_FRAME_DELAY_MILLIS;
                         }
                         break;
@@ -289,7 +282,7 @@ var pacman;
             }
         };
         return MazeState;
-    })(pacman_1._BaseState);
+    }(pacman_1._BaseState));
     pacman_1.MazeState = MazeState;
 })(pacman || (pacman = {}));
 

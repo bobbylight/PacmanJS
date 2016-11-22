@@ -13,7 +13,7 @@
     // be closed automatically when the JavaScript object is garbage collected.
     let mainWindow: Electron.BrowserWindow;
 
-    function createWindow() {
+    const createWindow: Function = () => {
         // Create the browser window.
         mainWindow = new electron.BrowserWindow({
             width: 224, height: 288,
@@ -34,7 +34,7 @@
             // when you should delete the corresponding element.
             mainWindow = null;
         });
-    }
+    };
 
     // This method will be called when Electron has finished
     // initialization and is ready to create browser windows.

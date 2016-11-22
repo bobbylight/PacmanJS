@@ -75,7 +75,7 @@ var pacman;
             }
         };
         return Inky;
-    })(pacman.Ghost);
+    }(pacman.Ghost));
     pacman.Inky = Inky;
 })(pacman || (pacman = {}));
 

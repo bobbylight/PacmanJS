@@ -95,7 +95,7 @@ var pacman;
             game.increaseScore(maze.checkForDot(this.row, this.column));
         };
         return Pacman;
-    })(pacman._BaseSprite);
+    }(pacman._BaseSprite));
     pacman.Pacman = Pacman;
 })(pacman || (pacman = {}));
 

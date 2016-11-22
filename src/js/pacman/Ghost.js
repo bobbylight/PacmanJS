@@ -601,7 +601,7 @@ var pacman;
             }
         };
         return Ghost;
-    })(pacman_1._BaseSprite);
+    }(pacman_1._BaseSprite));
     pacman_1.Ghost = Ghost;
 })(pacman || (pacman = {}));
 
