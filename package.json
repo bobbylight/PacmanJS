@@ -1,42 +1,38 @@
 {
   "name": "pacman-html5",
   "description": "Pacman written in TypeScript",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/bobbylight/PacmanJS.git"
   },
   "scripts": {
+    "clean": "rimraf build",
+    "build": "webpack",
+    "watch": "webpack --watch",
     "start": "electron src/js/electron-main.js"
   },
   "devDependencies": {
     "@types/electron": "1.4.27",
     "@types/node": "6.0.49",
+    "copy-webpack-plugin": "4.0.1",
+    "css-loader": "0.26.0",
     "dateformat": "1.0.12",
     "del": "2.2.2",
     "electron": "1.4.7",
     "electron-prebuilt": "1.3.9",
-    "gulp": "3.9.1",
-    "gulp-concat-css": "2.3.0",
-    "gulp-cssmin": "0.1.7",
-    "gulp-debug": "3.0.0",
-    "gulp-electron": "0.1.3",
-    "gulp-jshint": "2.0.4",
-    "gulp-replace": "0.5.4",
-    "gulp-rev": "7.1.2",
-    "gulp-sourcemaps": "1.9.1",
-    "gulp-tslint": "7.0.1",
-    "gulp-typescript": "3.1.3",
-    "gulp-uglify": "2.0.0",
-    "gulp-usemin": "0.3.25",
-    "jshint": "2.9.4",
-    "jshint-stylish": "2.2.1",
-    "run-sequence": "1.2.2",
+    "rimraf": "2.5.4",
+    "string-replace-webpack-plugin": "0.0.4",
+    "style-loader": "0.13.1",
+    "ts-loader": "1.2.2",
     "tslint": "4.0.1",
-    "typescript": "2.0.10"
+    "tslint-loader": "3.2.0",
+    "typescript": "2.0.10",
+    "webpack": "1.13.3",
+    "webpack-target-electron-renderer": "0.4.0"
   },
   "dependencies": {
-    "gtp": "^0.6.2"
+    "gtp": "^1.0.0"
   }
 }

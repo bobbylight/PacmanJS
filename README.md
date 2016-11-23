@@ -6,25 +6,19 @@ possible.  Feel free to [try it out in its current state](http://bobbylight.gith
 Licensed under [an MIT license](LICENSE.txt).
 
 ## Hacking
-This game depends on `gulp` for its builds. To install it if you don't already have it:
-
-```shell
-npm install -g gulp
-```
-
 To install and compile:
 
 ```shell
 git clone https://github.com/bobbylight/PacmanJS.git
 cd PacmanJS
 npm install
-gulp
+npm run watch  # Start webpack in watch mode to automatically compile changes
+npm run build  # Alternatively, just build once
 ```
 
-The source code lives in `src/app`.  You can build both the development and
-production (minified) versions of the game by running `gulp`.  The development
-version will be built in `src/js` and the production version in `dist/`.  Use
-`gulp watch` for rapid development.
+The source code lives in `src`.  `webpack` is used to build the application into `build/web`.
+A desktop build, built on `electron` is planned but not currently there due to technical
+difficulties.
 
 ## What's unimplemented/buggy
 
