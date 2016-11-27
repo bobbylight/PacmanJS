@@ -1,7 +1,6 @@
 'use strict';
 
 var webpackConfig = require('./webpack/webpack.test.js');
-//require('phantomjs-polyfill');
 webpackConfig.entry = {};
 
 module.exports = function (config) {
@@ -16,7 +15,6 @@ module.exports = function (config) {
         singleRun: true,
         autoWatchBatchDelay: 300,
         files: [
-            //'./node_modules/phantomjs-polyfill/bind-polyfill.js',
             './src/app/test.ts'
             //{ pattern: 'src/**/!(*.spec)+(.ts)', included: false },
             //'src/app/**/*.spec.ts',
