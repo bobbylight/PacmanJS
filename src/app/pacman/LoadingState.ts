@@ -2,10 +2,10 @@ import {_BaseState} from './_BaseState';
 import {Sounds} from './Sounds';
 import {PacmanGame} from './PacmanGame';
 import {TitleState} from './TitleState';
-import {Game} from 'gtp/dist/gtp/Game';
-import {BaseStateArgs} from 'gtp/dist/gtp/State';
-import {Utils} from 'gtp/dist/gtp/Utils';
-import {FadeOutInState} from 'gtp/dist/gtp/FadeOutInState';
+import {Game} from 'gtp';
+import {BaseStateArgs} from 'gtp';
+import {Utils} from 'gtp';
+import {FadeOutInState} from 'gtp';
 
 export class LoadingState extends _BaseState {
 

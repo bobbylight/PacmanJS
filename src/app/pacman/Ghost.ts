@@ -1,11 +1,11 @@
 import {_BaseSprite} from './_BaseSprite';
-import {Point} from 'gtp/dist/gtp/Point';
+import {Point} from 'gtp';
 import {Maze} from './Maze';
 import {Direction} from './Direction';
 import {PacmanGame} from './PacmanGame';
 import {MazeNode} from './MazeNode';
 import {Pacman} from './Pacman';
-import {Utils} from 'gtp/dist/gtp/Utils';
+import {Utils} from 'gtp';
 declare var game: PacmanGame;
 
 const GHOST_IN_BOX_SPEED: number = 0.5;

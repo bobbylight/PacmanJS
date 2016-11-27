@@ -1,13 +1,12 @@
+var loaders = require('./loaders');
 var path = require('path');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var StringReplacePlugin = require('string-replace-webpack-plugin');
 
-var dir_ts = path.resolve(__dirname, 'src/app');
-
 module.exports = [
     {
         entry: [
-            path.resolve(dir_ts, 'pacman.ts')
+            path.resolve('./src/app/pacman.ts')
         ],
         output: {
             path: './build/web/',
@@ -27,31 +26,7 @@ module.exports = [
                     loader: 'tslint-loader'
                 }
             ],
-            loaders: [
-                {
-                    test: /\.tsx?$/,
-                    //exclude: /(node_modules|bower_components)/,
-                    loader: 'ts-loader'
-                },
-                {
-                    test: /\.css$/,
-                    loader: "style!css"
-                },
-                {
-                    // This is the voodoo to have webpack convert "import 'index.html'; into an actual HTML file (!!)
-                    test: /index.html$/,
-                    loaders: [ 'file?name=[name].[ext]',
-                        StringReplacePlugin.replace({
-                            replacements: [{
-                                pattern: /<%=build.date%>/,
-                                replacement: function() {
-                                    return new Date().toLocaleDateString();
-                                }
-                            }]
-                        })
-                    ]
-                }
-            ]
+            loaders: loaders
         },
         plugins: [
             // Simply copies the files over

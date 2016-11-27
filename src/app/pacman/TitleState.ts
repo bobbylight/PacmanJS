@@ -4,10 +4,10 @@ import {Pacman} from './Pacman';
 import {Direction} from './Direction';
 import {Ghost} from './Ghost';
 import {Sounds} from './Sounds';
-import {InputManager} from 'gtp/dist/gtp/InputManager';
-import {BaseStateArgs} from 'gtp/dist/gtp/State';
-import {Game} from 'gtp/dist/gtp/Game';
-import {Image} from 'gtp/dist/gtp/Image';
+import {InputManager} from 'gtp';
+import {BaseStateArgs} from 'gtp';
+import {Game} from 'gtp';
+import {Image} from 'gtp';
 declare var game: PacmanGame;
 
 export class TitleState extends _BaseState {

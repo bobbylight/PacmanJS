@@ -1,4 +1,4 @@
-import {Rectangle} from 'gtp/dist/gtp/Rectangle';
+import {Rectangle} from 'gtp';
 import {Direction} from './Direction';
 import {PacmanGame} from './PacmanGame';
 import {Maze} from './Maze';

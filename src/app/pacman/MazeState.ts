@@ -5,8 +5,8 @@ import {Pacman} from './Pacman';
 import {TitleState} from './TitleState';
 import {Sounds} from './Sounds';
 import {Ghost, MotionState} from './Ghost';
-import {Keys} from 'gtp/dist/gtp/Keys';
-import {InputManager} from 'gtp/dist/gtp/InputManager';
+import {Keys} from 'gtp';
+import {InputManager} from 'gtp';
 declare var game: PacmanGame;
 
 type Substate = 'READY' | 'IN_GAME' | 'DYING' | 'GAME_OVER';

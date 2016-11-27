@@ -1,8 +1,8 @@
-import {Keys} from 'gtp/dist/gtp/Keys';
-import {State, BaseStateArgs} from 'gtp/dist/gtp/State';
-import {Game} from 'gtp/dist/gtp/Game';
-import {Utils} from 'gtp/dist/gtp/Utils';
-import {InputManager} from 'gtp/dist/gtp/InputManager';
+import {Keys} from 'gtp';
+import {State, BaseStateArgs} from 'gtp';
+import {Game} from 'gtp';
+import {Utils} from 'gtp';
+import {InputManager} from 'gtp';
 import {PacmanGame} from './PacmanGame';
 declare var game: PacmanGame;
 

@@ -1,7 +1,7 @@
 import {Maze} from './Maze';
 import {Direction} from './Direction';
 import {_BaseSprite} from './_BaseSprite';
-import {InputManager} from 'gtp/dist/gtp/InputManager';
+import {InputManager} from 'gtp';
 import {PacmanGame} from './PacmanGame';
 declare var game: PacmanGame;
 

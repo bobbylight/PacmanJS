@@ -1,5 +1,5 @@
-import {Game} from 'gtp/dist/gtp/Game';
-import {CanvasResizer, StretchMode} from 'gtp/dist/gtp/StretchMode';
+import {Game} from 'gtp';
+import {CanvasResizer, StretchMode} from 'gtp';
 import {Sounds} from './Sounds';
 import {Pacman} from './Pacman';
 import {Fruit} from './Fruit';
@@ -8,12 +8,12 @@ import {Blinky} from './Blinky';
 import {Pinky} from './Pinky';
 import {Inky} from './Inky';
 import {Clyde} from './Clyde';
-import {Image} from 'gtp/dist/gtp/Image';
-import {SpriteSheet} from 'gtp/dist/gtp/SpriteSheet';
+import {Image} from 'gtp';
+import {SpriteSheet} from 'gtp';
 import {MazeState} from './MazeState';
-import {Point} from 'gtp/dist/gtp/Point';
+import {Point} from 'gtp';
 import {Maze} from './Maze';
-import {Utils} from 'gtp/dist/gtp/Utils';
+import {Utils} from 'gtp';
 declare var game: PacmanGame;
 
 interface ElectronEnhancedWindow {

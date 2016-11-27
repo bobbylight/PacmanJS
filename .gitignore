@@ -1,6 +1,8 @@
 node_modules
 .tmp
-dist
 Thumbs.db
 *.iml
 build
+npm-debug.log
+reports
+js/

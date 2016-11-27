@@ -9,19 +9,34 @@
   },
   "scripts": {
     "clean": "rimraf build",
-    "build": "webpack",
-    "watch": "webpack --watch",
-    "start": "electron src/js/electron-main.js"
+    "build": "webpack --config webpack/webpack.config.js --NODE_ENV=production",
+    "watch": "webpack --config webpack/webpack.config.js --NODE_ENV=dev --watch",
+    "start": "electron src/js/electron-main.js",
+    "test": "karma start --NODE_ENV=test"
   },
   "devDependencies": {
     "@types/electron": "1.4.27",
-    "@types/node": "6.0.49",
+    "@types/requirejs": "2.1.28",
     "copy-webpack-plugin": "4.0.1",
     "css-loader": "0.26.0",
     "dateformat": "1.0.12",
     "del": "2.2.2",
     "electron": "1.4.7",
     "electron-prebuilt": "1.3.9",
+    "gtp": "1.0.2",
+    "istanbul": "0.4.5",
+    "istanbul-instrumenter-loader": "1.0.0",
+    "jasmine": "2.5.2",
+    "karma": "1.3.0",
+    "karma-coverage": "1.1.1",
+    "karma-jasmine": "1.0.2",
+    "karma-phantomjs-launcher": "1.0.2",
+    "karma-requirejs": "1.1.0",
+    "karma-sourcemap-loader": "0.3.7",
+    "karma-typescript-preprocessor": "0.3.0",
+    "karma-webpack": "1.8.0",
+    "phantomjs-polyfill": "0.0.2",
+    "requirejs": "2.3.2",
     "rimraf": "2.5.4",
     "string-replace-webpack-plugin": "0.0.4",
     "style-loader": "0.13.1",
@@ -33,6 +48,6 @@
     "webpack-target-electron-renderer": "0.4.0"
   },
   "dependencies": {
-    "gtp": "^1.0.0"
+    "@types/jasmine": "2.5.38"
   }
 }

@@ -14,12 +14,18 @@
         "removeComments": false,
 
         "target": "es5",
-        "module": "amd",
+        "module": "commonjs",
+        "moduleResolution": "node",
 
         "outDir": "src/js/",
-        "sourceMap": true
+        "sourceMap": true,
+
+        "typeRoots": [
+            "node_modules/@types"
+        ]
     },
     "include": [
-        "src/app/**/*.ts"
+        "src/app/**/*.ts",
+        "node_modules/gtp/lib/gtp.d.ts"
     ]
 }

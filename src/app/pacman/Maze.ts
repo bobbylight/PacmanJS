@@ -1,8 +1,8 @@
-import {Pool} from 'gtp/dist/gtp/Pool';
+import {Pool} from 'gtp';
 import {MazeNode} from './MazeNode';
 import {PacmanGame} from './PacmanGame';
-import {SpriteSheet} from 'gtp/dist/gtp/SpriteSheet';
-import {ImageUtils} from 'gtp/dist/gtp/ImageUtils';
+import {SpriteSheet} from 'gtp';
+import {ImageUtils} from 'gtp';
 declare var game: PacmanGame;
 
 let DOT_POINTS: number[] = [ 50, 10 ];
