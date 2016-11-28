@@ -25,7 +25,6 @@
         ]
     },
     "include": [
-        "src/app/**/*.ts",
-        "node_modules/gtp/lib/gtp.d.ts"
+        "src/app/**/*.ts"
     ]
 }
