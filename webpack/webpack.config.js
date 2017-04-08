@@ -1,7 +1,17 @@
-var loaders = require('./loaders');
-var path = require('path');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var StringReplacePlugin = require('string-replace-webpack-plugin');
+const loaders = require('./loaders');
+const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const StringReplacePlugin = require('string-replace-webpack-plugin');
+const webpack = require('webpack');
+
+// todo: add back when tslint-loader is updated for tslint 5.0.0
+// // Loaders specific to compiling
+// loaders.push({
+//     enforce: 'pre',
+//     test: /\.ts$/,
+//     loader: 'tslint-loader',
+//     exclude: /node_modules/
+// });
 
 module.exports = [
     {
@@ -9,23 +19,15 @@ module.exports = [
             path.resolve('./src/app/pacman.ts')
         ],
         output: {
-            path: './build/web/',
-            filename: 'bundle.js',
-            // libraryTarget: 'var',
-            // library: 'EntryPoint',
+            path: path.resolve('./build/web/'),
+            filename: '[name].js',
             publicPath: '/'
         },
         resolve: {
-            extensions: ['', '.js', '.ts'],
-            modulesDirectories: ['src/app', 'src/html', 'src/css', 'node_modules']
+            extensions: ['.js', '.ts'],
+            modules: ['src/app', 'src/html', 'src/css', 'node_modules']
         },
         module: {
-            preLoaders: [
-                {
-                    test: /\.ts$/,
-                    loader: 'tslint-loader'
-                }
-            ],
             loaders: loaders
         },
         plugins: [

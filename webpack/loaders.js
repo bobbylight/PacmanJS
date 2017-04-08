@@ -3,17 +3,17 @@ var StringReplacePlugin = require('string-replace-webpack-plugin');
 module.exports = [
     {
         test: /\.tsx?$/,
-        //exclude: /(node_modules|bower_components)/,
+        exclude: /node_modules/,
         loader: 'ts-loader'
     },
     {
         test: /\.css$/,
-        loader: "style!css"
+        loader: "style-loader!css-loader"
     },
     {
         // This is the voodoo to have webpack convert "import 'index.html'; into an actual HTML file (!!)
         test: /index.html$/,
-        loaders: [ 'file?name=[name].[ext]',
+        loaders: [ 'file-loader?name=[name].[ext]',
             StringReplacePlugin.replace({
                 replacements: [{
                     pattern: /<%=build.date%>/,

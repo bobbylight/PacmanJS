@@ -1,7 +1,6 @@
 'use strict';
 
 var webpackConfig = require('./webpack/webpack.test.js');
-webpackConfig.entry = {};
 
 module.exports = function (config) {
     config.set({
@@ -15,9 +14,9 @@ module.exports = function (config) {
         singleRun: true,
         autoWatchBatchDelay: 300,
         files: [
-            './src/app/test.ts'
+            //'./src/app/test.ts'
             //{ pattern: 'src/**/!(*.spec)+(.ts)', included: false },
-            //'src/app/**/*.spec.ts',
+            'src/app/**/*.spec.ts',
             //{ pattern: 'node_modules/gtp/**/*.js', included: false },
             //{ pattern: 'src/**/*.ts', included: false },
             //'test-main.js'
@@ -25,10 +24,10 @@ module.exports = function (config) {
         preprocessors: {
             //'src/**/*.ts': [ 'typescript' ],
             ////'src/app/test.ts': [ 'webpack' ],
-            //'src/app/**/*.spec.ts': [ 'webpack' ],
+            'src/app/**/*.spec.ts': [ 'webpack' ],
             //'src/**/!(*.spec)+(.js)': ['coverage']
-            './src/app/test.ts': [ 'webpack' ],
-            'src/**/!(*.spec)+(.js)': ['coverage']
+            // './src/app/test.ts': [ 'webpack' ],
+//            'src/**/!(*.spec)+(.js)': ['coverage']
         },
 
 // typescriptPreprocessor: {
@@ -47,16 +46,16 @@ module.exports = function (config) {
 //         return path.replace(/\.ts$/, '.js');
 //     }
 // },
-        webpackMiddleware: {
-            stats: {
-                chunkModules: false,
-                colors: true
-            }
-        },
+//         webpackMiddleware: {
+//             stats: {
+//                 chunkModules: false,
+//                 colors: true
+//             }
+//         },
         webpack: webpackConfig,
         reporters: [
             'dots',
-            'coverage'
+//            'coverage'
         ],
         coverageReporter: {
             reporters: [

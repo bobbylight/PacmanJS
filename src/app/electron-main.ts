@@ -1,3 +1,5 @@
+import {BrowserWindow, app} from 'electron';
+
 /*
  * Entry point for desktop version.  This is built with electron:
  * http://electron.atom.io/
@@ -5,17 +7,13 @@
 (() => {
     'use strict';
 
-    const electron: Electron.ElectronMainAndRenderer = require('electron');
-    // Module to control application life.
-    const app: Electron.App = electron.app;
-
     // Keep a global reference of the window object, if you don't, the window will
     // be closed automatically when the JavaScript object is garbage collected.
     let mainWindow: Electron.BrowserWindow;
 
     const createWindow: Function = () => {
         // Create the browser window.
-        mainWindow = new electron.BrowserWindow({
+        mainWindow = new BrowserWindow({
             width: 224, height: 288,
             useContentSize: true,
             autoHideMenuBar: true

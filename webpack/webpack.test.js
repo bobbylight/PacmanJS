@@ -2,18 +2,22 @@ var loaders = require('./loaders');
 var path = require('path');
 var webpack = require('webpack');
 
+// loaders.push({
+//     test: /^((?!\.spec\.ts).)*.ts$/,
+//     exclude: /node_modules/,
+//     loader: 'istanbul-instrumenter-loader'
+// });
+
 module.exports = {
-    entry: [ './src/app/pacman.ts' ],
+    entry: [ path.resolve('./src/app/pacman.ts') ],
     output: {
         filename: 'build.js',
         path: 'tmp'
     },
     resolve: {
-        root: __dirname,
-        extensions: ['', '.ts', '.js', '.json']
-    },
-    resolveLoader: {
-        modulesDirectories: ["node_modules"]
+        extensions: ['.ts', '.js', '.json'],
+        modules: ['src/app', 'src/html', 'src/css', 'node_modules']
+
     },
     devtool: "source-map-inline",
     plugins: [
@@ -21,13 +25,6 @@ module.exports = {
         })
     ],
     module: {
-        loaders: loaders,
-        postLoaders: [
-            {
-                test: /^((?!\.spec\.ts).)*.ts$/,
-                exclude: /(node_modules|bower_components)/,
-                loader: 'istanbul-instrumenter'
-            }
-        ]
+        loaders: loaders
     }
 };

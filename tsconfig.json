@@ -12,17 +12,14 @@
         //"noUnusedParameters": true,
         "preserveConstEnums": true,
         "removeComments": false,
+//        "strictNullChecks": true,
 
         "target": "es5",
         "module": "commonjs",
         "moduleResolution": "node",
 
         "outDir": "src/js/",
-        "sourceMap": true,
-
-        "typeRoots": [
-            "node_modules/@types"
-        ]
+        "sourceMap": true
     },
     "include": [
         "src/app/**/*.ts"
