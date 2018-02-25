@@ -5,9 +5,9 @@ export enum Direction {
     NORTH = 3
 }
 
-export class DirectionUtil {
+const DirectionUtil: any = {
 
-    static fromString(str: string = 'SOUTH'): Direction {
+    fromString(str: string = 'SOUTH'): Direction {
         switch (str.toUpperCase()) {
             case 'NORTH':
                 return Direction.NORTH;
@@ -20,4 +20,6 @@ export class DirectionUtil {
                 return Direction.SOUTH;
         }
     }
-}
+};
+
+export default DirectionUtil;

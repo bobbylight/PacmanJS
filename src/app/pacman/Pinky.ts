@@ -1,8 +1,9 @@
-import {Ghost, MotionState} from './Ghost';
-import {PacmanGame} from './PacmanGame';
-import {Direction} from './Direction';
-import {Maze} from './Maze';
-import {Pacman} from './Pacman';
+import { Ghost, MotionState } from './Ghost';
+import { PacmanGame } from './PacmanGame';
+import { Direction } from './Direction';
+import { Maze } from './Maze';
+import { Pacman } from './Pacman';
+
 declare var game: PacmanGame;
 
 /**

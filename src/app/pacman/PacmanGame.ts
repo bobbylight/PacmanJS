@@ -1,19 +1,15 @@
-import {Game} from 'gtp';
-import {CanvasResizer, StretchMode} from 'gtp';
-import {Sounds} from './Sounds';
-import {Pacman} from './Pacman';
-import {Fruit} from './Fruit';
-import {Ghost} from './Ghost';
-import {Blinky} from './Blinky';
-import {Pinky} from './Pinky';
-import {Inky} from './Inky';
-import {Clyde} from './Clyde';
-import {Image} from 'gtp';
-import {SpriteSheet} from 'gtp';
-import {MazeState} from './MazeState';
-import {Point} from 'gtp';
-import {Maze} from './Maze';
-import {Utils} from 'gtp';
+import { CanvasResizer, Game, Image, Point, SpriteSheet, StretchMode, Utils } from 'gtp';
+import SOUNDS from './Sounds';
+import { Pacman } from './Pacman';
+import { Fruit } from './Fruit';
+import { Ghost } from './Ghost';
+import { Blinky } from './Blinky';
+import { Pinky } from './Pinky';
+import { Inky } from './Inky';
+import { Clyde } from './Clyde';
+import { MazeState } from './MazeState';
+import { Maze } from './Maze';
+
 declare var game: PacmanGame;
 
 interface ElectronEnhancedWindow {
@@ -23,7 +19,7 @@ interface ElectronEnhancedWindow {
 /**
  * The default high score displayed in the game.
  */
-let DEFAULT_HIGH_SCORE: number = 50000;
+const DEFAULT_HIGH_SCORE: number = 50000;
 
 export enum GhostUpdateStrategy {
     UPDATE_ALL, UPDATE_NONE, UPDATE_ONE
@@ -39,13 +35,13 @@ export class PacmanGame extends Game {
     private _chompSound: number;
     pacman: Pacman;
     private _fruit: Fruit;
-    private _ghosts: Ghost[];
-    private _extraPointsArray: number[];
+    private readonly _ghosts: Ghost[];
+    private readonly _extraPointsArray: number[];
 
     /**
      * Whether this game is being played as a desktop game (e.g. in electron).
      */
-    private _desktopGame: boolean;
+    private readonly _desktopGame: boolean;
 
     /**
      * How we're stretching the game's canvas to fit the window.  This field is only used when the
@@ -102,8 +98,8 @@ export class PacmanGame extends Game {
         this._score = 0; // For title screen
         this._desktopGame = args.desktopGame ? args.desktopGame : this._isRunningInElectron();
 
-        this._extraPointsArray = [ 100, 200, 300, 400, 500, 700, 800,
-            1000, 1600, 2000, 3000, 5000 ];
+        this._extraPointsArray = [100, 200, 300, 400, 500, 700, 800,
+            1000, 1600, 2000, 3000, 5000];
 
         this._possiblyRegisterDesktopModeListeners();
     }
@@ -127,7 +123,7 @@ export class PacmanGame extends Game {
         if (this._fruit && this._fruitScoreIndex === -1 &&
             this.pacman.intersects(this._fruit)) {
             this.increaseScore(this._extraPointsArray[this._fruit.pointsIndex]);
-            this.audio.playSound(Sounds.EATING_FRUIT, false);
+            this.audio.playSound(SOUNDS.EATING_FRUIT, false);
             this._fruitScoreIndex = this._fruit.pointsIndex;
             this._fruitScoreEndTime = game.playTime + PacmanGame.SCORE_DISPLAY_LENGTH;
         }
@@ -149,7 +145,7 @@ export class PacmanGame extends Game {
 
         for (let i: number = 0; i < this._ghosts.length; i++) {
             if (this._ghosts[i].isEyes()) {
-                this.setLoopedSound(Sounds.EYES_RUNNING);
+                this.setLoopedSound(SOUNDS.EYES_RUNNING);
                 return; // "eye" noise trumps blue noise.
             }
             else if (this._ghosts[i].isBlue()) {
@@ -157,7 +153,7 @@ export class PacmanGame extends Game {
             }
         }
 
-        this.setLoopedSound(blue ? Sounds.CHASING_GHOSTS : Sounds.SIREN);
+        this.setLoopedSound(blue ? SOUNDS.CHASING_GHOSTS : SOUNDS.SIREN);
 
     }
 
@@ -167,7 +163,7 @@ export class PacmanGame extends Game {
      * @return The array of ghosts.
      */
     private _createGhostArray(): Ghost[] {
-        let ghosts: Ghost[] = [];
+        const ghosts: Ghost[] = [];
         this._resettingGhostStates = true;
         ghosts.push(new Blinky(this));
         ghosts.push(new Pinky(this));
@@ -183,7 +179,8 @@ export class PacmanGame extends Game {
             const ctx: CanvasRenderingContext2D = this.canvas.getContext('2d');
             const sx: number = 135,
                 sy: number = 38;
-            game.assets.get('sprites').drawScaled2(ctx, sx, sy, 8, 8, x, y, 8, 8);
+            const image: Image = game.assets.get('sprites');
+            image.drawScaled2(ctx, sx, sy, 8, 8, x, y, 8, 8);
         }
     }
 
@@ -191,7 +188,7 @@ export class PacmanGame extends Game {
         if (this._fruitScoreIndex > -1) {
             this.paintPointsEarned(ctx, this._fruitScoreIndex,
                 this._fruit.x, this._fruit.y);
-            let time: number = game.playTime;
+            const time: number = game.playTime;
             if (time >= this._fruitScoreEndTime) {
                 this._fruit = null;
                 this._fruitScoreIndex = -1;
@@ -218,7 +215,7 @@ export class PacmanGame extends Game {
 
         let scoreStr: string = this._score.toString();
         let x: number = 55 - scoreStr.length * 8;
-        let y: number = 10;
+        const y: number = 10;
         this.drawString(x, y, scoreStr, ctx);
 
         scoreStr = this._highScore.toString();
@@ -242,21 +239,21 @@ export class PacmanGame extends Game {
         image.drawScaled2(ctx, sx, sy, 16, 16, dx, dy, 16, 16);
     }
 
-    drawString(x: number, y: number, text: string|number,
+    drawString(x: number, y: number, text: string | number,
                ctx: CanvasRenderingContext2D = game.canvas.getContext('2d')) {
 
-        let str: string = text.toString(); // Allow us to pass in stuff like numerics
+        const str: string = text.toString(); // Allow us to pass in stuff like numerics
 
         // Note we have a SpriteSheet, not a BitmapFont, so our
         // calculation of what sub-image to draw is a little convoluted
-        let fontImage: SpriteSheet = this.assets.get('font');
-        let alphaOffs: number = 'A'.charCodeAt(0);
-        let numericOffs: number = '0'.charCodeAt(0);
+        const fontImage: SpriteSheet = this.assets.get('font');
+        const alphaOffs: number = 'A'.charCodeAt(0);
+        const numericOffs: number = '0'.charCodeAt(0);
         let index: number;
 
         for (let i: number = 0; i < str.length; i++) {
 
-            let ch: string = str[i];
+            const ch: string = str[i];
             const chCharCode: number = str.charCodeAt(i);
             if (ch >= 'A' && ch <= 'Z') {
                 index = fontImage.colCount + (chCharCode - alphaOffs);
@@ -354,7 +351,7 @@ export class PacmanGame extends Game {
         }
         this.increaseScore(this._extraPointsArray[this._eatenGhostPointsIndex]);
 
-        this.audio.playSound(Sounds.EATING_GHOST);
+        this.audio.playSound(SOUNDS.EATING_GHOST);
         return this._eatenGhostPointsIndex;
     }
 
@@ -370,7 +367,7 @@ export class PacmanGame extends Game {
         }
 
         if (!this._earnedExtraLife && this._score >= PacmanGame.EXTRA_LIFE_SCORE) {
-            this.audio.playSound(Sounds.EXTRA_LIFE);
+            this.audio.playSound(SOUNDS.EXTRA_LIFE);
             this.increaseLives(1);
             this._earnedExtraLife = true;
         }
@@ -379,14 +376,14 @@ export class PacmanGame extends Game {
     /**
      * Returns whether this game is being played on the desktop, as opposed to in a browser.
      *
-     * @returns {boolean} Whether this game is being played on the desktop.
+     * @returns Whether this game is being played on the desktop.
      */
     isDesktopGame(): boolean {
         return this._desktopGame;
     }
 
     private _isRunningInElectron(): boolean {
-        const eWindow: ElectronEnhancedWindow = <any>window;
+        const eWindow: ElectronEnhancedWindow = window as any;
         return eWindow && eWindow.process && eWindow.process.type;
     }
 
@@ -396,7 +393,7 @@ export class PacmanGame extends Game {
         this._fruit = null;
         this._fruitScoreIndex = -1;
         this._fruitScoreEndTime = -1;
-        let state: MazeState = <MazeState>this.state;
+        const state: MazeState = this.state as MazeState;
         state.reset();
     }
 
@@ -413,13 +410,13 @@ export class PacmanGame extends Game {
      * Paints the "points earned," for example, when PacMan eats a ghost or
      * fruit.
      *
-     * @param {CanvasContext2D} ctx The graphics context to use.
-     * @param {int} ptsIndex The index into the points array.
-     * @param {int} dx The x-coordinate at which to draw.
-     * @param {int} dy The y-coordinate at which to draw.
+     * @param ctx The graphics context to use.
+     * @param ptsIndex The index into the points array.
+     * @param dx The x-coordinate at which to draw.
+     * @param dy The y-coordinate at which to draw.
      */
     paintPointsEarned(ctx: CanvasRenderingContext2D, ptsIndex: number, dx: number, dy: number) {
-        let points: SpriteSheet = game.assets.get('points');
+        const points: SpriteSheet = game.assets.get('points');
         points.drawByIndex(ctx, dx, dy, ptsIndex);
     }
 
@@ -428,7 +425,7 @@ export class PacmanGame extends Game {
      */
     playChompSound() {
         this.audio.playSound(this._chompSound === 0 ?
-            Sounds.CHOMP_1 : Sounds.CHOMP_2);
+            SOUNDS.CHOMP_1 : SOUNDS.CHOMP_2);
         this._chompSound = (this._chompSound + 1) % 2;
     }
 
@@ -450,13 +447,13 @@ export class PacmanGame extends Game {
 
         // Have each ghost go to one of four random corners while in scatter
         // mode, but ensure each ghost goes to a different corner.
-        let corners: Point[] = [
+        const corners: Point[] = [
             new Point(2, 1),
             new Point(2, Maze.TILE_COUNT_HORIZONTAL - 2),
             new Point(Maze.TILE_COUNT_VERTICAL - 2, 1),
             new Point(Maze.TILE_COUNT_VERTICAL - 2, Maze.TILE_COUNT_HORIZONTAL - 2)
         ];
-        let cornerSeed: number = Utils.randomInt(4);
+        const cornerSeed: number = Utils.randomInt(4);
 
         for (let i: number = 0; i < this._ghosts.length; i++) {
             this._ghosts[i].reset();
@@ -468,7 +465,7 @@ export class PacmanGame extends Game {
 
     /**
      * Starts looping a sound effect.
-     * @param {string} sound The sound effect to loop.
+     * @param sound The sound effect to loop.
      */
     setLoopedSound(sound: string) {
         if (sound !== this._loopedSoundName) {
@@ -476,19 +473,15 @@ export class PacmanGame extends Game {
                 this.audio.stopSound(this._loopedSoundId);
             }
             this._loopedSoundName = sound;
-            if (sound != null) {
-                this._loopedSoundId = game.audio.playSound(sound, true);
-            }
-            else {
-                this._loopedSoundId = null;
-            }
+            this._loopedSoundId = sound != null ? game.audio.playSound(sound, true) : null;
         }
     }
 
     /**
      * Sets whether to update none, one, or all of the ghosts' positions
      * each frame.  This is used for debugging purposes.
-     * @param state How many ghosts to update.
+     *
+     * @param strategy How to update the ghosts.
      */
     set ghostUpdateStrategy(strategy: GhostUpdateStrategy) {
         this._ghostUpdateStrategy = strategy;
@@ -500,15 +493,16 @@ export class PacmanGame extends Game {
         this._score = 0;
         this._level = 0;
 
-        let levelData: any = game.assets.get('levels')[level];
-        let mazeState: any = new MazeState(levelData);
+        const levelsData: any = game.assets.get('levels');
+        const levelData: any = levelsData[level];
+        const mazeState: any = new MazeState(levelData);
         //this.setState(new FadeOutInState(this.state, mazeState));
         this.setState(mazeState); // The original did not fade in/out
     }
 
     startPacmanDying() {
         this.setLoopedSound(null);
-        this.audio.playSound(Sounds.DIES);
+        this.audio.playSound(SOUNDS.DIES);
         this.pacman.startDying();
         this._fruit = null;
         this._fruitScoreIndex = -1;
@@ -554,8 +548,8 @@ export class PacmanGame extends Game {
     /**
      * Updates the position of pacman, the ghosts and the fruit, in the
      * specified maze.
-     * @param {Maze} maze The maze.
-     * @param {number} time
+     * @param maze The maze.
+     * @param time
      */
     updateSpritePositions(maze: Maze, time: number) {
 

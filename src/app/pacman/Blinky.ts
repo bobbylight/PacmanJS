@@ -1,8 +1,9 @@
-import {Ghost, MotionState} from './Ghost';
-import {PacmanGame} from './PacmanGame';
-import {Direction} from './Direction';
-import {Maze} from './Maze';
-import {MazeNode} from './MazeNode';
+import { Ghost, MotionState } from './Ghost';
+import { PacmanGame } from './PacmanGame';
+import { Direction } from './Direction';
+import { Maze } from './Maze';
+import { MazeNode } from './MazeNode';
+
 declare var game: PacmanGame;
 
 /**
@@ -36,15 +37,15 @@ export class Blinky extends Ghost {
         // If at an intersection, do a breadth-first search for the shortest
         // route to PacMan, and go in that direction.
 
-        let moveAmount: number = this.moveAmount;
+        const moveAmount: number = this.moveAmount;
 
         if (this.atIntersection(maze)) { // If the ghost can turn...
 
-            let fromRow: number = this.row;
-            let fromCol: number = this.column;
-            let toRow: number = game.pacman.row;
-            let toCol: number = game.pacman.column;
-            let node: MazeNode = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
+            const fromRow: number = this.row;
+            const fromCol: number = this.column;
+            const toRow: number = game.pacman.row;
+            const toCol: number = game.pacman.column;
+            const node: MazeNode = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
 
             if (node == null) { // Happens only with "God Mode" enabled.
                 this.changeDirectionFallback(maze);

@@ -1,19 +1,19 @@
-import {_BaseState} from './_BaseState';
-import {Maze} from './Maze';
-import {PacmanGame} from './PacmanGame';
-import {Pacman} from './Pacman';
-import {TitleState} from './TitleState';
-import {Sounds} from './Sounds';
-import {Ghost, MotionState} from './Ghost';
-import {Keys} from 'gtp';
-import {InputManager} from 'gtp';
+import { _BaseState } from './_BaseState';
+import { Maze } from './Maze';
+import { PacmanGame } from './PacmanGame';
+import { Pacman } from './Pacman';
+import { TitleState } from './TitleState';
+import SOUNDS from './Sounds';
+import { Ghost, MotionState } from './Ghost';
+import { InputManager, Keys } from 'gtp';
+
 declare var game: PacmanGame;
 
 type Substate = 'READY' | 'IN_GAME' | 'DYING' | 'GAME_OVER';
 
 export class MazeState extends _BaseState {
 
-    private _mazeFile: number[][];
+    private readonly _mazeFile: number[][];
     private _maze: Maze;
     private _firstTimeThrough: boolean;
     private _updateScoreIndex: number;
@@ -83,8 +83,8 @@ export class MazeState extends _BaseState {
         const BOTTOM_INDENT: number = 12;
         const TILE_SIZE: number = PacmanGame.TILE_SIZE;
 
-        let x: number = game.getWidth() - BOTTOM_INDENT - 2 * TILE_SIZE;
-        let y: number = game.getHeight() - 2 * TILE_SIZE;
+        const x: number = game.getWidth() - BOTTOM_INDENT - 2 * TILE_SIZE;
+        const y: number = game.getHeight() - 2 * TILE_SIZE;
 
         switch (game.level) {
             default:
@@ -121,8 +121,8 @@ export class MazeState extends _BaseState {
         this._maze.render(ctx);
 
         // "window.pacman" because of hoisting of pacman let below
-        let TILE_SIZE: number = 8;
-        let mazeY: number = game.getHeight() - 2 * TILE_SIZE -
+        const TILE_SIZE: number = 8;
+        const mazeY: number = game.getHeight() - 2 * TILE_SIZE -
             Maze.TILE_COUNT_VERTICAL * TILE_SIZE;
         ctx.translate(0, mazeY);
 
@@ -151,7 +151,7 @@ export class MazeState extends _BaseState {
         if (this._substate === 'READY') {
             // These calculations should be fast enough, especially considering
             // that "READY!" is only displayed for about 4 seconds.
-            let ready: string = 'READY!';
+            const ready: string = 'READY!';
             let x: number = (game.getWidth() - ready.length * 9) / 2;
             // Give "Ready!" a little nudge to the right.  This is because the
             // ending '!' doesn't fill up the standard 8 pixels for a character,
@@ -160,8 +160,8 @@ export class MazeState extends _BaseState {
             game.drawString(x, 160, ready);
         }
         else if (this._substate === 'GAME_OVER') {
-            let gameOver: string = 'GAME OVER';
-            let x: number = (game.getWidth() - gameOver.length * 9) / 2;
+            const gameOver: string = 'GAME OVER';
+            const x: number = (game.getWidth() - gameOver.length * 9) / 2;
             game.drawString(x, 160, gameOver);
         }
 
@@ -171,8 +171,8 @@ export class MazeState extends _BaseState {
             ctx.fillRect(0, 0, game.getWidth(), game.getHeight());
             ctx.globalAlpha = 1;
             ctx.fillRect(50, 100, game.getWidth() - 100, game.getHeight() - 200);
-            let paused: string = 'PAUSED';
-            let x: number = (game.getWidth() - paused.length * 9) / 2;
+            const paused: string = 'PAUSED';
+            const x: number = (game.getWidth() - paused.length * 9) / 2;
             game.drawString(x, (game.getHeight() - 18) / 2, paused);
         }
     }
@@ -194,7 +194,7 @@ export class MazeState extends _BaseState {
     private _handleInput(delta: number, time: number) {
 
         this.handleDefaultKeys();
-        let input: InputManager = game.inputManager;
+        const input: InputManager = game.inputManager;
 
         // Enter -> Pause.  Don't check for pausing on "Game Over" screen as
         // that will carry over into the next game!
@@ -235,7 +235,7 @@ export class MazeState extends _BaseState {
 
                 // Z+C => auto-death
                 else if (input.isKeyDown(Keys.KEY_C)) {
-                    if ((<any>this._substate) !== 'DYING') { // <any> cast due to what seems to be a bug in tsc
+                    if ((this._substate as any) !== 'DYING') { // <any> cast due to what seems to be a bug in tsc
                         game.startPacmanDying();
                         this._substate = 'DYING';
                         this._nextDyingFrameTime = time + MazeState.DYING_FRAME_DELAY_MILLIS;
@@ -259,14 +259,14 @@ export class MazeState extends _BaseState {
             case 'READY':
                 if (this._firstTimeThrough && this._substateStartTime === 0) {
                     this._substateStartTime = time;
-                    game.audio.playSound(Sounds.OPENING);
+                    game.audio.playSound(SOUNDS.OPENING);
                 }
                 if (time >= this._substateStartTime + this._readyDelayMillis) {
                     this._substate = 'IN_GAME';
                     this._substateStartTime = time;
                     game.resetPlayTime();
                     this._lastMazeScreenKeypressTime = game.playTime;
-                    game.setLoopedSound(Sounds.SIREN);
+                    game.setLoopedSound(SOUNDS.SIREN);
                     this._firstTimeThrough = false;
                 }
                 break;
@@ -318,7 +318,7 @@ export class MazeState extends _BaseState {
         game.updateSpritePositions(this._maze, time);
 
         // If Pacman hit a ghost, decide what to do
-        let ghostHit: Ghost = game.checkForCollisions();
+        const ghostHit: Ghost = game.checkForCollisions();
         if (ghostHit) {
 
             switch (ghostHit.motionState) {

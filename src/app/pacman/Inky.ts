@@ -1,8 +1,9 @@
-import {Ghost, MotionState} from './Ghost';
-import {PacmanGame} from './PacmanGame';
-import {Direction} from './Direction';
-import {Maze} from './Maze';
-import {MazeNode} from './MazeNode';
+import { Ghost, MotionState } from './Ghost';
+import { PacmanGame } from './PacmanGame';
+import { Direction } from './Direction';
+import { Maze } from './Maze';
+import { MazeNode } from './MazeNode';
+
 declare var game: PacmanGame;
 
 /**
@@ -28,25 +29,25 @@ export class Inky extends Ghost {
 
     updatePositionChasingPacman(maze: Maze) {
 
-        let moveAmount: number = this.moveAmount;
+        const moveAmount: number = this.moveAmount;
 
         if (this.atIntersection(maze)) { // If the ghost can turn...
 
             // Get Blinky's proximity
-            let row: number = this.row;
-            let col: number = this.column;
-            let blinky: Ghost = game.getGhost(0);
-            let blinkyRow: number = blinky.row;
-            let blinkyCol: number = blinky.column;
-            let distSq: number = (blinkyCol - col) * (blinkyCol - col) +
+            const row: number = this.row;
+            const col: number = this.column;
+            const blinky: Ghost = game.getGhost(0);
+            const blinkyRow: number = blinky.row;
+            const blinkyCol: number = blinky.column;
+            const distSq: number = (blinkyCol - col) * (blinkyCol - col) +
                 (blinkyRow - row) * (blinkyRow - row);
             //console.log(distSq);
 
             // If we're close enough to Blinky, chase Pacman.
             if (distSq <= 35) {
-                let toRow: number = game.pacman.row;
-                let toCol: number = game.pacman.column;
-                let node: MazeNode = maze.getPathBreadthFirst(row, col, toRow, toCol);
+                const toRow: number = game.pacman.row;
+                const toCol: number = game.pacman.column;
+                const node: MazeNode = maze.getPathBreadthFirst(row, col, toRow, toCol);
                 //console.log("... " + node + " (" + row + "," + col + ")");
                 if (node == null) { // Happens only with "God Mode" enabled.
                     this.changeDirectionFallback(maze);

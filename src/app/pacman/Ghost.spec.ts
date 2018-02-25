@@ -1,6 +1,3 @@
-import {Maze} from './Maze';
-import {Ghost} from './Ghost';
-
 // class ConcreteGhost extends Ghost {
 //
 // 	constructor() {
@@ -13,8 +10,8 @@ import {Ghost} from './Ghost';
 
 describe('Ghost', () => {
 
-	it('can be subclassed', () => {
-		// const ghost: ConcreteGhost = new ConcreteGhost();
-		// expect(ghost).toBeDefined();
-	});
+    it('can be subclassed', () => {
+        // const ghost: ConcreteGhost = new ConcreteGhost();
+        // expect(ghost).toBeDefined();
+    });
 });

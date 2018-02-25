@@ -12,8 +12,8 @@ To install and compile:
 git clone https://github.com/bobbylight/PacmanJS.git
 cd PacmanJS
 npm install
-npm run watch  # Start webpack in watch mode to automatically compile changes
-npm run build  # Alternatively, just build once
+npm run watch  # Start dev server at localhost:8080, hot deploy changes
+npm run build  # Production build
 ```
 
 The source code lives in `src`.  `webpack` is used to build the application into `build/web`.
@@ -31,14 +31,7 @@ Relatively in the order in which I want to fix things:
   goes on
 
 ## To-Do
-1. `require` is defined twice.  Harmless build error:
-
-```
-ERROR in D:\dev\htmlgames\pacman-idea-project\pacman\node_modules\@types\requirejs\index.d.ts
-error TS2403: Subsequent variable declarations must have the same type.  Variable 'require' must be of type 'NodeRequire', but here has type 'Require'.
-```
-
-2. Tests don't work after the conversion to commonjs:
+1. Tests don't work after the conversion to commonjs:
 
 ```bash
 $ npm run test

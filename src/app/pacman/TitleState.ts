@@ -1,13 +1,11 @@
-import {_BaseState} from './_BaseState';
-import {PacmanGame} from './PacmanGame';
-import {Pacman} from './Pacman';
-import {Direction} from './Direction';
-import {Ghost} from './Ghost';
-import {Sounds} from './Sounds';
-import {InputManager} from 'gtp';
-import {BaseStateArgs} from 'gtp';
-import {Game} from 'gtp';
-import {Image} from 'gtp';
+import { _BaseState } from './_BaseState';
+import { PacmanGame } from './PacmanGame';
+import { Pacman } from './Pacman';
+import { Direction } from './Direction';
+import { Ghost } from './Ghost';
+import SOUNDS from './Sounds';
+import { BaseStateArgs, Game, Image, InputManager, SpriteSheet } from 'gtp';
+
 declare var game: PacmanGame;
 
 export class TitleState extends _BaseState {
@@ -17,19 +15,22 @@ export class TitleState extends _BaseState {
 
     /**
      * State that renders the title screen.
-     * @constructor
      */
     constructor(args?: PacmanGame | BaseStateArgs) {
+
         super(args);
         // Initialize our sprites not just in enter() so they are positioned
         // correctly while FadeOutInState is running
         this._initSprites();
+
+        this.handleStart = this.handleStart.bind(this);
     }
 
     enter() {
 
         super.enter(game);
 
+        // tslint:disable-next-line
         game.canvas.addEventListener('touchstart', this.handleStart, false);
         this._choice = 0;
         this._lastKeypressTime = game.playTime;
@@ -47,21 +48,22 @@ export class TitleState extends _BaseState {
     }
 
     leaving(game: Game) {
+        // tslint:disable-next-line
         game.canvas.removeEventListener('touchstart', this.handleStart, false);
     }
 
     private getGame(): PacmanGame {
-        return <PacmanGame>this.game;
+        return this.game as PacmanGame;
     }
 
     handleStart() {
-        console.log('Yee, touch detected!');
+        // console.log('Yee, touch detected!');
         this._startGame();
     }
 
     render(ctx: CanvasRenderingContext2D) {
 
-        let SCREEN_WIDTH: number = game.getWidth(),
+        const SCREEN_WIDTH: number = game.getWidth(),
             SCREEN_HEIGHT: number = game.getHeight(),
             charWidth: number = 9;
 
@@ -91,19 +93,20 @@ export class TitleState extends _BaseState {
     }
 
     _stringWidth(str: string): number {
-        return game.assets.get('font').cellW * str.length;
+        const font: SpriteSheet = game.assets.get('font');
+        return font.cellW * str.length;
     }
 
     _renderNoSoundMessage() {
 
-        let w: number = game.getWidth();
+        const w: number = game.getWidth();
 
         let text: string = 'SOUND IS DISABLED AS';
         let x: number = (w - this._stringWidth(text)) / 2;
         let y: number = game.getHeight() - 20 - 9 * 3;
         this.getGame().drawString(x, y, text);
         text = 'YOUR BROWSER DOES NOT';
-        x = ( w - this._stringWidth(text)) / 2;
+        x = (w - this._stringWidth(text)) / 2;
         y += 9;
         this.getGame().drawString(x, y, text);
         text = 'SUPPORT WEB AUDIO';
@@ -121,11 +124,11 @@ export class TitleState extends _BaseState {
         const charWidth: number = 9;
 
         // Render the "scores" stuff at the top.
-        (<PacmanGame>game).drawScores(ctx);
-        (<PacmanGame>game).drawScoresHeaders(ctx);
+        (game as PacmanGame).drawScores(ctx);
+        (game as PacmanGame).drawScoresHeaders(ctx);
 
         // Title image
-        let titleImage: Image = game.assets.get('title');
+        const titleImage: Image = game.assets.get('title');
         let x: number = (SCREEN_WIDTH - titleImage.width) / 2;
         let y: number = titleImage.height * 1.2;
         titleImage.draw(ctx, x, y);
@@ -166,19 +169,19 @@ export class TitleState extends _BaseState {
 
         this.handleDefaultKeys();
 
-        let playTime: number = game.playTime;
+        const playTime: number = game.playTime;
         if (playTime > this._lastKeypressTime + _BaseState.INPUT_REPEAT_MILLIS + 100) {
 
-            let im: InputManager = game.inputManager;
+            const im: InputManager = game.inputManager;
 
             if (im.up()) {
                 this._choice = Math.abs(this._choice - 1);
-                game.audio.playSound(Sounds.TOKEN);
+                game.audio.playSound(SOUNDS.TOKEN);
                 this._lastKeypressTime = playTime;
             }
             else if (im.down()) {
                 this._choice = (this._choice + 1) % 2;
-                game.audio.playSound(Sounds.TOKEN);
+                game.audio.playSound(SOUNDS.TOKEN);
                 this._lastKeypressTime = playTime;
             }
             else if (im.enter(true)) {
@@ -186,8 +189,8 @@ export class TitleState extends _BaseState {
             }
         }
 
-        let pacman: Pacman = game.pacman;
-        let ghost: Ghost = game.getGhost(0);
+        const pacman: Pacman = game.pacman;
+        const ghost: Ghost = game.getGhost(0);
 
         // Update the animated Pacman
         let moveAmount: number = pacman.moveAmount;

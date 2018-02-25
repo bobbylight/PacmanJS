@@ -1,4 +1,4 @@
-import {BrowserWindow, app} from 'electron';
+import { app, BrowserWindow } from 'electron';
 
 /*
  * Entry point for desktop version.  This is built with electron:
@@ -11,7 +11,7 @@ import {BrowserWindow, app} from 'electron';
     // be closed automatically when the JavaScript object is garbage collected.
     let mainWindow: Electron.BrowserWindow;
 
-    const createWindow: Function = () => {
+    const createWindow: (launchInfo: any) => void = (launchInfo: any): void => {
         // Create the browser window.
         mainWindow = new BrowserWindow({
             width: 224, height: 288,
@@ -51,7 +51,7 @@ import {BrowserWindow, app} from 'electron';
         // On OS X it's common to re-create a window in the app when the
         // dock icon is clicked and there are no other windows open.
         if (mainWindow === null) {
-            createWindow();
+            createWindow(null);
         }
     });
 

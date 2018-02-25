@@ -1,9 +1,6 @@
-import {Keys} from 'gtp';
-import {State, BaseStateArgs} from 'gtp';
-import {Game} from 'gtp';
-import {Utils} from 'gtp';
-import {InputManager} from 'gtp';
-import {PacmanGame} from './PacmanGame';
+import { BaseStateArgs, Game, InputManager, Keys, State, Utils } from 'gtp';
+import { PacmanGame } from './PacmanGame';
+
 declare var game: PacmanGame;
 
 export class _BaseState extends State {
@@ -13,7 +10,6 @@ export class _BaseState extends State {
 
     /**
      * Functionality common amongst all states in this game.
-     * @constructor
      */
     constructor(args?: Game | BaseStateArgs) {
         super(args);

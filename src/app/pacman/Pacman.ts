@@ -1,8 +1,9 @@
-import {Maze} from './Maze';
-import {Direction} from './Direction';
-import {_BaseSprite} from './_BaseSprite';
-import {InputManager} from 'gtp';
-import {PacmanGame} from './PacmanGame';
+import { Maze } from './Maze';
+import { Direction } from './Direction';
+import { _BaseSprite } from './_BaseSprite';
+import { InputManager } from 'gtp';
+import { PacmanGame } from './PacmanGame';
+
 declare var game: PacmanGame;
 
 export class Pacman extends _BaseSprite {
@@ -47,7 +48,7 @@ export class Pacman extends _BaseSprite {
     /**
      * Returns whether Pacman ins completely dead, or still doing his dying
      * animation.
-     * @return {boolean} Whether Pacman is still in his dying animation.
+     * @return Whether Pacman is still in his dying animation.
      */
     incDying(): boolean {
         this._dyingFrame = (this._dyingFrame + 1) % 12;

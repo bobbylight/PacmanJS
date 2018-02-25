@@ -1,11 +1,10 @@
-import {Pool} from 'gtp';
-import {MazeNode} from './MazeNode';
-import {PacmanGame} from './PacmanGame';
-import {SpriteSheet} from 'gtp';
-import {ImageUtils} from 'gtp';
+import { ImageUtils, Pool, SpriteSheet } from 'gtp';
+import { MazeNode } from './MazeNode';
+import { PacmanGame } from './PacmanGame';
+
 declare var game: PacmanGame;
 
-let DOT_POINTS: number[] = [ 50, 10 ];
+const DOT_POINTS: number[] = [50, 10];
 
 export class Maze {
 
@@ -38,14 +37,14 @@ export class Maze {
      * it is, it is removed.  If a dot is removed, the points the player should
      * receive is returned.
      *
-     * @param {number} row The row to check.
-     * @param {number} col The column to check.
-     * @return {number} The amount to add to the player's score, if any.
+     * @param row The row to check.
+     * @param col The column to check.
+     * @return The amount to add to the player's score, if any.
      */
     checkForDot(row: number, col: number): number {
 
         let score: number = 0;
-        let tile: number = this._getTileAt(row, col);
+        const tile: number = this._getTileAt(row, col);
 
         if (tile >= 0xfe) { // Small dot or big dot.
             game.playChompSound();
@@ -95,7 +94,7 @@ export class Maze {
     /**
      * Returns the number of dots Pacman must eat before a fruit appears.
      *
-     * @return {number} The number of dots Pacman must eat.
+     * @return The number of dots Pacman must eat.
      */
     static get FRUIT_DOT_COUNT(): number {
         return 64;
@@ -105,8 +104,8 @@ export class Maze {
      * Returns the "next" column, taking wrapping (from the tunnels) into
      * account.
      *
-     * @param {number} col The current column.
-     * @return {number} The column to the "right" of <code>col</code>.
+     * @param col The current column.
+     * @return The column to the "right" of <code>col</code>.
      * @see getPreviousColumn
      */
     private static _getNextColumn(col: number): number {
@@ -119,12 +118,11 @@ export class Maze {
     getPathBreadthFirst(fromRow: number, fromCol: number, toRow: number,
                         toCol: number): MazeNode {
 
-        let self: Maze = this;
         this.open.forEach((node: MazeNode) => {
-            self._data[node.row][node.col] &= 0xff;
+            this._data[node.row][node.col] &= 0xff;
         });
         this.closed.forEach((node: MazeNode) => {
-            self._data[node.row][node.col] &= 0xff;
+            this._data[node.row][node.col] &= 0xff;
         });
 
         this.open.length = 0;
@@ -138,7 +136,7 @@ export class Maze {
 
         while (this.open.length > 0) {
 
-            let node: MazeNode = this.open.splice(0, 1)[0];
+            const node: MazeNode = this.open.splice(0, 1)[0];
             if (node.equals(this.goalNode)) {
                 this._data[node.row][node.col] &= 0xff; // Won't be in open or closed lists
                 return Maze._constructPath(node);
@@ -215,8 +213,8 @@ export class Maze {
      * Returns the "previous" column, taking wrapping (from the tunnels) into
      * account.
      *
-     * @param {number} col The current column.
-     * @return {number} The column to the "left" of <code>col</code>.
+     * @param col The current column.
+     * @return The column to the "left" of <code>col</code>.
      * @see getNextColumn
      */
     private static _getPreviousColumn(col: number): number {
@@ -245,9 +243,9 @@ export class Maze {
     /**
      * Returns the tile at the specified location.
      *
-     * @param {int} row The row to check.
-     * @param {int} col The column to check.
-     * @return {int} The row data.
+     * @param row The row to check.
+     * @param col The column to check.
+     * @return The row data.
      */
     private _getTileAt(row: number, col: number): number {
         // Forgive bounds errors in case the user is going through the tunnel.
@@ -261,8 +259,8 @@ export class Maze {
     }
 
     isClearShotColumn(col: number, row1: number, row2: number): boolean {
-        let start: number = Math.min(row1, row2);
-        let end: number = Math.max(row1, row2);
+        const start: number = Math.min(row1, row2);
+        const end: number = Math.max(row1, row2);
         for (let i: number = start + 1; i < end; i++) {
             if (!this.isWalkable(i, col)) {
                 return false;
@@ -272,8 +270,8 @@ export class Maze {
     }
 
     isClearShotRow(row: number, col1: number, col2: number): boolean {
-        let start: number = Math.min(col1, col2);
-        let end: number = Math.max(col1, col2);
+        const start: number = Math.min(col1, col2);
+        const end: number = Math.max(col1, col2);
         for (let i: number = start + 1; i < end; i++) {
             if (!this.isWalkable(row, i)) {
                 return false;
@@ -284,12 +282,12 @@ export class Maze {
 
     /**
      * Returns whether a sprite can move onto the specified tile.
-     * @param {number} row The row to check.
-     * @param {number} col The column to check.
-     * @return {boolean} Whether a sprite can walk ono the specified tile.
+     * @param row The row to check.
+     * @param col The column to check.
+     * @return Whether a sprite can walk ono the specified tile.
      */
     isWalkable(row: number, col: number): boolean {
-        let tile: number = this._getTileAt(row, col);
+        const tile: number = this._getTileAt(row, col);
         return tile === 0 || tile >= 0xf0;
     }
 
@@ -298,18 +296,18 @@ export class Maze {
         // Draw all static content
         ctx.drawImage(this._mazeCanvas, 0, 0);
 
-        let TILE_SIZE: number = 8;
+        const TILE_SIZE: number = 8;
 
         // Draw the dots
         ctx.fillStyle = '#ffffff';
         for (let row: number = 0; row < Maze.TILE_COUNT_VERTICAL; row++) {
 
-            let y: number = row * TILE_SIZE + (2 * TILE_SIZE);
+            const y: number = row * TILE_SIZE + (2 * TILE_SIZE);
 
             for (let col: number = 0; col < Maze.TILE_COUNT_HORIZONTAL; col++) {
 
-                let tile: number = this._getTileAt(row, col);
-                let x: number = col * TILE_SIZE;
+                const tile: number = this._getTileAt(row, col);
+                const x: number = col * TILE_SIZE;
 
                 if (tile === Maze.TILE_DOT_SMALL) {
                     game.drawSmallDot(x + 3, y + 2);
@@ -329,8 +327,8 @@ export class Maze {
     reset(mazeInfo?: number[][]) {
         'use strict';
 
-        let TILE_SIZE: number = PacmanGame.TILE_SIZE;
-        let firstTime: boolean = mazeInfo != null;
+        const TILE_SIZE: number = PacmanGame.TILE_SIZE;
+        const firstTime: boolean = mazeInfo != null;
 
         // Load (or reset) map data
         if (firstTime) {
@@ -379,8 +377,8 @@ export class Maze {
                         default:
                             tile--;
                             if (tile > -1) {
-                                let dx: number = col * TILE_SIZE;
-                                let dy: number = mazeY + row * TILE_SIZE;
+                                const dx: number = col * TILE_SIZE;
+                                const dy: number = mazeY + row * TILE_SIZE;
                                 mapTiles.drawByIndex(mazeCtx, dx, dy, tile);
                             }
                             break;

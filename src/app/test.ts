@@ -1,6 +1,6 @@
 // this file is only being used by karma
 
-(<any>window).game = {};
+(window as any).game = {};
 
-const testsContext: any = (<any>require).context('.', true, /\.spec\.ts$/);
+const testsContext: any = (require as any).context('.', true, /\.spec\.ts$/);
 testsContext.keys().forEach(testsContext);

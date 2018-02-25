@@ -4,14 +4,18 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const StringReplacePlugin = require('string-replace-webpack-plugin');
 const webpack = require('webpack');
 
-// todo: add back when tslint-loader is updated for tslint 5.0.0
-// // Loaders specific to compiling
-// loaders.push({
-//     enforce: 'pre',
-//     test: /\.ts$/,
-//     loader: 'tslint-loader',
-//     exclude: /node_modules/
-// });
+const devBuild = process.env.NODE_ENV === 'dev';
+
+// Loaders specific to compiling
+loaders.push({
+    enforce: 'pre',
+    test: /\.tsx?$/,
+    loader: 'tslint-loader',
+    exclude: /node_modules/,
+    options: {
+        typeCheck: true
+    }
+});
 
 module.exports = [
     {
@@ -31,14 +35,19 @@ module.exports = [
             loaders: loaders
         },
         plugins: [
+            new webpack.DefinePlugin({
+                'process.env': {
+                    NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+                }
+            }),
             // Simply copies the files over
             new CopyWebpackPlugin([
                 { from: 'src/res', to: 'res' }
             ]),
             new StringReplacePlugin()
         ],
-        // Create Sourcemaps for the bundle
-        devtool: 'source-map',
+        // Create sourcemaps for the bundle
+        devtool: devBuild ? 'source-map' : undefined,
         devServer: {
             contentBase: './build/web'
         }

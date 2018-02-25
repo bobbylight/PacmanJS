@@ -1,15 +1,15 @@
-import {Rectangle} from 'gtp';
-import {Direction} from './Direction';
-import {PacmanGame} from './PacmanGame';
-import {Maze} from './Maze';
+import { Rectangle } from 'gtp';
+import { Direction } from './Direction';
+import { PacmanGame } from './PacmanGame';
+import { Maze } from './Maze';
 
 export abstract class _BaseSprite {
 
     bounds: Rectangle;
-    private _intersectBounds: Rectangle;
+    private readonly _intersectBounds: Rectangle;
     direction: Direction;
     _frame: number;
-    private _frameCount: number;
+    private readonly _frameCount: number;
     private _lastUpdateTime: number;
 
     constructor(frameCount: number) {
@@ -35,13 +35,13 @@ export abstract class _BaseSprite {
     }
 
     getCanMoveDown(maze: Maze) {
-        let x: number = this.centerX;
-        let y: number = this.centerY;
-        let xRemainder: number = x % this.TILE_SIZE;
-        let yRemainder: number = y % this.TILE_SIZE; //(y+TILE_SIZE) % this.TILE_SIZE;
+        const x: number = this.centerX;
+        const y: number = this.centerY;
+        const xRemainder: number = x % this.TILE_SIZE;
+        const yRemainder: number = y % this.TILE_SIZE; //(y+TILE_SIZE) % this.TILE_SIZE;
         if (xRemainder === 0 && yRemainder === 0) {
-            let row: number = this.row;
-            let col: number = this.column;
+            const row: number = this.row;
+            const col: number = this.column;
             return row < 30 && maze.isWalkable(row + 1, col);
         }
         return this.direction === Direction.NORTH || this.direction === Direction.SOUTH;
@@ -52,13 +52,13 @@ export abstract class _BaseSprite {
         if (x < 0) {
             return true; // Going through tunnel.
         }
-        x +=  this.TILE_SIZE / 2;
-        let y: number = this.centerY;
-        let xRemainder: number = x % this.TILE_SIZE; //(x-TILE_SIZE) % this.TILE_SIZE;
-        let yRemainder: number = y % this.TILE_SIZE;
+        x += this.TILE_SIZE / 2;
+        const y: number = this.centerY;
+        const xRemainder: number = x % this.TILE_SIZE; //(x-TILE_SIZE) % this.TILE_SIZE;
+        const yRemainder: number = y % this.TILE_SIZE;
         if (xRemainder === 0 && yRemainder === 0) {
-            let row: number = this.row;
-            let col: number = this.column;
+            const row: number = this.row;
+            const col: number = this.column;
             return col > 0 && maze.isWalkable(row, col - 1);
         }
         return this.direction === Direction.EAST || this.direction === Direction.WEST;
@@ -69,40 +69,40 @@ export abstract class _BaseSprite {
         if (x + this.width > this.SCREEN_WIDTH) {
             return true; // Going through tunnel.
         }
-        x +=  this.TILE_SIZE / 2;
-        let y: number = this.centerY;
-        let xRemainder: number = x % this.TILE_SIZE; //(x+TILE_SIZE) % this.TILE_SIZE;
-        let yRemainder: number = y % this.TILE_SIZE;
+        x += this.TILE_SIZE / 2;
+        const y: number = this.centerY;
+        const xRemainder: number = x % this.TILE_SIZE; //(x+TILE_SIZE) % this.TILE_SIZE;
+        const yRemainder: number = y % this.TILE_SIZE;
         if (xRemainder === 0 && yRemainder === 0) {
-            let row: number = this.row;
-            let col: number = this.column;
+            const row: number = this.row;
+            const col: number = this.column;
             return col < 27 && maze.isWalkable(row, col + 1);
         }
         return this.direction === Direction.EAST || this.direction === Direction.WEST;
     }
 
     getCanMoveUp(maze: Maze) {
-        let x: number = this.centerX;
-        let y: number = this.centerY;
+        const x: number = this.centerX;
+        const y: number = this.centerY;
         if ((x % 1) !== 0 || (y % 1) !== 0) {
             console.error('Unexpected condition: x === ' + x + ', y === ' + y);
         }
-        let xRemainder: number = x % this.TILE_SIZE;
-        let yRemainder: number = y % this.TILE_SIZE; //(y-TILE_SIZE) % this.TILE_SIZE;
+        const xRemainder: number = x % this.TILE_SIZE;
+        const yRemainder: number = y % this.TILE_SIZE; //(y-TILE_SIZE) % this.TILE_SIZE;
         if (xRemainder === 0 && yRemainder === 0) {
-            let row: number = this.row;
-            let col: number = this.column;
+            const row: number = this.row;
+            const col: number = this.column;
             return row > 0 && maze.isWalkable(row - 1, col);
         }
         return this.direction === Direction.NORTH || this.direction === Direction.SOUTH;
     }
 
     get centerX(): number {
-        return this.bounds.x +  this.TILE_SIZE / 2;
+        return this.bounds.x + this.TILE_SIZE / 2;
     }
 
     get centerY(): number {
-        return this.bounds.y +  this.TILE_SIZE / 2;
+        return this.bounds.y + this.TILE_SIZE / 2;
     }
 
     get column(): number {
@@ -154,7 +154,7 @@ export abstract class _BaseSprite {
     /**
      * Returns the number of milliseconds that should pass between the times
      * this sprite moves.
-     * @return {number} The number of milliseconds.
+     * @return The number of milliseconds.
      */
     abstract getUpdateDelayMillis(): number;
 
@@ -235,7 +235,7 @@ export abstract class _BaseSprite {
         return 224;
     }
 
-    setLocation(x: number,  y: number) {
+    setLocation(x: number, y: number) {
         this.bounds.x = x;
         this.bounds.y = y;
     }

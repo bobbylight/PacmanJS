@@ -1,27 +1,30 @@
 {
-    "compilerOptions": {
+  "compilerOptions": {
 
-        "allowJs": false,
-        "allowUnreachableCode": false,
-        "allowUnusedLabels": false,
-        "declaration": false,
-        "forceConsistentCasingInFileNames": true,
-        "noImplicitAny": true,
-        "noImplicitReturns": true,
-        //"noUnusedLocals": true,
-        //"noUnusedParameters": true,
-        "preserveConstEnums": true,
-        "removeComments": false,
-//        "strictNullChecks": true,
+    "allowJs": false,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "alwaysStrict": true,
+    "declaration": false,
+    "forceConsistentCasingInFileNames": true,
+    "newLine": "lf",
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    //"noUnusedLocals": true,
+    //"noUnusedParameters": true,
+    "preserveConstEnums": true,
+    "removeComments": false,
+    //"strictNullChecks": true,
 
-        "target": "es5",
-        "module": "commonjs",
-        "moduleResolution": "node",
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
 
-        "outDir": "src/js/",
-        "sourceMap": true
-    },
-    "include": [
-        "src/app/**/*.ts"
-    ]
+    "outDir": "src/js/",
+    "sourceMap": true
+  },
+  "include": [
+    "src/app/**/*.ts"
+  ]
 }
