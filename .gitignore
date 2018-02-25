@@ -1,5 +1,9 @@
-bower_components
+.idea
+*.iml
 node_modules
 .tmp
-dist
+build
+src
+web
 Thumbs.db
+npm-debug.log
