@@ -2,6 +2,7 @@ const loaders = require('./loaders');
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
 
 const devBuild = process.env.NODE_ENV === 'dev';
@@ -13,8 +14,7 @@ module.exports = {
     ],
     output: {
         path: path.resolve('./build/web/'),
-        filename: '[name].js',
-        publicPath: '/'
+        filename: '[name].js'
     },
     resolve: {
         extensions: ['.js', '.ts'],
@@ -36,7 +36,8 @@ module.exports = {
             template: 'src/html/index.html',
             inject: 'body',
             hash: true
-        })
+        }),
+        new MiniCssExtractPlugin()
     ],
     module: {
         rules: loaders

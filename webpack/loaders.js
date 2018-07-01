@@ -1,3 +1,7 @@
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+const devBuild = process.env.NODE_ENV === 'dev';
+
 module.exports = [
     {
         test: /\.tsx?$/,
@@ -14,7 +18,10 @@ module.exports = [
     },
     {
         test: /\.css$/,
-        loader: 'style-loader!css-loader'
+        use: [
+            devBuild ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'css-loader'
+        ]
     },
     {
         test: /index.html$/,
