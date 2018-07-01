@@ -2,6 +2,7 @@ import { Ghost, MotionState } from './Ghost';
 import { PacmanGame } from './PacmanGame';
 import { Direction } from './Direction';
 import { Maze } from './Maze';
+import Constants from './Constants';
 
 declare let game: PacmanGame;
 
@@ -14,14 +15,14 @@ export class Clyde extends Ghost {
      * Constructor.
      */
     constructor(game: PacmanGame) {
-        super(game, 3 * PacmanGame.SPRITE_SIZE, 14);
+        super(game, 3 * Constants.SPRITE_SIZE, 14);
     }
 
     reset() {
         super.reset();
         this.direction = Direction.SOUTH;
-        this.setLocation(16 * PacmanGame.TILE_SIZE - PacmanGame.TILE_SIZE / 2 - 4,
-            15 * PacmanGame.TILE_SIZE - PacmanGame.TILE_SIZE / 2);
+        this.setLocation(16 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2 - 4,
+            15 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2);
         this.motionState = MotionState.IN_BOX;
     }
 

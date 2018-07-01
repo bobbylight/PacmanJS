@@ -5,6 +5,7 @@ import { Direction } from './Direction';
 import { PacmanGame } from './PacmanGame';
 import { MazeNode } from './MazeNode';
 import { Pacman } from './Pacman';
+import Constants from './Constants';
 
 declare let game: PacmanGame;
 
@@ -255,7 +256,7 @@ export abstract class Ghost extends _BaseSprite {
 
         const destX: number = this.bounds.x;
         const destY: number = this.bounds.y;
-        const SPRITE_SIZE: number = PacmanGame.SPRITE_SIZE;
+        const SPRITE_SIZE: number = Constants.SPRITE_SIZE;
         let srcX: number,
             srcY: number;
 
@@ -524,8 +525,8 @@ export abstract class Ghost extends _BaseSprite {
 
             const fromRow: number = this.row;
             const fromCol: number = this.column;
-            const toRow: number = Math.floor((game.PENALTY_BOX_EXIT_Y + 8) / PacmanGame.TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
-            let toCol: number = Math.floor((game.PENALTY_BOX_EXIT_X) / PacmanGame.TILE_SIZE); //xToColumn(game.PENALTY_BOX_EXIT_X);
+            const toRow: number = Math.floor((game.PENALTY_BOX_EXIT_Y + 8) / Constants.TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
+            let toCol: number = Math.floor((game.PENALTY_BOX_EXIT_X) / Constants.TILE_SIZE); //xToColumn(game.PENALTY_BOX_EXIT_X);
             if (fromCol <= toCol) {
                 toCol++; // Approaching from the left.
             }
@@ -562,7 +563,7 @@ export abstract class Ghost extends _BaseSprite {
         else {
 
             const fromRow: number = this.row;
-            const toRow: number = Math.floor((game.PENALTY_BOX_EXIT_Y + 8) / PacmanGame.TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
+            const toRow: number = Math.floor((game.PENALTY_BOX_EXIT_Y + 8) / Constants.TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
 
             if (fromRow === toRow && this.x === game.PENALTY_BOX_EXIT_X) {
                 this.motionState = MotionState.EYES_ENTERING_BOX;
@@ -586,7 +587,7 @@ export abstract class Ghost extends _BaseSprite {
         const moveAmount: number = GHOST_IN_BOX_SPEED; //getMoveAmount();
 
         const y: number = this.y;
-        if (y < game.PENALTY_BOX_EXIT_Y + 3 * PacmanGame.SPRITE_SIZE / 2) {
+        if (y < game.PENALTY_BOX_EXIT_Y + 3 * Constants.SPRITE_SIZE / 2) {
             this.direction = Direction.SOUTH; // May be redundant.
             this.incY(moveAmount);
         }
@@ -754,6 +755,5 @@ export abstract class Ghost extends _BaseSprite {
         if (game.playTime >= this._exitScatteringTime) {
             this.motionState = MotionState.CHASING_PACMAN;
         }
-
     }
 }

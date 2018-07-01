@@ -3,6 +3,7 @@ import { PacmanGame } from './PacmanGame';
 import { Direction } from './Direction';
 import { Maze } from './Maze';
 import { MazeNode } from './MazeNode';
+import Constants from './Constants';
 
 declare let game: PacmanGame;
 
@@ -16,14 +17,14 @@ export class Inky extends Ghost {
      * Constructor.
      */
     constructor(game: PacmanGame) {
-        super(game, 1 * PacmanGame.SPRITE_SIZE, 8);
+        super(game, 1 * Constants.SPRITE_SIZE, 8);
     }
 
     reset() {
         super.reset();
         this.direction = Direction.SOUTH;
-        this.setLocation(12 * PacmanGame.TILE_SIZE - PacmanGame.TILE_SIZE / 2 - 4,
-            15 * PacmanGame.TILE_SIZE - PacmanGame.TILE_SIZE / 2);
+        this.setLocation(12 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2 - 4,
+            15 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2);
         this.motionState = MotionState.IN_BOX;
     }
 

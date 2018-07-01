@@ -9,6 +9,7 @@ import { Inky } from './Inky';
 import { Clyde } from './Clyde';
 import { MazeState } from './MazeState';
 import { Maze } from './Maze';
+import Constants from './Constants';
 
 interface ElectronEnhancedWindow {
     process?: any;
@@ -307,11 +308,11 @@ export class PacmanGame extends Game {
     }
 
     get PENALTY_BOX_EXIT_X(): number {
-        return (this.getWidth() - PacmanGame.SPRITE_SIZE) / 2;
+        return (this.getWidth() - Constants.SPRITE_SIZE) / 2;
     }
 
     get PENALTY_BOX_EXIT_Y(): number {
-        return 12 * PacmanGame.TILE_SIZE - PacmanGame.TILE_SIZE / 2;
+        return 12 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2;
     }
 
     /**
@@ -320,14 +321,6 @@ export class PacmanGame extends Game {
      */
     static get SCORE_DISPLAY_LENGTH(): number {
         return 750;
-    }
-
-    static get SPRITE_SIZE(): number {
-        return 16;
-    }
-
-    static get TILE_SIZE(): number {
-        return 8;
     }
 
     ghostEaten(ghost: Ghost): number {

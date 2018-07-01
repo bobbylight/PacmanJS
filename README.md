@@ -8,7 +8,7 @@ Licensed under [an MIT license](LICENSE.txt).
 ## Hacking
 To install and compile:
 
-```shell
+```bash
 git clone https://github.com/bobbylight/PacmanJS.git
 cd PacmanJS
 npm install
@@ -20,6 +20,15 @@ The source code lives in `src`.  `webpack` is used to build the application into
 A desktop build, built on `electron` is planned but not currently there due to technical
 difficulties.
 
+
+## Running Tests
+
+```bash
+npm run test
+npm run cover  # Runs tests and generates a coverage report
+
+```
+
 ## What's unimplemented/buggy
 
 Relatively in the order in which I want to fix things:
@@ -29,14 +38,3 @@ Relatively in the order in which I want to fix things:
 * Ghost AI is approximate to, but not exactly, the actual algorithms
 * Blinky does not turn into Cruise Elroy, or increase in speed, as a level
   goes on
-
-## To-Do
-1. Tests don't run for some reason:
-
-```bash
-$ npm run test
-...
-declare let game: PacmanGame;
-        ^
-TypeError: Object prototype may only be an Object or null: undefined
-```

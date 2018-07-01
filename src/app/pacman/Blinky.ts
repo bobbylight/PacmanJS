@@ -3,8 +3,7 @@ import { PacmanGame } from './PacmanGame';
 import { Direction } from './Direction';
 import { Maze } from './Maze';
 import { MazeNode } from './MazeNode';
-
-declare let game: PacmanGame;
+import Constants from './Constants';
 
 /**
  * Blinky, the red ghost.  Blinky always takes the shortest route to Pacman
@@ -16,7 +15,7 @@ export class Blinky extends Ghost {
      * Constructor.
      */
     constructor(game: PacmanGame) {
-        super(game, 0 * PacmanGame.SPRITE_SIZE, 0); // Not initially in the penalty box
+        super(game, 0 * Constants.SPRITE_SIZE, 0); // Not initially in the penalty box
     }
 
     reset() {
@@ -43,8 +42,8 @@ export class Blinky extends Ghost {
 
             const fromRow: number = this.row;
             const fromCol: number = this.column;
-            const toRow: number = game.pacman.row;
-            const toCol: number = game.pacman.column;
+            const toRow: number = this.game.pacman.row;
+            const toCol: number = this.game.pacman.column;
             const node: MazeNode = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
 
             if (node == null) { // Happens only with "God Mode" enabled.
@@ -76,7 +75,7 @@ export class Blinky extends Ghost {
         }
 
         // Switch over to scatter mode if it's time to do so.
-        if (game.playTime >= this.startScatteringTime) {
+        if (this.game.playTime >= this.startScatteringTime) {
             this.motionState = MotionState.SCATTERING;
         }
 

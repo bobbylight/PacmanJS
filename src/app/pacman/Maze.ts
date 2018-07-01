@@ -1,6 +1,7 @@
 import { ImageUtils, Pool, SpriteSheet } from 'gtp';
 import { MazeNode } from './MazeNode';
 import { PacmanGame } from './PacmanGame';
+import Constants from './Constants';
 
 declare let game: PacmanGame;
 
@@ -327,7 +328,7 @@ export class Maze {
     reset(mazeInfo?: number[][]) {
         'use strict';
 
-        const TILE_SIZE: number = PacmanGame.TILE_SIZE;
+        const TILE_SIZE: number = Constants.TILE_SIZE;
         const firstTime: boolean = mazeInfo != null;
 
         // Load (or reset) map data

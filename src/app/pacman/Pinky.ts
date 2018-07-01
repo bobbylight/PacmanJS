@@ -3,6 +3,7 @@ import { PacmanGame } from './PacmanGame';
 import { Direction } from './Direction';
 import { Maze } from './Maze';
 import { Pacman } from './Pacman';
+import Constants from './Constants';
 
 declare let game: PacmanGame;
 
@@ -16,14 +17,14 @@ export class Pinky extends Ghost {
      * Constructor.
      */
     constructor(game: PacmanGame) {
-        super(game, 2 * PacmanGame.SPRITE_SIZE, 2);
+        super(game, 2 * Constants.SPRITE_SIZE, 2);
     }
 
     reset() {
         super.reset();
         this.direction = Direction.NORTH;
-        this.setLocation(14 * PacmanGame.TILE_SIZE - PacmanGame.TILE_SIZE / 2 - 4,
-            15 * PacmanGame.TILE_SIZE - PacmanGame.TILE_SIZE / 2);
+        this.setLocation(14 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2 - 4,
+            15 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2);
         this.motionState = MotionState.IN_BOX;
     }
 

@@ -4,12 +4,11 @@ describe('Blinky', () => {
 
     it('reset() works as expected', () => {
 
-        console.log('>>> a');
-        const mockGame: any = {};
+        const mockGame: any /* PacmanGame */ = {
+            checkLoopedSound: () => {}
+        };
 
-        console.log('>>> b');
         const ghost: Blinky = new Blinky(mockGame);
-        console.log('>>> c');
         ghost.reset();
     });
 });

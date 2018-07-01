@@ -5,6 +5,7 @@ import { Direction } from './Direction';
 import { Ghost } from './Ghost';
 import SOUNDS from './Sounds';
 import { BaseStateArgs, Game, Image, InputManager, SpriteSheet } from 'gtp';
+import Constants from './Constants';
 
 declare let game: PacmanGame;
 
@@ -43,7 +44,7 @@ export class TitleState extends _BaseState {
         pacman.setLocation(game.getWidth() / 2, 240);
         pacman.direction = Direction.EAST;
         const ghost: Ghost = game.getGhost(0);
-        ghost.setLocation(game.getWidth() / 2 - 3 * PacmanGame.SPRITE_SIZE, 240);
+        ghost.setLocation(game.getWidth() / 2 - 3 * Constants.SPRITE_SIZE, 240);
         ghost.direction = Direction.EAST;
     }
 

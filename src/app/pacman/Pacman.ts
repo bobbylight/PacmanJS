@@ -3,6 +3,7 @@ import { Direction } from './Direction';
 import { _BaseSprite } from './_BaseSprite';
 import { InputManager } from 'gtp';
 import { PacmanGame } from './PacmanGame';
+import Constants from './Constants';
 
 declare let game: PacmanGame;
 
@@ -57,7 +58,7 @@ export class Pacman extends _BaseSprite {
 
     render(ctx: CanvasRenderingContext2D) {
 
-        const SPRITE_SIZE: number = PacmanGame.SPRITE_SIZE;
+        const SPRITE_SIZE: number = Constants.SPRITE_SIZE;
 
         const x: number = this.bounds.x;
         const y: number = this.bounds.y;
