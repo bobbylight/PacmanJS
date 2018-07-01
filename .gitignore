@@ -1,5 +1,7 @@
 .idea
+.nyc_output/
 *.iml
+coverage/
 node_modules
 .tmp
 build
