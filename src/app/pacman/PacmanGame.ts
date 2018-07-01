@@ -10,8 +10,6 @@ import { Clyde } from './Clyde';
 import { MazeState } from './MazeState';
 import { Maze } from './Maze';
 
-declare var game: PacmanGame;
-
 interface ElectronEnhancedWindow {
     process?: any;
 }
@@ -125,7 +123,7 @@ export class PacmanGame extends Game {
             this.increaseScore(this._extraPointsArray[this._fruit.pointsIndex]);
             this.audio.playSound(SOUNDS.EATING_FRUIT, false);
             this._fruitScoreIndex = this._fruit.pointsIndex;
-            this._fruitScoreEndTime = game.playTime + PacmanGame.SCORE_DISPLAY_LENGTH;
+            this._fruitScoreEndTime = this.playTime + PacmanGame.SCORE_DISPLAY_LENGTH;
         }
 
         return null;
@@ -179,7 +177,7 @@ export class PacmanGame extends Game {
             const ctx: CanvasRenderingContext2D = this.canvas.getContext('2d');
             const sx: number = 135,
                 sy: number = 38;
-            const image: Image = game.assets.get('sprites');
+            const image: Image = this.assets.get('sprites');
             image.drawScaled2(ctx, sx, sy, 8, 8, x, y, 8, 8);
         }
     }
@@ -188,7 +186,7 @@ export class PacmanGame extends Game {
         if (this._fruitScoreIndex > -1) {
             this.paintPointsEarned(ctx, this._fruitScoreIndex,
                 this._fruit.x, this._fruit.y);
-            const time: number = game.playTime;
+            const time: number = this.playTime;
             if (time >= this._fruitScoreEndTime) {
                 this._fruit = null;
                 this._fruitScoreIndex = -1;
@@ -234,13 +232,13 @@ export class PacmanGame extends Game {
     }
 
     drawSprite(dx: number, dy: number, sx: number, sy: number) {
-        const image: Image = game.assets.get('sprites');
+        const image: Image = this.assets.get('sprites');
         const ctx: CanvasRenderingContext2D = this.canvas.getContext('2d');
         image.drawScaled2(ctx, sx, sy, 16, 16, dx, dy, 16, 16);
     }
 
     drawString(x: number, y: number, text: string | number,
-               ctx: CanvasRenderingContext2D = game.canvas.getContext('2d')) {
+               ctx: CanvasRenderingContext2D = this.canvas.getContext('2d')) {
 
         const str: string = text.toString(); // Allow us to pass in stuff like numerics
 
@@ -416,7 +414,7 @@ export class PacmanGame extends Game {
      * @param dy The y-coordinate at which to draw.
      */
     paintPointsEarned(ctx: CanvasRenderingContext2D, ptsIndex: number, dx: number, dy: number) {
-        const points: SpriteSheet = game.assets.get('points');
+        const points: SpriteSheet = this.assets.get('points');
         points.drawByIndex(ctx, dx, dy, ptsIndex);
     }
 
@@ -473,7 +471,7 @@ export class PacmanGame extends Game {
                 this.audio.stopSound(this._loopedSoundId);
             }
             this._loopedSoundName = sound;
-            this._loopedSoundId = sound != null ? game.audio.playSound(sound, true) : null;
+            this._loopedSoundId = sound != null ? this.audio.playSound(sound, true) : null;
         }
     }
 
@@ -493,7 +491,7 @@ export class PacmanGame extends Game {
         this._score = 0;
         this._level = 0;
 
-        const levelsData: any = game.assets.get('levels');
+        const levelsData: any = this.assets.get('levels');
         const levelData: any = levelsData[level];
         const mazeState: any = new MazeState(levelData);
         //this.setState(new FadeOutInState(this.state, mazeState));
@@ -516,7 +514,7 @@ export class PacmanGame extends Game {
     }
 
     toggleStretchMode() {
-        if (game.isDesktopGame()) {
+        if (this.isDesktopGame()) {
             switch (this._stretchMode) {
                 default:
                 case StretchMode.STRETCH_NONE:
@@ -549,7 +547,7 @@ export class PacmanGame extends Game {
      * Updates the position of pacman, the ghosts and the fruit, in the
      * specified maze.
      * @param maze The maze.
-     * @param time
+     * @param time The amount of elapsed time.
      */
     updateSpritePositions(maze: Maze, time: number) {
 

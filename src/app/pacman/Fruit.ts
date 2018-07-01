@@ -2,7 +2,7 @@ import { _BaseSprite } from './_BaseSprite';
 import { Maze } from './Maze';
 import { PacmanGame } from './PacmanGame';
 
-declare var game: PacmanGame;
+declare let game: PacmanGame;
 
 export class Fruit extends _BaseSprite {
 

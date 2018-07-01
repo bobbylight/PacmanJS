@@ -7,7 +7,7 @@ import SOUNDS from './Sounds';
 import { Ghost, MotionState } from './Ghost';
 import { InputManager, Keys } from 'gtp';
 
-declare var game: PacmanGame;
+declare let game: PacmanGame;
 
 type Substate = 'READY' | 'IN_GAME' | 'DYING' | 'GAME_OVER';
 

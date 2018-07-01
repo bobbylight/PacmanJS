@@ -6,7 +6,7 @@ import { PacmanGame } from './PacmanGame';
 import { MazeNode } from './MazeNode';
 import { Pacman } from './Pacman';
 
-declare var game: PacmanGame;
+declare let game: PacmanGame;
 
 const GHOST_IN_BOX_SPEED: number = 0.5;
 

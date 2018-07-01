@@ -2,7 +2,7 @@ import { ImageUtils, Pool, SpriteSheet } from 'gtp';
 import { MazeNode } from './MazeNode';
 import { PacmanGame } from './PacmanGame';
 
-declare var game: PacmanGame;
+declare let game: PacmanGame;
 
 const DOT_POINTS: number[] = [50, 10];
 

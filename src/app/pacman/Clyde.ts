@@ -3,7 +3,7 @@ import { PacmanGame } from './PacmanGame';
 import { Direction } from './Direction';
 import { Maze } from './Maze';
 
-declare var game: PacmanGame;
+declare let game: PacmanGame;
 
 /**
  * Clyde, the orange ghost.

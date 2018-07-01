@@ -1,9 +1,10 @@
 import DirectionUtil, { Direction } from './Direction';
+import * as chai from 'chai';
 
 describe('DirectionUtil', () => {
 
     it('Test test :)', () => {
 
-        expect(DirectionUtil.fromString('SOUTH')).toEqual(Direction.SOUTH);
+        chai.assert.equal(DirectionUtil.fromString('SOUTH'), Direction.SOUTH);
     });
 });

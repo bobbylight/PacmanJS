@@ -1,7 +1,7 @@
 import { BaseStateArgs, Game, InputManager, Keys, State, Utils } from 'gtp';
 import { PacmanGame } from './PacmanGame';
 
-declare var game: PacmanGame;
+declare let game: PacmanGame;
 
 export class _BaseState extends State {
 

@@ -6,7 +6,7 @@ import { Ghost } from './Ghost';
 import SOUNDS from './Sounds';
 import { BaseStateArgs, Game, Image, InputManager, SpriteSheet } from 'gtp';
 
-declare var game: PacmanGame;
+declare let game: PacmanGame;
 
 export class TitleState extends _BaseState {
 

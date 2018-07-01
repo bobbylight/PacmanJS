@@ -4,7 +4,7 @@ import { Direction } from './Direction';
 import { Maze } from './Maze';
 import { MazeNode } from './MazeNode';
 
-declare var game: PacmanGame;
+declare let game: PacmanGame;
 
 /**
  * Inky, the blue ghost.  Inky is "bashful" and only changes after Pacman if

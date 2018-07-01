@@ -31,14 +31,12 @@ Relatively in the order in which I want to fix things:
   goes on
 
 ## To-Do
-1. Tests don't work after the conversion to commonjs:
+1. Tests don't run for some reason:
 
 ```bash
 $ npm run test
 ...
-26 11 2016 23:36:45.386:INFO [PhantomJS 2.1.1 (Windows 8 0.0.0)]: Connected on socket /#-09u1FLuLHy2SV_8AAAA with id 61737670
-PhantomJS 2.1.1 (Windows 8 0.0.0) ERROR
-  TypeError: undefined is not an object (evaluating 'b.prototype')
-  at src/app/test.ts:3574
-PhantomJS 2.1.1 (Windows 8 0.0.0): Executed 0 of 0 ERROR (0.077 secs / 0 secs)
+declare let game: PacmanGame;
+        ^
+TypeError: Object prototype may only be an Object or null: undefined
 ```

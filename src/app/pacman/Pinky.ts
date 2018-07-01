@@ -4,7 +4,7 @@ import { Direction } from './Direction';
 import { Maze } from './Maze';
 import { Pacman } from './Pacman';
 
-declare var game: PacmanGame;
+declare let game: PacmanGame;
 
 /**
  * Pinky, the pink ghost.  If PacMan is "visible" to Pinky (i.e., in the

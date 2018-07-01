@@ -4,7 +4,7 @@ import { _BaseSprite } from './_BaseSprite';
 import { InputManager } from 'gtp';
 import { PacmanGame } from './PacmanGame';
 
-declare var game: PacmanGame;
+declare let game: PacmanGame;
 
 export class Pacman extends _BaseSprite {
 

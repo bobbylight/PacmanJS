@@ -4,7 +4,7 @@ import { Direction } from './Direction';
 import { Maze } from './Maze';
 import { MazeNode } from './MazeNode';
 
-declare var game: PacmanGame;
+declare let game: PacmanGame;
 
 /**
  * Blinky, the red ghost.  Blinky always takes the shortest route to Pacman
