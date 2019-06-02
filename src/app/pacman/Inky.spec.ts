@@ -1,9 +1,9 @@
-import { Blinky } from './Blinky';
 import { Direction } from './Direction';
 import { MotionState } from './Ghost';
+import { Inky } from './Inky';
 import * as chai from 'chai';
 
-describe('Blinky', () => {
+describe('Inky', () => {
 
     it('reset() works as expected', () => {
 
@@ -11,10 +11,10 @@ describe('Blinky', () => {
             checkLoopedSound: () => {}
         };
 
-        const ghost: Blinky = new Blinky(mockGame);
+        const ghost: Inky = new Inky(mockGame);
         ghost.reset();
 
-        chai.assert.equal(ghost.direction, Direction.WEST);
-        chai.assert.equal(ghost.motionState, MotionState.SCATTERING);
+        chai.assert.equal(ghost.direction, Direction.SOUTH);
+        chai.assert.equal(ghost.motionState, MotionState.IN_BOX);
     });
 });

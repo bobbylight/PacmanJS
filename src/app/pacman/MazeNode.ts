@@ -6,7 +6,7 @@ export class MazeNode {
 
     row: number;
     col: number;
-    parent: MazeNode;
+    parent: MazeNode | null;
 
     constructor(row: number = 0, col: number = 0) {
         this.row = row;
@@ -17,7 +17,7 @@ export class MazeNode {
         return this.row === node2.row && this.col === node2.col;
     }
 
-    set(row: number, col: number, parent: MazeNode) {
+    set(row: number, col: number, parent: MazeNode | null) {
         this.row = row;
         this.col = col;
         this.parent = parent;

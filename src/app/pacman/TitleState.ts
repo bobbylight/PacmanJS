@@ -17,7 +17,7 @@ export class TitleState extends _BaseState {
     /**
      * State that renders the title screen.
      */
-    constructor(args?: PacmanGame | BaseStateArgs) {
+    constructor(args?: PacmanGame | BaseStateArgs<PacmanGame>) {
 
         super(args);
         // Initialize our sprites not just in enter() so they are positioned
@@ -53,10 +53,6 @@ export class TitleState extends _BaseState {
         game.canvas.removeEventListener('touchstart', this.handleStart, false);
     }
 
-    private getGame(): PacmanGame {
-        return this.game as PacmanGame;
-    }
-
     handleStart() {
         // console.log('Yee, touch detected!');
         this._startGame();
@@ -74,12 +70,12 @@ export class TitleState extends _BaseState {
         // " - 5" to account for differently sized choices
         let x: number = (SCREEN_WIDTH - charWidth * 15) / 2 - 5;
         let y: number = (SCREEN_HEIGHT - 15 * 2) / 2;
-        this.getGame().drawString(x, y + this._choice * 15, '>');
+        this.game.drawString(x, y + this._choice * 15, '>');
 
         // Draw the small and big dots
         x += charWidth * 1.5;
         y = 200;
-        game.canvas.getContext('2d').fillStyle = '#ffffff';
+        game.canvas.getContext('2d')!.fillStyle = '#ffffff';
         game.drawSmallDot(x + 3, y + 2);
         y += 9;
         game.drawBigDot(x, y);
@@ -105,15 +101,15 @@ export class TitleState extends _BaseState {
         let text: string = 'SOUND IS DISABLED AS';
         let x: number = (w - this._stringWidth(text)) / 2;
         let y: number = game.getHeight() - 20 - 9 * 3;
-        this.getGame().drawString(x, y, text);
+        this.game.drawString(x, y, text);
         text = 'YOUR BROWSER DOES NOT';
         x = (w - this._stringWidth(text)) / 2;
         y += 9;
-        this.getGame().drawString(x, y, text);
+        this.game.drawString(x, y, text);
         text = 'SUPPORT WEB AUDIO';
         x = (w - this._stringWidth(text)) / 2;
         y += 9;
-        this.getGame().drawString(x, y, text);
+        this.game.drawString(x, y, text);
     }
 
     // TODO: Move this stuff into an image that gets rendered each frame?
@@ -140,26 +136,26 @@ export class TitleState extends _BaseState {
         // " - 5" to account for differently sized choices
         x = (SCREEN_WIDTH - charWidth * charCount) / 2 - 5;
         y = (game.getHeight() - 15 * 2) / 2;
-        this.getGame().drawString(x, y, temp, ctx);
+        this.game.drawString(x, y, temp, ctx);
         temp = 'ALTERNATE MAZE';
         y += 15;
-        this.getGame().drawString(x, y, temp, ctx);
+        this.game.drawString(x, y, temp, ctx);
 
         // Scores for the dot types
         x += charWidth * 2;
         temp = '10 POINTS';
         charCount = temp.length - 2; // "-2" for animated dots
         y = 200;
-        this.getGame().drawString(x, y, temp, ctx);
+        this.game.drawString(x, y, temp, ctx);
         temp = '50 POINTS';
         y += 9;
-        this.getGame().drawString(x, y, temp, ctx);
+        this.game.drawString(x, y, temp, ctx);
 
         // Copyright
         temp = '2015 OLD MAN GAMES';
         x = (SCREEN_WIDTH - charWidth * temp.length) / 2;
         y = game.getHeight() - 20;
-        this.getGame().drawString(x, y, temp, ctx);
+        this.game.drawString(x, y, temp, ctx);
     }
 
     _startGame() {

@@ -1,9 +1,9 @@
-import { BaseStateArgs, Game, InputManager, Keys, State, Utils } from 'gtp';
+import { BaseStateArgs, InputManager, Keys, State, Utils } from 'gtp';
 import { PacmanGame } from './PacmanGame';
 
 declare let game: PacmanGame;
 
-export class _BaseState extends State {
+export class _BaseState extends State<PacmanGame> {
 
     private _lastConfigKeypressTime: number;
     protected _lastSpriteFrameTime: number;
@@ -11,7 +11,7 @@ export class _BaseState extends State {
     /**
      * Functionality common amongst all states in this game.
      */
-    constructor(args?: Game | BaseStateArgs) {
+    constructor(args?: PacmanGame | BaseStateArgs<PacmanGame>) {
         super(args);
         this._lastConfigKeypressTime = Utils.timestamp();
         this._lastSpriteFrameTime = 0;

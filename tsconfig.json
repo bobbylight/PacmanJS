@@ -11,11 +11,11 @@
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    //"noUnusedLocals": true,
+    "noUnusedLocals": true,
     //"noUnusedParameters": true,
     "preserveConstEnums": true,
     "removeComments": false,
-    //"strictNullChecks": true,
+    "strictNullChecks": true,
 
     "target": "es5",
     "module": "commonjs",

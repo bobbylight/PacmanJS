@@ -75,7 +75,7 @@ export class Maze {
      *        breadth-first search.
      * @return The first node to move to.
      */
-    private static _constructPath(node: MazeNode): MazeNode/*MazeNode[]*/ {
+    private static _constructPath(node: MazeNode): MazeNode/*MazeNode[]*/ | null {
         /*
          LinkedList<Node> path = new LinkedList<Node>();
          while (node.parent!=null) {
@@ -84,7 +84,7 @@ export class Maze {
          }
          return path;
          */
-        let prev: MazeNode = null;
+        let prev: MazeNode | null = null;
         while (node.parent) {
             prev = node;
             node = node.parent;
@@ -117,7 +117,7 @@ export class Maze {
     }
 
     getPathBreadthFirst(fromRow: number, fromCol: number, toRow: number,
-                        toCol: number): MazeNode {
+                        toCol: number): MazeNode | null {
 
         this.open.forEach((node: MazeNode) => {
             this._data[node.row][node.col] &= 0xff;
@@ -347,7 +347,7 @@ export class Maze {
             // Create an image for the maze
             const mazeY: number = 2 * TILE_SIZE;
             this._mazeCanvas = ImageUtils.createCanvas(game.getWidth(), game.getHeight());
-            const mazeCtx: CanvasRenderingContext2D = this._mazeCanvas.getContext('2d');
+            const mazeCtx: CanvasRenderingContext2D = this._mazeCanvas.getContext('2d')!;
             let walkableCount: number = 0;
             this._dotCount = 0;
 

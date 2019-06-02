@@ -319,7 +319,7 @@ export class MazeState extends _BaseState {
         game.updateSpritePositions(this._maze, time);
 
         // If Pacman hit a ghost, decide what to do
-        const ghostHit: Ghost = game.checkForCollisions();
+        const ghostHit: Ghost | null = game.checkForCollisions();
         if (ghostHit) {
 
             switch (ghostHit.motionState) {

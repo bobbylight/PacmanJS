@@ -48,7 +48,7 @@ export class Inky extends Ghost {
             if (distSq <= 35) {
                 const toRow: number = game.pacman.row;
                 const toCol: number = game.pacman.column;
-                const node: MazeNode = maze.getPathBreadthFirst(row, col, toRow, toCol);
+                const node: MazeNode | null = maze.getPathBreadthFirst(row, col, toRow, toCol);
                 //console.log("... " + node + " (" + row + "," + col + ")");
                 if (node == null) { // Happens only with "God Mode" enabled.
                     this.changeDirectionFallback(maze);

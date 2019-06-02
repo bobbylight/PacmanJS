@@ -9,7 +9,7 @@ import { app, BrowserWindow } from 'electron';
 
     // Keep a global reference of the window object, if you don't, the window will
     // be closed automatically when the JavaScript object is garbage collected.
-    let mainWindow: Electron.BrowserWindow;
+    let mainWindow: Electron.BrowserWindow | null;
 
     const createWindow: (launchInfo: any) => void = (launchInfo: any): void => {
         // Create the browser window.

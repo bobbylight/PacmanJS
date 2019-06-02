@@ -1,5 +1,4 @@
-PacmanJS - A Pacman clone in TypeScript
-=======================================
+# PacmanJS - A Pacman clone in TypeScript
 Like it says on the tin.  This reproduction will try to be as authentic as
 possible.  Feel free to [try it out in its current state](http://bobbylight.github.io/PacmanJS/).
 

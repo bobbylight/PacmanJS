@@ -33,7 +33,7 @@ export class PacmanGame extends Game {
     private _ghostUpdateStrategy: GhostUpdateStrategy;
     private _chompSound: number;
     pacman: Pacman;
-    private _fruit: Fruit;
+    private _fruit: Fruit | null;
     private readonly _ghosts: Ghost[];
     private readonly _extraPointsArray: number[];
 
@@ -58,9 +58,9 @@ export class PacmanGame extends Game {
      * The sound effect currently looping (the background siren, the ghosts
      * running away, the ghost eyes running away, etc.).
      */
-    private _loopedSoundId: number;
+    private _loopedSoundId: number | null;
 
-    private _loopedSoundName: string;
+    private _loopedSoundName: string | null;
 
     /**
      * A flag used internally to decide when a ghost changing state should
@@ -111,7 +111,7 @@ export class PacmanGame extends Game {
         }
     }
 
-    checkForCollisions(): Ghost {
+    checkForCollisions(): Ghost | null {
 
         for (let i: number = 0; i < this._ghosts.length; i++) {
             if (this.pacman.intersects(this._ghosts[i])) {
@@ -175,7 +175,7 @@ export class PacmanGame extends Game {
     drawBigDot(x: number, y: number) {
         const ms: number = this.playTime;
         if (ms < 0 || (ms % 500) > 250) {
-            const ctx: CanvasRenderingContext2D = this.canvas.getContext('2d');
+            const ctx: CanvasRenderingContext2D = this.canvas.getContext('2d')!;
             const sx: number = 135,
                 sy: number = 38;
             const image: Image = this.assets.get('sprites');
@@ -184,7 +184,7 @@ export class PacmanGame extends Game {
     }
 
     drawFruit(ctx: CanvasRenderingContext2D) {
-        if (this._fruitScoreIndex > -1) {
+        if (this._fruit && this._fruitScoreIndex > -1) {
             this.paintPointsEarned(ctx, this._fruitScoreIndex,
                 this._fruit.x, this._fruit.y);
             const time: number = this.playTime;
@@ -228,18 +228,18 @@ export class PacmanGame extends Game {
     }
 
     drawSmallDot(x: number, y: number) {
-        const ctx: CanvasRenderingContext2D = this.canvas.getContext('2d');
+        const ctx: CanvasRenderingContext2D = this.canvas.getContext('2d')!;
         ctx.fillRect(x, y, 2, 2);
     }
 
     drawSprite(dx: number, dy: number, sx: number, sy: number) {
         const image: Image = this.assets.get('sprites');
-        const ctx: CanvasRenderingContext2D = this.canvas.getContext('2d');
+        const ctx: CanvasRenderingContext2D = this.canvas.getContext('2d')!;
         image.drawScaled2(ctx, sx, sy, 16, 16, dx, dy, 16, 16);
     }
 
     drawString(x: number, y: number, text: string | number,
-               ctx: CanvasRenderingContext2D = this.canvas.getContext('2d')) {
+               ctx: CanvasRenderingContext2D = this.canvas.getContext('2d')!) {
 
         const str: string = text.toString(); // Allow us to pass in stuff like numerics
 
@@ -458,7 +458,7 @@ export class PacmanGame extends Game {
      * Starts looping a sound effect.
      * @param sound The sound effect to loop.
      */
-    setLoopedSound(sound: string) {
+    setLoopedSound(sound: string | null) {
         if (sound !== this._loopedSoundName) {
             if (this._loopedSoundId != null) {
                 this.audio.stopSound(this._loopedSoundId);

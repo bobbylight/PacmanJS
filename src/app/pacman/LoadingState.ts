@@ -21,7 +21,7 @@ export class LoadingState extends _BaseState {
     /**
      * State that renders while resources are loading.
      */
-    constructor(args?: Game | BaseStateArgs) {
+    constructor(args?: PacmanGame | BaseStateArgs<PacmanGame>) {
         super(args);
         this._assetsLoaded = false;
     }
@@ -67,10 +67,9 @@ export class LoadingState extends _BaseState {
                         }
                     }
 
-                    const skipTitle: string = Utils.getRequestParam('skipTitle');
+                    const skipTitle: string | null = Utils.getRequestParam('skipTitle');
                     if (skipTitle !== null) { // Allow empty strings
-                        const pacmanGame: PacmanGame = this.game as PacmanGame;
-                        pacmanGame.startGame(0);
+                        this.game.startGame(0);
                     }
                     else {
                         game.setState(new FadeOutInState(this, new TitleState()));

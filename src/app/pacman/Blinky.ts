@@ -44,7 +44,7 @@ export class Blinky extends Ghost {
             const fromCol: number = this.column;
             const toRow: number = this.game.pacman.row;
             const toCol: number = this.game.pacman.column;
-            const node: MazeNode = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
+            const node: MazeNode | null = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
 
             if (node == null) { // Happens only with "God Mode" enabled.
                 this.changeDirectionFallback(maze);

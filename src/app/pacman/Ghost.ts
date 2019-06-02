@@ -531,7 +531,7 @@ export abstract class Ghost extends _BaseSprite {
                 toCol++; // Approaching from the left.
             }
 
-            const node: MazeNode = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
+            const node: MazeNode | null = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
             if (node == null) { // i.e. ghost is actually at the penalty box.
                 // Should never happen; we should always catch the ghost
                 // before getting to its destination in the "else" below.
@@ -721,7 +721,7 @@ export abstract class Ghost extends _BaseSprite {
             const fromCol: number = this.column;
             const toRow: number = this._corner.x;
             const toCol: number = this._corner.y;
-            const node: MazeNode = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
+            const node: MazeNode | null = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
             if (!node) { // i.e. ghost is actually in the corner.
                 this.changeDirectionFallback(maze);
             }
