@@ -1,6 +1,5 @@
 import { Ghost } from './Ghost';
 import { Maze } from './Maze';
-import * as chai from 'chai';
 import { PacmanGame } from './PacmanGame';
 
 const game: any = {};
@@ -19,6 +18,6 @@ describe('Ghost', () => {
 
     it('can be subclassed', () => {
         const ghost: ConcreteGhost = new ConcreteGhost();
-        chai.assert.isDefined(ghost);
+        expect(ghost).toBeDefined();
     });
 });

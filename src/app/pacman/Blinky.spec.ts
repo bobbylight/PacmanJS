@@ -1,7 +1,6 @@
 import { Blinky } from './Blinky';
 import { Direction } from './Direction';
 import { MotionState } from './Ghost';
-import * as chai from 'chai';
 
 describe('Blinky', () => {
 
@@ -14,7 +13,7 @@ describe('Blinky', () => {
         const ghost: Blinky = new Blinky(mockGame);
         ghost.reset();
 
-        chai.assert.equal(ghost.direction, Direction.WEST);
-        chai.assert.equal(ghost.motionState, MotionState.SCATTERING);
+        expect(ghost.direction).toEqual(Direction.WEST);
+        expect(ghost.motionState).toEqual(MotionState.SCATTERING);
     });
 });

@@ -1,7 +1,6 @@
 import { Direction } from './Direction';
 import { MotionState } from './Ghost';
 import { Pinky } from './Pinky';
-import * as chai from 'chai';
 
 describe('Pinky', () => {
 
@@ -14,7 +13,7 @@ describe('Pinky', () => {
         const ghost: Pinky = new Pinky(mockGame);
         ghost.reset();
 
-        chai.assert.equal(ghost.direction, Direction.NORTH);
-        chai.assert.equal(ghost.motionState, MotionState.IN_BOX);
+        expect(ghost.direction).toEqual(Direction.NORTH);
+        expect(ghost.motionState).toEqual(MotionState.IN_BOX);
     });
 });

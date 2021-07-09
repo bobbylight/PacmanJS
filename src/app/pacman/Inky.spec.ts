@@ -1,7 +1,6 @@
 import { Direction } from './Direction';
 import { MotionState } from './Ghost';
 import { Inky } from './Inky';
-import * as chai from 'chai';
 
 describe('Inky', () => {
 
@@ -14,7 +13,7 @@ describe('Inky', () => {
         const ghost: Inky = new Inky(mockGame);
         ghost.reset();
 
-        chai.assert.equal(ghost.direction, Direction.SOUTH);
-        chai.assert.equal(ghost.motionState, MotionState.IN_BOX);
+        expect(ghost.direction).toEqual(Direction.SOUTH);
+        expect(ghost.motionState).toEqual(MotionState.IN_BOX);
     });
 });
