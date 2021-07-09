@@ -31,7 +31,6 @@ export class TitleState extends _BaseState {
 
         super.enter(game);
 
-        // tslint:disable-next-line
         game.canvas.addEventListener('touchstart', this.handleStart, { capture: false, passive: true });
         this._choice = 0;
         this._lastKeypressTime = game.playTime;
@@ -49,7 +48,6 @@ export class TitleState extends _BaseState {
     }
 
     leaving(game: Game) {
-        // tslint:disable-next-line
         game.canvas.removeEventListener('touchstart', this.handleStart, false);
     }
 

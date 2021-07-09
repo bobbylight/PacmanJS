@@ -8,12 +8,6 @@ module.exports = [
         exclude: /node_modules/,
         use: [
             { loader: 'ts-loader' },
-            {
-                loader: 'tslint-loader',
-                options: {
-                    typeCheck: true
-                }
-            }
         ]
     },
     {

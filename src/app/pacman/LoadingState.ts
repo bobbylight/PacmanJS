@@ -5,7 +5,7 @@ import { TitleState } from './TitleState';
 import { BaseStateArgs, FadeOutInState, Game, Utils } from 'gtp';
 
 /**
- * Converts a hex string to an integer.  Not a member of <code>LoadingState</code> to appease tslint.
+ * Converts a hex string to an integer.
  *
  * @param str The hex number, as a string.
  * @returns The number version of <code>str</code>.
