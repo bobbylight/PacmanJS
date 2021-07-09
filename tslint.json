@@ -66,7 +66,7 @@
     "no-namespace": true,
     "no-null-keyword": false,
     "no-parameter-properties": true,
-    "no-redundant-jsdoc": true,
+    //"no-redundant-jsdoc": true,
     "no-reference": true,
     "no-require-imports": false,
     "no-return-await": true,

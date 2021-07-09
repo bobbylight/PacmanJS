@@ -23,15 +23,12 @@ module.exports = {
     mode: devBuild ? 'development' : 'production',
     devtool: devBuild ? 'source-map' : undefined,
     plugins: [
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: JSON.stringify(process.env.NODE_ENV)
-            }
-        }),
         // Simply copies the files over
-        new CopyWebpackPlugin([
-            { from: 'src/res', to: 'res' }
-        ]),
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: 'src/res', to: 'res' }
+            ]
+        }),
         new HtmlWebpackPlugin({
             template: 'src/html/index.html',
             inject: 'body',

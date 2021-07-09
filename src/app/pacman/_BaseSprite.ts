@@ -31,7 +31,6 @@ export abstract class _BaseSprite {
             case Direction.WEST:
                 return this.getCanMoveUp(maze) || this.getCanMoveDown(maze);
         }
-        return false;
     }
 
     getCanMoveDown(maze: Maze) {
