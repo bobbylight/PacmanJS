@@ -1,4 +1,8 @@
 # PacmanJS - A Pacman clone in TypeScript
+![Build](https://github.com/bobbylight/PacmanJS/actions/workflows/build.yml/badge.svg)
+![CodeQL](https://github.com/bobbylight/PacmanJS/actions/workflows/codeql-analysis.yml/badge.svg)
+[![codecov](https://codecov.io/gh/bobbylight/PacmanJS/branch/master/graph/badge.svg?token=1AzwBREy4R)](https://codecov.io/gh/bobbylight/PacmanJS)
+
 Like it says on the tin.  This reproduction will try to be as authentic as
 possible.  Feel free to [try it out in its current state](http://bobbylight.github.io/PacmanJS/).
 
@@ -25,7 +29,7 @@ electron.  See the `build:electron`, `dist:electron` and other related tasks bel
 ## npm scripts
 
 * `clean`: Deletes prior build artifacts
-* `build`: Builds production artifact into `build/web`
+* `build`: Builds production artifact into `build/web/`
 * `watch`: Runs a dev server on http://localhost:8080 and hot-deploys changes
 * `lint`: Lints the project
 * `test`: Runs unit tests
