@@ -29,10 +29,10 @@ electron.  See the `build:electron`, `dist:electron` and other related tasks bel
 * `watch`: Runs a dev server on http://localhost:8080 and hot-deploys changes
 * `lint`: Lints the project
 * `test`: Runs unit tests
-* `build:electron`: Builds all electron artifacts
+* `build:electron`: Builds all electron artifacts into `build/electron/`
 * `start:electron`: Starts the election app built via `build:electron`
-* `pack:electron`: Generates a native application wrapping the app built by `build:electron`
-* `dist:electron`: Generates a native application and installer
+* `pack:electron`: Generates a native application into `dist/` that wraps the app built by `build:electron`
+* `dist:electron`: Generates a native application and installer in `dist/`
 
 
 ## Running Tests
