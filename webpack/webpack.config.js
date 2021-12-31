@@ -3,7 +3,6 @@ const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const webpack = require('webpack');
 
 const devBuild = process.env.NODE_ENV === 'dev';
 console.log(`Starting webpack build with NODE_ENV: ${process.env.NODE_ENV}`);

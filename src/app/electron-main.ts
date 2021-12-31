@@ -1,4 +1,6 @@
 import { app, BrowserWindow } from 'electron';
+import * as path from 'path';
+import { format as formatUrl } from 'url';
 
 /*
  * Entry point for desktop version.  This is built with electron:
@@ -20,10 +22,14 @@ import { app, BrowserWindow } from 'electron';
         });
 
         // and load the index.html of the app.
-        mainWindow.loadURL('file://' + __dirname + '/../desktop-index.html');
+        mainWindow.loadURL(formatUrl({
+            pathname: path.join(__dirname, 'desktop-index.html'),
+            protocol: 'file',
+            slashes: true
+        }));
 
         // Open the DevTools.
-        //mainWindow.webContents.openDevTools();
+        mainWindow.webContents.openDevTools();
 
         // Emitted when the window is closed.
         mainWindow.on('closed', () => {
@@ -31,6 +37,10 @@ import { app, BrowserWindow } from 'electron';
             // in an array if your app supports multi windows, this is the time
             // when you should delete the corresponding element.
             mainWindow = null;
+        });
+
+        import('./pacman').then(() => {
+            (window as any).init('parent');
         });
     };
 
