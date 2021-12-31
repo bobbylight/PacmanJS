@@ -1,20 +1,16 @@
 const loaders = require('./loaders');
 const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const devBuild = process.env.NODE_ENV === 'dev';
-console.log(`Starting webpack build with NODE_ENV: ${process.env.NODE_ENV}`);
+console.log(`Starting electron main build with NODE_ENV: ${process.env.NODE_ENV}`);
 
 module.exports = [
     {
         target: 'electron-main',
-        entry: {
-            'electron-main': path.resolve('./src/app/electron-main.ts'),
-            app: path.resolve('./src/app/pacman.ts')
-        },
+        entry: './src/app/electron-main.ts',
         output: {
             path: path.resolve('./build/electron/'),
-            filename: '[name].js'
+            filename: 'electron-bundle.js'
         },
         resolve: {
             extensions: ['.js', '.ts', '.tsx'],
@@ -27,13 +23,6 @@ module.exports = [
             __filename: false
         },
         plugins: [
-            // Simply copies the files over
-            new CopyWebpackPlugin({
-                patterns: [
-                    {from: 'src/res', to: 'res'},
-                    { from: 'desktop-index.html', context: 'src/html' },
-                ]
-            }),
         ],
         module: {
             rules: loaders

@@ -40,6 +40,6 @@ module.exports = {
     },
     // Create sourcemaps for the bundle
     devServer: {
-        contentBase: './build/web'
+        static: './build/web'
     }
 };
