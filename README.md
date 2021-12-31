@@ -24,15 +24,15 @@ electron.  See the `build:electron`, `dist:electron` and other related tasks bel
 
 ## npm scripts
 
-* clean: Deletes prior build artifacts
-* build: Builds production artifact into `build/web`
-* watch: Runs a dev server on http://localhost:8080 and hot-deploys changes
-* lint: Lints the project
-* test: Runs unit tests
-* build:electron: Builds all electron artifacts
-* start:electron: Starts the election app built via `build:electron`
-* pack:electron: Generates a native application wrapping the app built by `build:electron`
-* dist:electron: Generates a native application and installer
+* `clean`: Deletes prior build artifacts
+* `build`: Builds production artifact into `build/web`
+* `watch`: Runs a dev server on http://localhost:8080 and hot-deploys changes
+* `lint`: Lints the project
+* `test`: Runs unit tests
+* `build:electron`: Builds all electron artifacts
+* `start:electron`: Starts the election app built via `build:electron`
+* `pack:electron`: Generates a native application wrapping the app built by `build:electron`
+* `dist:electron`: Generates a native application and installer
 
 
 ## Running Tests
@@ -41,6 +41,7 @@ A coverage report will be generated in `coverage/index.html`:
 ```bash
 npm run test
 ```
+
 
 ## What's unimplemented/buggy
 Relatively in the order in which I want to fix things:
