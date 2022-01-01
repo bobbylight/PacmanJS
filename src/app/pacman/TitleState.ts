@@ -11,8 +11,8 @@ declare let game: PacmanGame;
 
 export class TitleState extends _BaseState {
 
-    private _choice: number;
-    private _lastKeypressTime: number;
+    private choice: number;
+    private lastKeypressTime: number;
 
     /**
      * State that renders the title screen.
@@ -32,8 +32,8 @@ export class TitleState extends _BaseState {
         super.enter(game);
 
         game.canvas.addEventListener('touchstart', this.handleStart, { capture: false, passive: true });
-        this._choice = 0;
-        this._lastKeypressTime = game.playTime;
+        this.choice = 0;
+        this.lastKeypressTime = game.playTime;
 
         this._initSprites();
     }
@@ -53,7 +53,7 @@ export class TitleState extends _BaseState {
 
     handleStart() {
         // console.log('Yee, touch detected!');
-        this._startGame();
+        this.startGame();
     }
 
     render(ctx: CanvasRenderingContext2D) {
@@ -62,13 +62,13 @@ export class TitleState extends _BaseState {
             SCREEN_HEIGHT: number = game.getHeight(),
             charWidth: number = 9;
 
-        this._renderStaticStuff(ctx);
+        this.renderStaticStuff(ctx);
 
         // Draw the menu "choice" arrow
         // " - 5" to account for differently sized choices
         let x: number = (SCREEN_WIDTH - charWidth * 15) / 2 - 5;
         let y: number = (SCREEN_HEIGHT - 15 * 2) / 2;
-        this.game.drawString(x, y + this._choice * 15, '>');
+        this.game.drawString(x, y + this.choice * 15, '>');
 
         // Draw the small and big dots
         x += charWidth * 1.5;
@@ -83,35 +83,35 @@ export class TitleState extends _BaseState {
         game.getGhost(0).paint(ctx);
 
         if (!game.audio.isInitialized()) {
-            this._renderNoSoundMessage();
+            this.renderNoSoundMessage();
         }
     }
 
-    _stringWidth(str: string): number {
+    private stringWidth(str: string): number {
         const font: SpriteSheet = game.assets.get('font');
         return font.cellW * str.length;
     }
 
-    _renderNoSoundMessage() {
+    private renderNoSoundMessage() {
 
         const w: number = game.getWidth();
 
         let text: string = 'SOUND IS DISABLED AS';
-        let x: number = (w - this._stringWidth(text)) / 2;
+        let x: number = (w - this.stringWidth(text)) / 2;
         let y: number = game.getHeight() - 20 - 9 * 3;
         this.game.drawString(x, y, text);
         text = 'YOUR BROWSER DOES NOT';
-        x = (w - this._stringWidth(text)) / 2;
+        x = (w - this.stringWidth(text)) / 2;
         y += 9;
         this.game.drawString(x, y, text);
         text = 'SUPPORT WEB AUDIO';
-        x = (w - this._stringWidth(text)) / 2;
+        x = (w - this.stringWidth(text)) / 2;
         y += 9;
         this.game.drawString(x, y, text);
     }
 
     // TODO: Move this stuff into an image that gets rendered each frame?
-    _renderStaticStuff(ctx: CanvasRenderingContext2D) {
+    private renderStaticStuff(ctx: CanvasRenderingContext2D) {
 
         const game: Game = this.game;
         game.clearScreen('rgb(0,0,0)');
@@ -156,8 +156,8 @@ export class TitleState extends _BaseState {
         this.game.drawString(x, y, temp, ctx);
     }
 
-    _startGame() {
-        game.startGame(this._choice);
+    private startGame() {
+        game.startGame(this.choice);
     }
 
     update(delta: number) {
@@ -165,22 +165,22 @@ export class TitleState extends _BaseState {
         this.handleDefaultKeys();
 
         const playTime: number = game.playTime;
-        if (playTime > this._lastKeypressTime + _BaseState.INPUT_REPEAT_MILLIS + 100) {
+        if (playTime > this.lastKeypressTime + _BaseState.INPUT_REPEAT_MILLIS + 100) {
 
             const im: InputManager = game.inputManager;
 
             if (im.up()) {
-                this._choice = Math.abs(this._choice - 1);
+                this.choice = Math.abs(this.choice - 1);
                 game.audio.playSound(SOUNDS.TOKEN);
-                this._lastKeypressTime = playTime;
+                this.lastKeypressTime = playTime;
             }
             else if (im.down()) {
-                this._choice = (this._choice + 1) % 2;
+                this.choice = (this.choice + 1) % 2;
                 game.audio.playSound(SOUNDS.TOKEN);
-                this._lastKeypressTime = playTime;
+                this.lastKeypressTime = playTime;
             }
             else if (im.enter(true)) {
-                this._startGame();
+                this.startGame();
             }
         }
 

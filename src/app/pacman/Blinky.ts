@@ -30,7 +30,7 @@ export class Blinky extends Ghost {
      *
      * @param maze The maze in which the actor is moving.
      */
-    updatePositionChasingPacman(maze: Maze) {
+    protected updatePositionChasingPacman(maze: Maze) {
 
         // Logic:
         // If at an intersection, do a breadth-first search for the shortest

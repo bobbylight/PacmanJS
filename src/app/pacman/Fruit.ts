@@ -64,7 +64,7 @@ export class Fruit extends _BaseSprite {
         game.drawSprite(this.x, this.y, srcX, srcY);
     }
 
-    updatePositionImpl(maze: Maze) {
+    protected updatePositionImpl(maze: Maze) {
         // Do nothing; fruit doesn't move.
     }
 }

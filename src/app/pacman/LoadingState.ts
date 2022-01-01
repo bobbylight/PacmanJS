@@ -3,36 +3,27 @@ import SOUNDS from './Sounds';
 import { PacmanGame } from './PacmanGame';
 import { TitleState } from './TitleState';
 import { BaseStateArgs, FadeOutInState, Game, Utils } from 'gtp';
-
-/**
- * Converts a hex string to an integer.
- *
- * @param str The hex number, as a string.
- * @returns The number version of <code>str</code>.
- */
-const hexStrToInt: (str: string) => number = (str: string): number => {
-    return parseInt(str, 16);
-};
+import { fixLevelData } from './Util';
 
 export class LoadingState extends _BaseState {
 
-    private _assetsLoaded: boolean;
+    private assetsLoaded: boolean;
 
     /**
      * State that renders while resources are loading.
      */
     constructor(args?: PacmanGame | BaseStateArgs<PacmanGame>) {
         super(args);
-        this._assetsLoaded = false;
+        this.assetsLoaded = false;
     }
 
     update(delta: number) {
 
         this.handleDefaultKeys();
 
-        if (!this._assetsLoaded) {
+        if (!this.assetsLoaded) {
 
-            this._assetsLoaded = true;
+            this.assetsLoaded = true;
             const game: Game = this.game;
 
             // Load assets used by this state first
@@ -59,13 +50,7 @@ export class LoadingState extends _BaseState {
                 game.assets.addSound(SOUNDS.TOKEN, 'res/sounds/token.wav');
                 game.assets.onLoad(() => {
 
-                    // Convert level data from hex strings to numbers
-                    const levelData: any[][] = game.assets.get('levels');
-                    for (let i: number = 0; i < levelData.length; i++) {
-                        for (let row: number = 0; row < levelData[i].length; row++) {
-                            levelData[i][row] = levelData[i][row].map(hexStrToInt);
-                        }
-                    }
+                    fixLevelData(game.assets.get('levels'));
 
                     const skipTitle: string | null = Utils.getRequestParam('skipTitle');
                     if (skipTitle !== null) { // Allow empty strings

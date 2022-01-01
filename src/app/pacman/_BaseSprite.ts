@@ -258,5 +258,5 @@ export abstract class _BaseSprite {
         this.bounds.y = y;
     }
 
-    abstract updatePositionImpl(maze: Maze): void;
+    protected abstract updatePositionImpl(maze: Maze): void;
 }

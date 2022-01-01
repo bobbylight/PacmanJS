@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@types/jest": "27.4.0",
+    "@types/jsdom": "16.2.14",
     "@typescript-eslint/eslint-plugin": "5.8.1",
     "@typescript-eslint/parser": "5.8.1",
     "copy-webpack-plugin": "10.2.0",
@@ -32,6 +33,7 @@
     "eslint": "8.5.0",
     "html-webpack-plugin": "5.5.0",
     "jest": "27.4.5",
+    "jsdom": "16.7.0",
     "mini-css-extract-plugin": "2.4.5",
     "raw-loader": "4.0.2",
     "rimraf": "3.0.2",

@@ -96,7 +96,7 @@ export class Pacman extends _BaseSprite {
         this._dyingFrame = 1;
     }
 
-    updatePositionImpl(maze: Maze) {
+    protected updatePositionImpl(maze: Maze) {
 
         const moveAmount: number = this.moveAmount;
 

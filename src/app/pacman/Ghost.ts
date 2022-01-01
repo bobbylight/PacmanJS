@@ -36,20 +36,20 @@ export abstract class Ghost extends _BaseSprite {
     /**
      * The "corner" this ghost will retreat to when in "scatter" mode.
      */
-    private readonly _corner: Point;
+    private readonly corner: Point;
 
     /**
      * The number of times this ghost has been in "scatter" mode for this
      * level and PacMan life.
      */
-    private _scatterCount: number;
+    private scatterCount: number;
 
     /**
      * If in scatter mode, this is the time at which the mode should switch
      * to "chasing PacMan" mode.  If not in scatter mode, this value is
      * invalid.
      */
-    private _exitScatteringTime: number;
+    private exitScatteringTime: number;
 
     /**
      * The time at which this ghost should switch from "chasing PacMan" mode
@@ -69,25 +69,25 @@ export abstract class Ghost extends _BaseSprite {
      * The motion state to revert back to when a ghost leaves "blue mode."
      * If a ghost is not in "blue mode," this value is invalid.
      */
-    private _previousState: number;
+    private previousState: number;
 
     /**
      * The y-coordinate of the sprites in the sprite sheet to use.
      */
-    private readonly _spriteSheetY: number;
+    private readonly spriteSheetY: number;
 
     /**
      * The number of seconds this ghost will wait before leaving the penalty
      * box for the first time.
      */
-    private readonly _exitDelaySeconds: number;
+    private readonly exitDelaySeconds: number;
 
     constructor(game: PacmanGame, spriteSheetY: number, exitDelaySeconds: number) {
         super(2);
         this.game = game;
-        this._corner = new Point();
-        this._spriteSheetY = spriteSheetY;
-        this._exitDelaySeconds = exitDelaySeconds;
+        this.corner = new Point();
+        this.spriteSheetY = spriteSheetY;
+        this.exitDelaySeconds = exitDelaySeconds;
         this.reset();
     }
 
@@ -170,7 +170,7 @@ export abstract class Ghost extends _BaseSprite {
      * @param level The current game level.
      * @return The length of time a ghost should stay blue.
      */
-    private _getBlueTimeForLevel(level: number): number {
+    private getBlueTimeForLevel(level: number): number {
         switch (level) {
             case 0:
             case 1:
@@ -195,8 +195,8 @@ export abstract class Ghost extends _BaseSprite {
      *
      * @return The delay, in milliseconds.
      */
-    private _getFirstExitDelayMillis(): number {
-        return this._exitDelaySeconds * 1000;
+    private getFirstExitDelayMillis(): number {
+        return this.exitDelaySeconds * 1000;
     }
 
     getFrameCount(): number {
@@ -284,7 +284,7 @@ export abstract class Ghost extends _BaseSprite {
             default:
                 srcX = this.direction * SPRITE_SIZE * this.getFrameCount() +
                     this.getFrame() * SPRITE_SIZE;
-                srcY = this._spriteSheetY;
+                srcY = this.spriteSheetY;
                 game.drawSprite(destX, destY, srcX, srcY);
                 break;
 
@@ -300,7 +300,7 @@ export abstract class Ghost extends _BaseSprite {
             case MotionState.CHASING_PACMAN:
             case MotionState.SCATTERING:
             case MotionState.BLUE:
-                this.motionState = MotionState.BLUE;
+                this._motionState = MotionState.BLUE;
                 return true;
             default:
                 // Do nothing; in other states, we don't turn blue.
@@ -323,7 +323,7 @@ export abstract class Ghost extends _BaseSprite {
      */
     reset() {
         super.reset();
-        this._scatterCount = 0;
+        this.scatterCount = 0;
     }
 
     /**
@@ -333,8 +333,8 @@ export abstract class Ghost extends _BaseSprite {
      * @param corner The corner to go to.
      */
     setCorner(corner: Point) {
-        this._corner.x = corner.x;
-        this._corner.y = corner.y;
+        this.corner.x = corner.x;
+        this.corner.y = corner.y;
     }
 
     set motionState(motionState: MotionState) {
@@ -347,15 +347,15 @@ export abstract class Ghost extends _BaseSprite {
         // Ghosts don't enter scatter mode a 5th time; they just relentlessly
         // attack PacMan.
         if (motionState === MotionState.SCATTERING) {
-            switch (this._scatterCount++) {
+            switch (this.scatterCount++) {
                 case 0:
                 case 1:
-                    this._exitScatteringTime = game.playTime + 7000;
+                    this.exitScatteringTime = game.playTime + 7000;
                     this._motionState = motionState;
                     break;
                 case 2:
                 case 3:
-                    this._exitScatteringTime = game.playTime + 5000;
+                    this.exitScatteringTime = game.playTime + 5000;
                     this._motionState = motionState;
                     break;
                 default:
@@ -365,29 +365,29 @@ export abstract class Ghost extends _BaseSprite {
         }
 
         else if (motionState === MotionState.BLUE) {
-            const blueTime: number = this._getBlueTimeForLevel(game.level);
+            const blueTime: number = this.getBlueTimeForLevel(game.level);
             const playTime: number = game.playTime;
             this.exitBlueTime = playTime + blueTime;
             // Remember previous state and modify its "end time" to
             // include the blue time.
             switch (this._motionState) {
                 case MotionState.CHASING_PACMAN:
-                    this._previousState = this._motionState;
+                    this.previousState = this._motionState;
                     this.startScatteringTime += blueTime;
                     break;
                 case MotionState.SCATTERING:
-                    this._previousState = this._motionState;
-                    this._exitScatteringTime += blueTime;
+                    this.previousState = this._motionState;
+                    this.exitScatteringTime += blueTime;
                     break;
                 case MotionState.BLUE:
                     // Keep previous "previousState".
                     const prevBlueTimeRemaining: number = this.exitBlueTime - playTime;
-                    switch (this._previousState) {
+                    switch (this.previousState) {
                         case MotionState.CHASING_PACMAN:
                             this.startScatteringTime += prevBlueTimeRemaining + blueTime;
                             break;
                         case MotionState.SCATTERING:
-                            this._exitScatteringTime += prevBlueTimeRemaining + blueTime;
+                            this.exitScatteringTime += prevBlueTimeRemaining + blueTime;
                             break;
                     }
                     break;
@@ -413,7 +413,7 @@ export abstract class Ghost extends _BaseSprite {
      *
      * @param maze The maze in which the ghost is moving.
      */
-    _updatePositionBlue(maze: Maze) {
+    private updatePositionBlue(maze: Maze) {
 
         // Logic:
         // If PacMan has a clear shot to us, try to go in a direction other
@@ -491,7 +491,7 @@ export abstract class Ghost extends _BaseSprite {
         // Use game.playTime to ensure proper exit delay, even if game is
         // paused, etc.
         if (game.playTime >= this.exitBlueTime) {
-            this.motionState = this._previousState;
+            this._motionState = this.previousState;
         }
 
     }
@@ -501,7 +501,7 @@ export abstract class Ghost extends _BaseSprite {
      *
      * @param maze The maze in which the actor is moving.
      */
-    abstract updatePositionChasingPacman(maze: Maze): void;
+    protected abstract updatePositionChasingPacman(maze: Maze): void;
 
     /**
      * Updates this ghost's position when it is a set of "eyes" heading back
@@ -509,7 +509,7 @@ export abstract class Ghost extends _BaseSprite {
      *
      * @param maze The maze in which the ghost is moving.
      */
-    private _updatePositionEyes(maze: Maze) {
+    private updatePositionEyes(maze: Maze) {
 
         // Logic:
         // At intersections, do a breadth-first search to find the shortest
@@ -535,7 +535,7 @@ export abstract class Ghost extends _BaseSprite {
             if (node == null) { // i.e. ghost is actually at the penalty box.
                 // Should never happen; we should always catch the ghost
                 // before getting to its destination in the "else" below.
-                this.motionState = MotionState.EYES_ENTERING_BOX;
+                this._motionState = MotionState.EYES_ENTERING_BOX;
             }
             else {
                 if (node.col < fromCol) {
@@ -566,7 +566,7 @@ export abstract class Ghost extends _BaseSprite {
             const toRow: number = Math.floor((game.PENALTY_BOX_EXIT_Y + 8) / Constants.TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
 
             if (fromRow === toRow && this.x === game.PENALTY_BOX_EXIT_X) {
-                this.motionState = MotionState.EYES_ENTERING_BOX;
+                this._motionState = MotionState.EYES_ENTERING_BOX;
             }
             else {
                 this.continueInCurrentDirection(moveAmount);
@@ -582,7 +582,7 @@ export abstract class Ghost extends _BaseSprite {
      *
      * @param maze The maze in which the ghost is moving.
      */
-    private _updatePositionEyesEnteringBox(maze: Maze) {
+    private updatePositionEyesEnteringBox(maze: Maze) {
 
         const moveAmount: number = GHOST_IN_BOX_SPEED; //getMoveAmount();
 
@@ -592,7 +592,7 @@ export abstract class Ghost extends _BaseSprite {
             this.incY(moveAmount);
         }
         else {
-            this.motionState = MotionState.LEAVING_BOX;
+            this._motionState = MotionState.LEAVING_BOX;
         }
 
     }
@@ -602,7 +602,7 @@ export abstract class Ghost extends _BaseSprite {
      *
      * @param maze The maze in which the ghost is floating.
      */
-    updatePositionImpl(maze: Maze) {
+    protected updatePositionImpl(maze: Maze) {
 
         switch (this._motionState) {
             case MotionState.IN_BOX:
@@ -618,13 +618,13 @@ export abstract class Ghost extends _BaseSprite {
                 this.updatePositionChasingPacman(maze);
                 break;
             case MotionState.BLUE:
-                this._updatePositionBlue(maze);
+                this.updatePositionBlue(maze);
                 break;
             case MotionState.EYES:
-                this._updatePositionEyes(maze);
+                this.updatePositionEyes(maze);
                 break;
             case MotionState.EYES_ENTERING_BOX:
-                this._updatePositionEyesEnteringBox(maze);
+                this.updatePositionEyesEnteringBox(maze);
                 break;
         }
     }
@@ -634,7 +634,7 @@ export abstract class Ghost extends _BaseSprite {
      *
      * @param maze The maze in which the actor is moving.
      */
-    updatePositionInBox(maze: Maze) {
+    private updatePositionInBox(maze: Maze) {
 
         const moveAmount: number = GHOST_IN_BOX_SPEED; //ghost.getMoveAmount();
 
@@ -661,8 +661,8 @@ export abstract class Ghost extends _BaseSprite {
 
         // Use game.playTime to ensure proper exit delay, even if game is
         // paused, etc.
-        if (game.playTime >= this._getFirstExitDelayMillis()) {
-            this.motionState = MotionState.LEAVING_BOX;
+        if (game.playTime >= this.getFirstExitDelayMillis()) {
+            this._motionState = MotionState.LEAVING_BOX;
         }
 
     }
@@ -672,7 +672,7 @@ export abstract class Ghost extends _BaseSprite {
      *
      * @param maze The maze in which the actor is moving.
      */
-    updatePositionLeavingBox(maze: Maze) {
+    private updatePositionLeavingBox(maze: Maze) {
 
         const moveAmount: number = GHOST_IN_BOX_SPEED; //getMoveAmount();
 
@@ -692,7 +692,7 @@ export abstract class Ghost extends _BaseSprite {
             // shouldn't, but still)
             if (y <= game.PENALTY_BOX_EXIT_Y) {
                 y = game.PENALTY_BOX_EXIT_Y; // Should be unnecessary
-                this.motionState = MotionState.SCATTERING;
+                this._motionState = MotionState.SCATTERING;
                 this.direction = Direction.WEST;
             }
             else {
@@ -707,7 +707,7 @@ export abstract class Ghost extends _BaseSprite {
      *
      * @param maze The maze in which the actor is moving.
      */
-    updatePositionScattering(maze: Maze) {
+    private updatePositionScattering(maze: Maze) {
 
         // Logic:
         // At intersections, do a breadth-first search to find the shortest
@@ -719,8 +719,8 @@ export abstract class Ghost extends _BaseSprite {
 
             const fromRow: number = this.row;
             const fromCol: number = this.column;
-            const toRow: number = this._corner.x;
-            const toCol: number = this._corner.y;
+            const toRow: number = this.corner.x;
+            const toCol: number = this.corner.y;
             const node: MazeNode | null = maze.getPathBreadthFirst(fromRow, fromCol, toRow, toCol);
             if (!node) { // i.e. ghost is actually in the corner.
                 this.changeDirectionFallback(maze);
@@ -752,8 +752,8 @@ export abstract class Ghost extends _BaseSprite {
             this.continueInCurrentDirection(moveAmount);
         }
 
-        if (game.playTime >= this._exitScatteringTime) {
-            this.motionState = MotionState.CHASING_PACMAN;
+        if (game.playTime >= this.exitScatteringTime) {
+            this._motionState = MotionState.CHASING_PACMAN;
         }
     }
 }

@@ -50,7 +50,7 @@ export class _BaseState extends State<PacmanGame> {
                     }
                     style.width = (parseInt(style.width.substring(0, style.width.length - 2), 10) + 1) + 'px';
                     style.height = (parseInt(style.height.substring(0, style.height.length - 2), 10) + 1) + 'px';
-                    game.setStatusMessage('Canvas size now: (' + style.width + ', ' + style.height + ')');
+                    game.setStatusMessage(`Canvas size now: (${style.width}, ${style.height})`);
                     this._lastConfigKeypressTime = time;
                 }
 
@@ -65,7 +65,7 @@ export class _BaseState extends State<PacmanGame> {
                     }
                     style.width = (parseInt(style.width.substring(0, style.width.length - 2), 10) - 1) + 'px';
                     style.height = (parseInt(style.height.substring(0, style.height.length - 2), 10) - 1) + 'px';
-                    game.setStatusMessage('Canvas size now: (' + style.width + ', ' + style.height + ')');
+                    game.setStatusMessage(`Canvas size now: (${style.width}, ${style.height})`);
                     this._lastConfigKeypressTime = time;
                 }
 

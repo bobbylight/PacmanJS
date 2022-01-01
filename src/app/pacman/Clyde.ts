@@ -31,7 +31,7 @@ export class Clyde extends Ghost {
      *
      * @param maze The maze in which the actor is moving.
      */
-    updatePositionChasingPacman(maze: Maze) {
+    protected updatePositionChasingPacman(maze: Maze) {
 
         const moveAmount: number = this.moveAmount;
 

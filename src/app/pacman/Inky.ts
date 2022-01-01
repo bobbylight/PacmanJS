@@ -28,7 +28,7 @@ export class Inky extends Ghost {
         this.motionState = MotionState.IN_BOX;
     }
 
-    updatePositionChasingPacman(maze: Maze) {
+    protected updatePositionChasingPacman(maze: Maze) {
 
         const moveAmount: number = this.moveAmount;
 

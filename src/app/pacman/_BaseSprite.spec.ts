@@ -11,7 +11,7 @@ class ConcreteSprite extends _BaseSprite {
         return 100;
     }
 
-    updatePositionImpl(maze: Maze): void {
+    protected updatePositionImpl(maze: Maze): void {
     }
 
 }

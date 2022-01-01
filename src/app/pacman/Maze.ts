@@ -9,11 +9,11 @@ const DOT_POINTS: number[] = [50, 10];
 
 export class Maze {
 
-    private _data: number[][];
-    private _mazeCanvas: HTMLCanvasElement;
-    private _eatenDotCount: number;
-    private _dotCount: number;
-    private _origMazeInfo: number[][];
+    private data: number[][];
+    private mazeCanvas: HTMLCanvasElement;
+    private eatenDotCount: number;
+    private dotCount: number;
+    private origMazeInfo: number[][];
 
     closed: MazeNode[] = [];
     open: MazeNode[] = [];
@@ -22,10 +22,10 @@ export class Maze {
     /**
      * A cache of nodes to speed up search operations.
      */
-    private _nodeCache: Pool<MazeNode>;
+    private nodeCache: Pool<MazeNode>;
 
     constructor(mazeInfo: number[][]) {
-        this._data = [];
+        this.data = [];
         this.reset(mazeInfo);
     }
 
@@ -45,20 +45,20 @@ export class Maze {
     checkForDot(row: number, col: number): number {
 
         let score: number = 0;
-        const tile: number = this._getTileAt(row, col);
+        const tile: number = this.getTileAt(row, col);
 
         if (tile >= 0xfe) { // Small dot or big dot.
             game.playChompSound();
             if (tile === 0xfe) {
                 game.makeGhostsBlue();
             }
-            this._eatenDotCount++;
-            this._data[row][col] = 0;
+            this.eatenDotCount++;
+            this.data[row][col] = 0;
             score = DOT_POINTS[tile - 0xfe];
-            if (this._eatenDotCount === Maze.FRUIT_DOT_COUNT) {
+            if (this.eatenDotCount === Maze.FRUIT_DOT_COUNT) {
                 game.addFruit();
             }
-            if (this._eatenDotCount === this._dotCount) {
+            if (this.eatenDotCount === this.dotCount) {
                 game.loadNextLevel();
             }
         }
@@ -120,26 +120,26 @@ export class Maze {
                         toCol: number): MazeNode | null {
 
         this.open.forEach((node: MazeNode) => {
-            this._data[node.row][node.col] &= 0xff;
+            this.data[node.row][node.col] &= 0xff;
         });
         this.closed.forEach((node: MazeNode) => {
-            this._data[node.row][node.col] &= 0xff;
+            this.data[node.row][node.col] &= 0xff;
         });
 
         this.open.length = 0;
         this.closed.length = 0;
         this.goalNode.set(toRow, toCol, null);
-        let temp: MazeNode = this._nodeCache.borrowObj();
+        let temp: MazeNode = this.nodeCache.borrowObj();
 
         //path.add(computeInt(fromRow, fromCol));
         this.open.push(new MazeNode(fromRow, fromCol));
-        this._data[fromRow][fromCol] |= 0x100;
+        this.data[fromRow][fromCol] |= 0x100;
 
         while (this.open.length > 0) {
 
             const node: MazeNode = this.open.splice(0, 1)[0];
             if (node.equals(this.goalNode)) {
-                this._data[node.row][node.col] &= 0xff; // Won't be in open or closed lists
+                this.data[node.row][node.col] &= 0xff; // Won't be in open or closed lists
                 return Maze._constructPath(node);
             }
 
@@ -153,11 +153,11 @@ export class Maze {
                     //if (!this.closed.contains(temp) && !this.open.contains(temp)) {
                     //   temp.parent = node;
                     //}
-                    if ((this._data[node.row - 1][node.col] & 0x100) === 0) {
-                        this._data[node.row - 1][node.col] |= 0x100;
+                    if ((this.data[node.row - 1][node.col] & 0x100) === 0) {
+                        this.data[node.row - 1][node.col] |= 0x100;
                         temp.set(node.row - 1, node.col, node);
                         this.open.push(temp);
-                        temp = this._nodeCache.borrowObj();
+                        temp = this.nodeCache.borrowObj();
                     }
                 }
 
@@ -166,11 +166,11 @@ export class Maze {
                     //if (!this.closed.contains(temp) && !this.open.contains(temp)) {
                     //   temp.parent = node;
                     //}
-                    if ((this._data[node.row + 1][node.col] & 0x100) === 0) {
-                        this._data[node.row + 1][node.col] |= 0x100;
+                    if ((this.data[node.row + 1][node.col] & 0x100) === 0) {
+                        this.data[node.row + 1][node.col] |= 0x100;
                         temp.set(node.row + 1, node.col, node);
                         this.open.push(temp);
-                        temp = this._nodeCache.borrowObj();
+                        temp = this.nodeCache.borrowObj();
                     }
                 }
 
@@ -180,11 +180,11 @@ export class Maze {
                     //if (!this.closed.contains(temp) && !this.open.contains(temp)) {
                     //   temp.parent = node;
                     //}
-                    if ((this._data[node.row][col] & 0x100) === 0) {
-                        this._data[node.row][col] |= 0x100;
+                    if ((this.data[node.row][col] & 0x100) === 0) {
+                        this.data[node.row][col] |= 0x100;
                         temp.set(node.row, col, node);
                         this.open.push(temp);
-                        temp = this._nodeCache.borrowObj();
+                        temp = this.nodeCache.borrowObj();
                     }
                 }
 
@@ -194,11 +194,11 @@ export class Maze {
                     //if (!this.closed.contains(temp) && !this.open.contains(temp)) {
                     //   temp.parent = node;
                     //}
-                    if ((this._data[node.row][col] & 0x100) === 0) {
-                        this._data[node.row][col] |= 0x100;
+                    if ((this.data[node.row][col] & 0x100) === 0) {
+                        this.data[node.row][col] |= 0x100;
                         temp.set(node.row, col, node);
                         this.open.push(temp);
-                        temp = this._nodeCache.borrowObj();
+                        temp = this.nodeCache.borrowObj();
                     }
                 }
 
@@ -248,7 +248,7 @@ export class Maze {
      * @param col The column to check.
      * @return The row data.
      */
-    private _getTileAt(row: number, col: number): number {
+    private getTileAt(row: number, col: number): number {
         // Forgive bounds errors in case the user is going through the tunnel.
         if (col < 0 || col >= Maze.TILE_COUNT_HORIZONTAL) {
             return -1;
@@ -256,7 +256,7 @@ export class Maze {
         if (row < 0 || row >= Maze.TILE_COUNT_VERTICAL) {
             return -1;
         }
-        return this._data[row][col] & 0xff; // Remove internally-used high bits
+        return this.data[row][col] & 0xff; // Remove internally-used high bits
     }
 
     isClearShotColumn(col: number, row1: number, row2: number): boolean {
@@ -288,14 +288,14 @@ export class Maze {
      * @return Whether a sprite can walk ono the specified tile.
      */
     isWalkable(row: number, col: number): boolean {
-        const tile: number = this._getTileAt(row, col);
+        const tile: number = this.getTileAt(row, col);
         return tile === 0 || tile >= 0xf0;
     }
 
     render(ctx: CanvasRenderingContext2D) {
 
         // Draw all static content
-        ctx.drawImage(this._mazeCanvas, 0, 0);
+        ctx.drawImage(this.mazeCanvas, 0, 0);
 
         const TILE_SIZE: number = 8;
 
@@ -307,7 +307,7 @@ export class Maze {
 
             for (let col: number = 0; col < Maze.TILE_COUNT_HORIZONTAL; col++) {
 
-                const tile: number = this._getTileAt(row, col);
+                const tile: number = this.getTileAt(row, col);
                 const x: number = col * TILE_SIZE;
 
                 if (tile === Maze.TILE_DOT_SMALL) {
@@ -334,11 +334,11 @@ export class Maze {
         // Load (or reset) map data
         if (firstTime) {
             // First time through, we cache a pristine view of our maze data
-            this._origMazeInfo = Maze._cloneObjectOfPrimitives(mazeInfo);
+            this.origMazeInfo = Maze._cloneObjectOfPrimitives(mazeInfo);
         }
         // Next, we create a working copy of our maze data, since we mutate it
-        this._data = Maze._cloneObjectOfPrimitives(this._origMazeInfo);
-        this._eatenDotCount = 0;
+        this.data = Maze._cloneObjectOfPrimitives(this.origMazeInfo);
+        this.eatenDotCount = 0;
 
         if (firstTime) {
 
@@ -346,20 +346,20 @@ export class Maze {
 
             // Create an image for the maze
             const mazeY: number = 2 * TILE_SIZE;
-            this._mazeCanvas = ImageUtils.createCanvas(game.getWidth(), game.getHeight());
-            const mazeCtx: CanvasRenderingContext2D = this._mazeCanvas.getContext('2d')!;
+            this.mazeCanvas = ImageUtils.createCanvas(game.getWidth(), game.getHeight());
+            const mazeCtx: CanvasRenderingContext2D = this.mazeCanvas.getContext('2d')!;
             let walkableCount: number = 0;
-            this._dotCount = 0;
+            this.dotCount = 0;
 
             mazeCtx.fillStyle = '#000000';
-            mazeCtx.fillRect(0, 0, this._mazeCanvas.width, this._mazeCanvas.height);
+            mazeCtx.fillRect(0, 0, this.mazeCanvas.width, this.mazeCanvas.height);
 
             game.drawScoresHeaders(mazeCtx);
 
             // Render each tile from the map data
-            for (let row: number = 0; row < this._data.length; row++) {
+            for (let row: number = 0; row < this.data.length; row++) {
 
-                const rowData: number[] = this._data[row];
+                const rowData: number[] = this.data[row];
 
                 for (let col: number = 0; col < rowData.length; col++) {
 
@@ -372,7 +372,7 @@ export class Maze {
 
                         case Maze.TILE_DOT_SMALL:
                         case Maze.TILE_DOT_BIG:
-                            this._dotCount++;
+                            this.dotCount++;
                             break;
 
                         default:
@@ -387,8 +387,8 @@ export class Maze {
                 }
             }
 
-            if (!this._nodeCache) {
-                this._nodeCache = new Pool(MazeNode, walkableCount);
+            if (!this.nodeCache) {
+                this.nodeCache = new Pool(MazeNode, walkableCount);
             }
         }
     }

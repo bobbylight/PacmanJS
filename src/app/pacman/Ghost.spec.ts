@@ -4,13 +4,13 @@ import { PacmanGame } from './PacmanGame';
 
 const game: any = {};
 
-class ConcreteGhost extends Ghost {
+export class ConcreteGhost extends Ghost {
 
     constructor() {
         super(game as PacmanGame, 0, 0);
     }
 
-    updatePositionChasingPacman(maze: Maze): void {
+    protected updatePositionChasingPacman(maze: Maze): void {
     }
 }
 
