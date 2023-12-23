@@ -3,6 +3,12 @@ import { PacmanGame } from './PacmanGame';
 import { Pacman } from './Pacman';
 import { ConcreteGhost } from './Ghost.spec';
 import { Direction } from './Direction';
+
+// TextEncoder not defined:
+// https://github.com/jsdom/jsdom/issues/2524
+import { TextEncoder, TextDecoder } from 'util';
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder as any;
 import { JSDOM } from 'jsdom';
 
 describe('TitleState', () => {

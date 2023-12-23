@@ -3,7 +3,7 @@ import SOUNDS from './Sounds';
 import { PacmanGame } from './PacmanGame';
 import { TitleState } from './TitleState';
 import { BaseStateArgs, FadeOutInState, Game, Utils } from 'gtp';
-import { fixLevelData } from './Util';
+import { fixLevelDatas } from './Util';
 
 export class LoadingState extends _BaseState {
 
@@ -50,7 +50,7 @@ export class LoadingState extends _BaseState {
                 game.assets.addSound(SOUNDS.TOKEN, 'res/sounds/token.wav');
                 game.assets.onLoad(() => {
 
-                    fixLevelData(game.assets.get('levels'));
+                    fixLevelDatas(game.assets.get('levels'));
 
                     const skipTitle: string | null = Utils.getRequestParam('skipTitle');
                     if (skipTitle !== null) { // Allow empty strings
