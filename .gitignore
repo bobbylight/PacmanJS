@@ -5,7 +5,6 @@ node_modules
 .tmp
 Thumbs.db
 *.iml
-build
 dist
 npm-debug.log
 reports

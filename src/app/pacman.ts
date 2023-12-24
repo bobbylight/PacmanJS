@@ -1,9 +1,6 @@
 import { PacmanGame } from './pacman/PacmanGame';
 import { LoadingState } from './pacman/LoadingState';
 
-import 'index.html';
-import 'all.css';
-
 /*
  * Game bootstrap code.  This can be in an inline <script> tag as well.
  */
@@ -20,3 +17,4 @@ const CANVAS_HEIGHT: number = 288; //576;
     gameWindow.game.setState(new LoadingState());
     gameWindow.game.start();
 };
+(window as any).init('parent', 'src/');

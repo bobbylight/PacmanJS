@@ -16,8 +16,8 @@ To install, compile, and run locally:
 git clone https://github.com/bobbylight/PacmanJS.git
 cd PacmanJS
 npm install
-npm run watch  # Start dev server at localhost:8080, hot deploy changes
-npm run build  # Production build
+npm run dev  # Start dev server at localhost:5173, hot deploy changes
+npm run build  # Production build into dist/
 ```
 
 
@@ -30,7 +30,7 @@ electron.  See the `build:electron`, `dist:electron` and other related tasks bel
 
 * `clean`: Deletes prior build artifacts
 * `build`: Builds production artifact into `build/web/`
-* `watch`: Runs a dev server on http://localhost:8080 and hot-deploys changes
+* `dev`:   Runs a dev server on http://localhost:5173 and hot-deploys changes
 * `lint`: Lints the project
 * `test`: Runs unit tests
 * `build:electron`: Builds all electron artifacts into `build/electron/`
