@@ -1,8 +1,9 @@
 import DirectionUtil, { Direction } from './Direction';
+import { describe, expect, test } from 'vitest';
 
 describe('DirectionUtil', () => {
 
-    it('Test test :)', () => {
+    test('Test test :)', () => {
 
         expect(DirectionUtil.fromString('SOUTH')).toEqual(Direction.SOUTH);
     });

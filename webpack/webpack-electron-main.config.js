@@ -7,7 +7,7 @@ console.log(`Starting electron main build with NODE_ENV: ${process.env.NODE_ENV}
 module.exports = [
     {
         target: 'electron-main',
-        entry: './src/app/electron-main.ts',
+        entry: './src/electron-main.ts',
         output: {
             path: path.resolve('./build/electron/'),
             filename: 'electron-bundle.js'

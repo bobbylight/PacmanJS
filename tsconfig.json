@@ -26,6 +26,6 @@
     "sourceMap": true
   },
   "include": [
-    "src/app/**/*.ts"
+    "src/**/*.ts"
   ]
 }

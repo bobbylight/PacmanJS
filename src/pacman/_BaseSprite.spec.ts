@@ -1,5 +1,6 @@
 import { _BaseSprite } from './_BaseSprite';
 import { Maze } from './Maze';
+import { describe, expect, test } from 'vitest';
 
 class ConcreteSprite extends _BaseSprite {
 
@@ -18,7 +19,7 @@ class ConcreteSprite extends _BaseSprite {
 
 describe('_BaseSprite', () => {
 
-    it('can be subclassed', () => {
+    test('can be subclassed', () => {
         const sprite: ConcreteSprite = new ConcreteSprite();
         expect(sprite).toBeDefined();
     });

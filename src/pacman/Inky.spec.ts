@@ -1,19 +1,20 @@
 import { Direction } from './Direction';
 import { MotionState } from './Ghost';
-import { Pinky } from './Pinky';
+import { Inky } from './Inky';
+import { describe, expect, test } from 'vitest';
 
-describe('Pinky', () => {
+describe('Inky', () => {
 
-    it('reset() works as expected', () => {
+    test('reset() works as expected', () => {
 
         const mockGame: any /* PacmanGame */ = {
             checkLoopedSound: () => {}
         };
 
-        const ghost: Pinky = new Pinky(mockGame);
+        const ghost: Inky = new Inky(mockGame);
         ghost.reset();
 
-        expect(ghost.direction).toEqual(Direction.NORTH);
+        expect(ghost.direction).toEqual(Direction.SOUTH);
         expect(ghost.motionState).toEqual(MotionState.IN_BOX);
     });
 });

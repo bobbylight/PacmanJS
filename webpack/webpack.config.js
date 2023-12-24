@@ -9,7 +9,7 @@ console.log(`Starting webpack build with NODE_ENV: ${process.env.NODE_ENV}`);
 
 module.exports = {
     entry: [
-        path.resolve('./src/app/pacman.ts')
+        path.resolve('./src/pacman.ts')
     ],
     output: {
         path: path.resolve('./build/web/'),

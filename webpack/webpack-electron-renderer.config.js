@@ -9,7 +9,7 @@ console.log(`Starting electron renderer build with NODE_ENV: ${process.env.NODE_
 module.exports = [
     {
         target: 'electron-renderer',
-        entry: './src/app/pacman.ts',
+        entry: './src/pacman.ts',
         output: {
             path: path.resolve('./build/electron/'),
             filename: 'pacman.js'

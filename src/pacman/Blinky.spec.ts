@@ -1,10 +1,11 @@
 import { Blinky } from './Blinky';
 import { Direction } from './Direction';
 import { MotionState } from './Ghost';
+import { describe, expect, test } from 'vitest';
 
 describe('Blinky', () => {
 
-    it('reset() works as expected', () => {
+    test('reset() works as expected', () => {
 
         const mockGame: any /* PacmanGame */ = {
             checkLoopedSound: () => {}

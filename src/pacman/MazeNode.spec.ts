@@ -1,8 +1,9 @@
 import { MazeNode } from './MazeNode';
+import { describe, expect, test } from 'vitest';
 
 describe('MazeNode', () => {
 
-    it('constructor, 0-arg', () => {
+    test('constructor, 0-arg', () => {
         const node: MazeNode = new MazeNode();
         expect(node.row).toEqual(0);
         expect(node.col).toEqual(0);
