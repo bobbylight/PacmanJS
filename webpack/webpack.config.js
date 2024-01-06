@@ -12,7 +12,7 @@ module.exports = {
         path.resolve('./src/app/pacman.ts')
     ],
     output: {
-        path: path.resolve('./build/web/'),
+        path: path.resolve('./build'),
         filename: '[name].js'
     },
     resolve: {
@@ -40,6 +40,6 @@ module.exports = {
     },
     // Create sourcemaps for the bundle
     devServer: {
-        static: './build/web'
+        static: './build'
     }
 };

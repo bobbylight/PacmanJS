@@ -1,24 +1,18 @@
 {
-  "name": "pacmanjs",
+  "name": "pacmanjs-fork",
   "description": "Pacman written in TypeScript",
-  "version": "3.1.0",
+  "version": "0.0.1",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bobbylight/PacmanJS.git"
+    "url": "https://github.com/Kirrrusha/PacmanJS-fork.git"
   },
   "scripts": {
     "clean": "rimraf build dist",
     "build": "cross-env NODE_ENV=production webpack --config webpack/webpack.config.js",
     "watch": "cross-env NODE_ENV=dev webpack serve --config ./webpack/webpack.config.js",
     "lint": "eslint --ext .ts src/",
-    "test": "jest --coverage src/",
-    "build:electron": "npm run build:electron:main && npm run build:electron:renderer",
-    "build:electron:main": "cross-env NODE_ENV=dev webpack --config webpack/webpack-electron-main.config.js",
-    "build:electron:renderer": "cross-env NODE_ENV=dev webpack --config webpack/webpack-electron-renderer.config.js",
-    "start:electron": "electron build/electron/electron-bundle.js -debug",
-    "pack:electron": "electron-builder --dir",
-    "dist:electron": "electron-builder"
+    "test": "jest --coverage src/"
   },
   "devDependencies": {
     "@types/jest": "29.4.0",
@@ -50,16 +44,5 @@
   },
   "dependencies": {
     "gtp": "2.0.5"
-  },
-  "build": {
-    "appId": "org.fife.pacmanjs",
-    "files": "./build/electron/**/*",
-    "directories": {
-      "buildResources": "./build/electron"
-    },
-    "mac": {
-      "category": "my.app.category.type"
-    }
-  },
-  "main": "build/electron/electron-bundle.js"
+  }
 }
