@@ -1,4 +1,5 @@
-import DirectionUtil, { Direction } from './Direction';
+import { Direction } from './constants/direction';
+import { DirectionUtil } from './utils/Direction';
 
 describe('DirectionUtil', () => {
 

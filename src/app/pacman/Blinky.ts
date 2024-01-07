@@ -1,9 +1,10 @@
-import { Ghost, MotionState } from './Ghost';
-import { PacmanGame } from './PacmanGame';
-import { Direction } from './Direction';
+import { Ghost } from './Ghost';
 import { Maze } from './Maze';
 import { MazeNode } from './MazeNode';
-import Constants from './Constants';
+import { PacmanGame } from './PacmanGame';
+import { Direction } from './constants/direction';
+import { MotionState } from './constants/motionState';
+import { SPRITE_SIZE } from './constants/spriteSize';
 
 /**
  * Blinky, the red ghost.  Blinky always takes the shortest route to Pacman
@@ -15,7 +16,7 @@ export class Blinky extends Ghost {
      * Constructor.
      */
     constructor(game: PacmanGame) {
-        super(game, 0 * Constants.SPRITE_SIZE, 0); // Not initially in the penalty box
+        super(game, 0 * SPRITE_SIZE, 0); // Not initially in the penalty box
     }
 
     reset() {

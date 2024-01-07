@@ -1,11 +1,7 @@
-export enum Direction {
-    EAST = 0,
-    SOUTH = 1,
-    WEST = 2,
-    NORTH = 3
-}
+import { Direction } from "../constants/direction";
 
-const DirectionUtil: any = {
+
+export const DirectionUtil = {
 
     fromString(str: string = 'SOUTH'): Direction {
         switch (str.toUpperCase()) {
@@ -22,4 +18,4 @@ const DirectionUtil: any = {
     }
 };
 
-export default DirectionUtil;
+

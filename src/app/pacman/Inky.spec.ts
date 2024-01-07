@@ -1,6 +1,6 @@
-import { Direction } from './Direction';
-import { MotionState } from './Ghost';
 import { Inky } from './Inky';
+import { Direction } from './constants/direction';
+import { MotionState } from './constants/motionState';
 
 describe('Inky', () => {
 

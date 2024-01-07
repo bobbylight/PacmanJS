@@ -1,7 +1,8 @@
 import { Rectangle } from 'gtp';
-import { Direction } from './Direction';
 import { Maze } from './Maze';
-import Constants from './Constants';
+import { Direction } from './constants/direction';
+import { SPRITE_SIZE } from './constants/spriteSize';
+import { TILE_SIZE } from './constants/tileSize';
 
 export abstract class _BaseSprite {
 
@@ -13,7 +14,7 @@ export abstract class _BaseSprite {
     private _lastUpdateTime: number;
 
     constructor(frameCount: number) {
-        this.bounds = new Rectangle(0, 0, Constants.SPRITE_SIZE, Constants.SPRITE_SIZE);
+        this.bounds = new Rectangle(0, 0, SPRITE_SIZE, SPRITE_SIZE);
         this._intersectBounds = new Rectangle();
         this.direction = Direction.EAST;
         this._frame = 0;
@@ -36,8 +37,8 @@ export abstract class _BaseSprite {
     getCanMoveDown(maze: Maze) {
         const x: number = this.centerX;
         const y: number = this.centerY;
-        const xRemainder: number = x % this.TILE_SIZE;
-        const yRemainder: number = y % this.TILE_SIZE; //(y+TILE_SIZE) % this.TILE_SIZE;
+        const xRemainder: number = x % TILE_SIZE;
+        const yRemainder: number = y % TILE_SIZE; //(y+TILE_SIZE) % this.TILE_SIZE;
         if (xRemainder === 0 && yRemainder === 0) {
             const row: number = this.row;
             const col: number = this.column;
@@ -51,10 +52,10 @@ export abstract class _BaseSprite {
         if (x < 0) {
             return true; // Going through tunnel.
         }
-        x += this.TILE_SIZE / 2;
+        x += TILE_SIZE / 2;
         const y: number = this.centerY;
-        const xRemainder: number = x % this.TILE_SIZE; //(x-TILE_SIZE) % this.TILE_SIZE;
-        const yRemainder: number = y % this.TILE_SIZE;
+        const xRemainder: number = x % TILE_SIZE; //(x-TILE_SIZE) % this.TILE_SIZE;
+        const yRemainder: number = y % TILE_SIZE;
         if (xRemainder === 0 && yRemainder === 0) {
             const row: number = this.row;
             const col: number = this.column;
@@ -68,10 +69,10 @@ export abstract class _BaseSprite {
         if (x + this.width > this.SCREEN_WIDTH) {
             return true; // Going through tunnel.
         }
-        x += this.TILE_SIZE / 2;
+        x += TILE_SIZE / 2;
         const y: number = this.centerY;
-        const xRemainder: number = x % this.TILE_SIZE; //(x+TILE_SIZE) % this.TILE_SIZE;
-        const yRemainder: number = y % this.TILE_SIZE;
+        const xRemainder: number = x % TILE_SIZE; //(x+TILE_SIZE) % this.TILE_SIZE;
+        const yRemainder: number = y % TILE_SIZE;
         if (xRemainder === 0 && yRemainder === 0) {
             const row: number = this.row;
             const col: number = this.column;
@@ -86,8 +87,8 @@ export abstract class _BaseSprite {
         if ((x % 1) !== 0 || (y % 1) !== 0) {
             console.error('Unexpected condition: x === ' + x + ', y === ' + y);
         }
-        const xRemainder: number = x % this.TILE_SIZE;
-        const yRemainder: number = y % this.TILE_SIZE; //(y-TILE_SIZE) % this.TILE_SIZE;
+        const xRemainder: number = x % TILE_SIZE;
+        const yRemainder: number = y % TILE_SIZE; //(y-TILE_SIZE) % this.TILE_SIZE;
         if (xRemainder === 0 && yRemainder === 0) {
             const row: number = this.row;
             const col: number = this.column;
@@ -97,16 +98,16 @@ export abstract class _BaseSprite {
     }
 
     get centerX(): number {
-        return this.bounds.x + this.TILE_SIZE / 2;
+        return this.bounds.x + TILE_SIZE / 2;
     }
 
     get centerY(): number {
-        return this.bounds.y + this.TILE_SIZE / 2;
+        return this.bounds.y + TILE_SIZE / 2;
     }
 
     get column(): number {
 
-        let col: number = Math.floor(this.centerX / this.TILE_SIZE);
+        let col: number = Math.floor(this.centerX / TILE_SIZE);
 
         // Do "bounds checking" to correct for when sprites are going through
         // tunnels
@@ -138,16 +139,14 @@ export abstract class _BaseSprite {
         return 1; // TODO: Perhaps this is no longer needed?
     }
 
-    get TILE_SIZE(): number {
-        return 8; // TODO: Move this somewhere more generic
-    }
+
 
     get width(): number {
         return this.bounds.w;
     }
 
     get row(): number {
-        return Math.floor(this.centerY / this.TILE_SIZE);
+        return Math.floor(this.centerY / TILE_SIZE);
     }
 
     /**

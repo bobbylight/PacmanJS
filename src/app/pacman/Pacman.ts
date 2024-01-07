@@ -1,9 +1,9 @@
-import { Maze } from './Maze';
-import { Direction } from './Direction';
-import { _BaseSprite } from './_BaseSprite';
 import { InputManager } from 'gtp';
+import { Maze } from './Maze';
 import { PacmanGame } from './PacmanGame';
-import Constants from './Constants';
+import { _BaseSprite } from './_BaseSprite';
+import { Direction } from './constants/direction';
+import { SPRITE_SIZE } from './constants/spriteSize';
 
 declare let game: PacmanGame;
 
@@ -57,9 +57,6 @@ export class Pacman extends _BaseSprite {
     }
 
     render(ctx: CanvasRenderingContext2D) {
-
-        const SPRITE_SIZE: number = Constants.SPRITE_SIZE;
-
         const x: number = this.bounds.x;
         const y: number = this.bounds.y;
 

@@ -1,15 +1,16 @@
 import { CanvasResizer, Game, Image, Point, SpriteSheet, StretchMode, Utils } from 'gtp';
-import SOUNDS from './Sounds';
-import { Pacman } from './Pacman';
+import { Blinky } from './Blinky';
+import { Clyde } from './Clyde';
 import { Fruit } from './Fruit';
 import { Ghost } from './Ghost';
-import { Blinky } from './Blinky';
-import { Pinky } from './Pinky';
 import { Inky } from './Inky';
-import { Clyde } from './Clyde';
-import { MazeState } from './MazeState';
 import { Maze } from './Maze';
-import Constants from './Constants';
+import { MazeState } from './MazeState';
+import { Pacman } from './Pacman';
+import { Pinky } from './Pinky';
+import SOUNDS from './Sounds';
+import { SPRITE_SIZE } from './constants/spriteSize';
+import { TILE_SIZE } from './constants/tileSize';
 
 interface ElectronEnhancedWindow {
     process?: any;
@@ -308,11 +309,11 @@ export class PacmanGame extends Game {
     }
 
     get PENALTY_BOX_EXIT_X(): number {
-        return (this.getWidth() - Constants.SPRITE_SIZE) / 2;
+        return (this.getWidth() - SPRITE_SIZE) / 2;
     }
 
     get PENALTY_BOX_EXIT_Y(): number {
-        return 12 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2;
+        return 12 * TILE_SIZE - TILE_SIZE / 2;
     }
 
     /**

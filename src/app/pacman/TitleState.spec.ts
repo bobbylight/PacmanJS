@@ -1,15 +1,17 @@
-import { TitleState } from './TitleState';
-import { PacmanGame } from './PacmanGame';
-import { Pacman } from './Pacman';
+import { Direction } from './constants/direction';
 import { ConcreteGhost } from './Ghost.spec';
-import { Direction } from './Direction';
+import { Pacman } from './Pacman';
+import { PacmanGame } from './PacmanGame';
+import { TitleState } from './TitleState';
 
 // TextEncoder not defined:
 // https://github.com/jsdom/jsdom/issues/2524
-import { TextEncoder, TextDecoder } from 'util';
+import { JSDOM } from 'jsdom';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+import { TextDecoder, TextEncoder } from 'util';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder as any;
-import { JSDOM } from 'jsdom';
 
 describe('TitleState', () => {
 

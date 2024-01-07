@@ -1,25 +1,19 @@
-import { _BaseSprite } from './_BaseSprite';
 import { Point, Utils } from 'gtp';
 import { Maze } from './Maze';
-import { Direction } from './Direction';
-import { PacmanGame } from './PacmanGame';
 import { MazeNode } from './MazeNode';
 import { Pacman } from './Pacman';
-import Constants from './Constants';
+import { PacmanGame } from './PacmanGame';
+import { _BaseSprite } from './_BaseSprite';
+import { Direction } from './constants/direction';
+import { GHOST_IN_BOX_SPEED } from './constants/ghostSpeed';
+import { MotionState } from './constants/motionState';
+import { SPRITE_SIZE } from './constants/spriteSize';
+import { TILE_SIZE } from './constants/tileSize';
 
 declare let game: PacmanGame;
 
-const GHOST_IN_BOX_SPEED: number = 0.5;
 
-export enum MotionState {
-    IN_BOX = 0,
-    LEAVING_BOX = 1,
-    CHASING_PACMAN = 2,
-    SCATTERING = 3,
-    BLUE = 4,
-    EYES = 5,
-    EYES_ENTERING_BOX = 6
-}
+
 
 export abstract class Ghost extends _BaseSprite {
 
@@ -256,9 +250,9 @@ export abstract class Ghost extends _BaseSprite {
 
         const destX: number = this.bounds.x;
         const destY: number = this.bounds.y;
-        const SPRITE_SIZE: number = Constants.SPRITE_SIZE;
-        let srcX: number,
-            srcY: number;
+
+        let srcX: number;
+        let srcY: number;
 
         switch (this._motionState) {
 
@@ -525,8 +519,8 @@ export abstract class Ghost extends _BaseSprite {
 
             const fromRow: number = this.row;
             const fromCol: number = this.column;
-            const toRow: number = Math.floor((game.PENALTY_BOX_EXIT_Y + 8) / Constants.TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
-            let toCol: number = Math.floor((game.PENALTY_BOX_EXIT_X) / Constants.TILE_SIZE); //xToColumn(game.PENALTY_BOX_EXIT_X);
+            const toRow: number = Math.floor((game.PENALTY_BOX_EXIT_Y + 8) / TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
+            let toCol: number = Math.floor((game.PENALTY_BOX_EXIT_X) / TILE_SIZE); //xToColumn(game.PENALTY_BOX_EXIT_X);
             if (fromCol <= toCol) {
                 toCol++; // Approaching from the left.
             }
@@ -563,7 +557,7 @@ export abstract class Ghost extends _BaseSprite {
         else {
 
             const fromRow: number = this.row;
-            const toRow: number = Math.floor((game.PENALTY_BOX_EXIT_Y + 8) / Constants.TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
+            const toRow: number = Math.floor((game.PENALTY_BOX_EXIT_Y + 8) / TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
 
             if (fromRow === toRow && this.x === game.PENALTY_BOX_EXIT_X) {
                 this._motionState = MotionState.EYES_ENTERING_BOX;
@@ -587,7 +581,7 @@ export abstract class Ghost extends _BaseSprite {
         const moveAmount: number = GHOST_IN_BOX_SPEED; //getMoveAmount();
 
         const y: number = this.y;
-        if (y < game.PENALTY_BOX_EXIT_Y + 3 * Constants.SPRITE_SIZE / 2) {
+        if (y < game.PENALTY_BOX_EXIT_Y + 3 * SPRITE_SIZE / 2) {
             this.direction = Direction.SOUTH; // May be redundant.
             this.incY(moveAmount);
         }

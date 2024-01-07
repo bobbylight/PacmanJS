@@ -1,0 +1,1 @@
+export const SPRITE_SIZE: number = 16;

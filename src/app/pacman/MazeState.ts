@@ -1,12 +1,13 @@
-import { _BaseState } from './_BaseState';
-import { Maze } from './Maze';
-import { PacmanGame } from './PacmanGame';
-import { Pacman } from './Pacman';
-import { TitleState } from './TitleState';
-import SOUNDS from './Sounds';
-import { Ghost, MotionState } from './Ghost';
 import { InputManager, Keys } from 'gtp';
-import Constants from './Constants';
+import { Ghost } from './Ghost';
+import { Maze } from './Maze';
+import { Pacman } from './Pacman';
+import { PacmanGame } from './PacmanGame';
+import SOUNDS from './Sounds';
+import { TitleState } from './TitleState';
+import { _BaseState } from './_BaseState';
+import { MotionState } from './constants/motionState';
+import { TILE_SIZE } from './constants/tileSize';
 
 declare let game: PacmanGame;
 
@@ -82,7 +83,6 @@ export class MazeState extends _BaseState {
         // The indentation on either side of the status stuff at the bottom
         // (extra life count, possible fruits, etc.).
         const BOTTOM_INDENT: number = 12;
-        const TILE_SIZE: number = Constants.TILE_SIZE;
 
         const x: number = game.getWidth() - BOTTOM_INDENT - 2 * TILE_SIZE;
         const y: number = game.getHeight() - 2 * TILE_SIZE;

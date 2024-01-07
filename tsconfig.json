@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-
+    "baseUrl": ".",
     "allowJs": false,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
@@ -23,9 +23,12 @@
     "moduleResolution": "node",
 
     "outDir": "src/js/",
-    "sourceMap": true
+    "sourceMap": true,
+    "paths": {
+      "*": ["src/app/pacman/*"]
+    }
   },
   "include": [
-    "src/app/**/*.ts"
+    "src",
   ]
 }

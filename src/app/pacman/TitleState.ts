@@ -1,11 +1,11 @@
-import { _BaseState } from './_BaseState';
-import { PacmanGame } from './PacmanGame';
-import { Pacman } from './Pacman';
-import { Direction } from './Direction';
-import { Ghost } from './Ghost';
-import SOUNDS from './Sounds';
 import { BaseStateArgs, Game, Image, InputManager, SpriteSheet } from 'gtp';
-import Constants from './Constants';
+import { Ghost } from './Ghost';
+import { Pacman } from './Pacman';
+import { PacmanGame } from './PacmanGame';
+import SOUNDS from './Sounds';
+import { _BaseState } from './_BaseState';
+import { Direction } from './constants/direction';
+import { SPRITE_SIZE } from './constants/spriteSize';
 
 declare let game: PacmanGame;
 
@@ -43,7 +43,7 @@ export class TitleState extends _BaseState {
         pacman.setLocation(game.getWidth() / 2, 240);
         pacman.direction = Direction.EAST;
         const ghost: Ghost = game.getGhost(0);
-        ghost.setLocation(game.getWidth() / 2 - 3 * Constants.SPRITE_SIZE, 240);
+        ghost.setLocation(game.getWidth() / 2 - 3 * SPRITE_SIZE, 240);
         ghost.direction = Direction.EAST;
     }
 

@@ -1,0 +1,1 @@
+export const GHOST_IN_BOX_SPEED = 0.5;

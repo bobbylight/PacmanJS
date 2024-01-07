@@ -1,7 +1,8 @@
-import { _BaseSprite } from './_BaseSprite';
 import { Maze } from './Maze';
 import { PacmanGame } from './PacmanGame';
-import Constants from './Constants';
+import { _BaseSprite } from './_BaseSprite';
+import { SPRITE_SIZE } from './constants/spriteSize';
+
 
 declare let game: PacmanGame;
 
@@ -58,7 +59,6 @@ export class Fruit extends _BaseSprite {
      * @param ctx The rendering context.
      */
     paint(ctx: CanvasRenderingContext2D) {
-        const SPRITE_SIZE: number = Constants.SPRITE_SIZE;
         const srcX: number = this._col * SPRITE_SIZE;
         const srcY: number = this._row * SPRITE_SIZE;
         game.drawSprite(this.x, this.y, srcX, srcY);
