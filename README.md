@@ -22,6 +22,8 @@ npm run build  # Production build into dist/
 
 
 ## Electron Support
+*Note: Currently broken since we've moved off of webpack!*
+
 Besides browser support, a native version of the game can be built using
 electron.  See the `build:electron`, `dist:electron` and other related tasks below.
 
@@ -32,19 +34,11 @@ electron.  See the `build:electron`, `dist:electron` and other related tasks bel
 * `build`: Builds production artifact into `build/web/`
 * `dev`:   Runs a dev server on http://localhost:5173 and hot-deploys changes
 * `lint`: Lints the project
-* `test`: Runs unit tests
+* `test`: Runs unit tests and generates coverage report in `coverage/`
 * `build:electron`: Builds all electron artifacts into `build/electron/`
 * `start:electron`: Starts the election app built via `build:electron`
 * `pack:electron`: Generates a native application into `dist/` that wraps the app built by `build:electron`
 * `dist:electron`: Generates a native application and installer in `dist/`
-
-
-## Running Tests
-A coverage report will be generated in `coverage/index.html`:
-
-```bash
-npm run test
-```
 
 
 ## What's unimplemented/buggy
