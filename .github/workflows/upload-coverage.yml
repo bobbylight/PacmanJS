@@ -29,7 +29,7 @@ jobs:
     - name: Run tests
       run: npm run test
     - name: Codecov
-      uses: codecov/codecov-action@v2.0.1
+      uses: codecov/codecov-action@v4
       with:
         # Comma-separated list of files to upload
         files: ./coverage/lcov.info
