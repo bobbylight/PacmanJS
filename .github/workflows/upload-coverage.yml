@@ -30,6 +30,8 @@ jobs:
       run: npm run test
     - name: Codecov
       uses: codecov/codecov-action@v4
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       with:
         # Comma-separated list of files to upload
         files: ./coverage/lcov.info
