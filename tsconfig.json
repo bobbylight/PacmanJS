@@ -18,9 +18,9 @@
     "resolveJsonModule": true,
     "strictNullChecks": true,
 
-    "target": "es5",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "target": "es6",
+    "module": "es2020",
+    "moduleResolution": "bundler",
 
     "outDir": "src/js/",
     "sourceMap": true

@@ -8,12 +8,13 @@
     "url": "https://github.com/bobbylight/PacmanJS.git"
   },
   "scripts": {
-    "clean": "rimraf dist",
+    "clean": "rimraf dist coverage",
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
     "lint": "eslint --ext .ts src/",
     "test": "vitest --coverage src/",
+    "tsc": "tsc --noEmit",
     "build:electron": "npm run build:electron:main && npm run build:electron:renderer",
     "build:electron:main": "cross-env NODE_ENV=dev webpack --config webpack/webpack-electron-main.config.js",
     "build:electron:renderer": "cross-env NODE_ENV=dev webpack --config webpack/webpack-electron-renderer.config.js",
@@ -22,6 +23,8 @@
     "dist:electron": "electron-builder"
   },
   "devDependencies": {
+    "@types/electron": "1.6.12",
+    "@types/node": "22.8.1",
     "@typescript-eslint/eslint-plugin": "8.11.0",
     "@typescript-eslint/parser": "8.11.0",
     "@vitest/coverage-v8": "2.1.3",
