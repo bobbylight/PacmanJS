@@ -31,8 +31,9 @@ electron.  See the `build:electron`, `dist:electron` and other related tasks bel
 ## npm scripts
 
 * `clean`: Deletes prior build artifacts
-* `build`: Builds production artifact into `build/web/`
 * `dev`:   Runs a dev server on http://localhost:5173 and hot-deploys changes
+* `build`: Builds production artifact into `dist/`
+* `serve`: Runs the built app on http://localhost:4173
 * `lint`: Lints the project
 * `test`: Runs unit tests and generates coverage report in `coverage/`
 * `build:electron`: Builds all electron artifacts into `build/electron/`
