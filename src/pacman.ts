@@ -17,5 +17,5 @@ const CANVAS_HEIGHT: number = 288; //576;
     gameWindow.game.setState(new LoadingState());
     gameWindow.game.start();
 };
-(window as any).init('parent', '/');
+(window as any).init('parent');
 
