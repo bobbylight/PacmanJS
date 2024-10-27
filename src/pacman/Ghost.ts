@@ -199,7 +199,7 @@ export abstract class Ghost extends _BaseSprite {
         return this.exitDelaySeconds * 1000;
     }
 
-    getFrameCount(): number {
+    override getFrameCount(): number {
         return 2;
     }
 
@@ -321,7 +321,7 @@ export abstract class Ghost extends _BaseSprite {
      * Subclasses should be sure to call the super's implementation when
      * overriding.
      */
-    reset() {
+    override reset() {
         super.reset();
         this.scatterCount = 0;
     }

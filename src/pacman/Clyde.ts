@@ -18,7 +18,7 @@ export class Clyde extends Ghost {
         super(game, 3 * Constants.SPRITE_SIZE, 14);
     }
 
-    reset() {
+    override reset() {
         super.reset();
         this.direction = Direction.SOUTH;
         this.setLocation(16 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2 - 4,

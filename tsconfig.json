@@ -1,14 +1,13 @@
 {
   "compilerOptions": {
 
-    "allowJs": false,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-    "alwaysStrict": true,
     "declaration": false,
     "forceConsistentCasingInFileNames": true,
     "newLine": "lf",
     "noImplicitAny": true,
+    "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noUnusedLocals": true,
@@ -16,7 +15,8 @@
     "preserveConstEnums": true,
     "removeComments": false,
     "resolveJsonModule": true,
-    "strictNullChecks": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
 
     "target": "es6",
     "module": "es2020",

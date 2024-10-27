@@ -78,7 +78,7 @@ export class Pacman extends _BaseSprite {
         game.drawSprite(x, y, srcX, srcY);
     }
 
-    reset() {
+    override reset() {
 
         const TILE_SIZE: number = 8;
 
@@ -88,7 +88,7 @@ export class Pacman extends _BaseSprite {
         this._frame = 0;
     }
 
-    setLocation(x: number, y: number) {
+    override setLocation(x: number, y: number) {
         super.setLocation(x, y);
     }
 

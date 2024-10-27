@@ -20,7 +20,7 @@ export class Pinky extends Ghost {
         super(game, 2 * Constants.SPRITE_SIZE, 2);
     }
 
-    reset() {
+    override reset() {
         super.reset();
         this.direction = Direction.NORTH;
         this.setLocation(14 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2 - 4,

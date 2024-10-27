@@ -37,7 +37,7 @@ export class MazeState extends _BaseState {
         return this.firstTimeThrough ? 4500 : 2000;
     }
 
-    enter() {
+    override enter() {
 
         game.pacman.reset();
         game.resetGhosts();
@@ -116,7 +116,7 @@ export class MazeState extends _BaseState {
         }
     }
 
-    render(ctx: CanvasRenderingContext2D) {
+    override render(ctx: CanvasRenderingContext2D) {
 
         super.render(ctx);
         this.maze.render(ctx);
@@ -248,7 +248,7 @@ export class MazeState extends _BaseState {
         }
     }
 
-    update(delta: number) {
+    override update(delta: number) {
         super.update(delta);
 
         // playTime may reset in handleInput, so we fetch it again afterward

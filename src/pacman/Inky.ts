@@ -20,7 +20,7 @@ export class Inky extends Ghost {
         super(game, 1 * Constants.SPRITE_SIZE, 8);
     }
 
-    reset() {
+    override reset() {
         super.reset();
         this.direction = Direction.SOUTH;
         this.setLocation(12 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2 - 4,

@@ -18,7 +18,7 @@ export class Blinky extends Ghost {
         super(game, 0 * Constants.SPRITE_SIZE, 0); // Not initially in the penalty box
     }
 
-    reset() {
+    override reset() {
         super.reset();
         this.direction = Direction.WEST;
         this.setLocation(this.game.PENALTY_BOX_EXIT_X, this.game.PENALTY_BOX_EXIT_Y);

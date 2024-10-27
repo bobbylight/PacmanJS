@@ -46,7 +46,7 @@ export class PacmanGame extends Game {
      * How we're stretching the game's canvas to fit the window.  This field is only used when the
      * game is being played in desktop mode (e.g. in electron).
      */
-    private stretchMode: StretchMode;
+    private stretchMode: StretchMode = StretchMode.STRETCH_PROPORTIONAL;
 
     /**
      * Whether the player has earned an extra life (from achieving a
@@ -520,7 +520,7 @@ export class PacmanGame extends Game {
                     this.stretchMode = StretchMode.STRETCH_NONE;
                     break;
             }
-            this.setStatusMessage('Stretch mode: ' + StretchMode[this.stretchMode]);
+            this.setStatusMessage('Stretch mode: ' + this.stretchMode);
             CanvasResizer.resize(this.canvas, this.stretchMode);
         }
     }

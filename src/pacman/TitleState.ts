@@ -27,7 +27,7 @@ export class TitleState extends _BaseState {
         this.handleStart = this.handleStart.bind(this);
     }
 
-    enter() {
+    override enter() {
 
         super.enter(game);
 
@@ -47,7 +47,7 @@ export class TitleState extends _BaseState {
         ghost.direction = Direction.EAST;
     }
 
-    leaving(game: Game) {
+    override leaving(game: Game) {
         game.canvas.removeEventListener('touchstart', this.handleStart, false);
     }
 
@@ -56,7 +56,7 @@ export class TitleState extends _BaseState {
         this.startGame();
     }
 
-    render(ctx: CanvasRenderingContext2D) {
+    override render(ctx: CanvasRenderingContext2D) {
 
         const SCREEN_WIDTH: number = game.getWidth(),
             SCREEN_HEIGHT: number = game.getHeight(),
@@ -160,7 +160,7 @@ export class TitleState extends _BaseState {
         game.startGame(this.choice);
     }
 
-    update(delta: number) {
+    override update(delta: number) {
 
         this.handleDefaultKeys();
 
