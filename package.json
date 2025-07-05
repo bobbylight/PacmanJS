@@ -14,16 +14,9 @@
     "serve": "vite preview",
     "lint": "eslint --ext .ts src/",
     "test": "vitest --coverage src/",
-    "tsc": "tsc --noEmit",
-    "build:electron": "npm run build:electron:main && npm run build:electron:renderer",
-    "build:electron:main": "cross-env NODE_ENV=dev webpack --config webpack/webpack-electron-main.config.js",
-    "build:electron:renderer": "cross-env NODE_ENV=dev webpack --config webpack/webpack-electron-renderer.config.js",
-    "start:electron": "electron build/electron/electron-bundle.js -debug",
-    "pack:electron": "electron-builder --dir",
-    "dist:electron": "electron-builder"
+    "tsc": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/electron": "1.6.12",
     "@types/node": "24.0.10",
     "@typescript-eslint/eslint-plugin": "8.35.1",
     "@typescript-eslint/parser": "8.35.1",
@@ -38,16 +31,5 @@
   },
   "dependencies": {
     "gtp": "3.0.1"
-  },
-  "build": {
-    "appId": "org.fife.pacmanjs",
-    "files": "./build/electron/**/*",
-    "directories": {
-      "buildResources": "./build/electron"
-    },
-    "mac": {
-      "category": "my.app.category.type"
-    }
-  },
-  "main": "build/electron/electron-bundle.js"
+  }
 }
