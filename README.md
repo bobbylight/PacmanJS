@@ -22,7 +22,7 @@ npm run build  # Production build into dist/
 
 
 ## Electron Support
-*Note: Currently broken since we've moved off of webpack!*
+*Note: This was removed and needs to be re-added, see https://github.com/bobbylight/PacmanJS/issues/17.*
 
 Besides browser support, a native version of the game can be built using
 electron.  See the `build:electron`, `dist:electron` and other related tasks below.
@@ -36,16 +36,11 @@ electron.  See the `build:electron`, `dist:electron` and other related tasks bel
 * `serve`: Runs the built app on http://localhost:4173
 * `lint`: Lints the project
 * `test`: Runs unit tests and generates coverage report in `coverage/`
-* `build:electron`: Builds all electron artifacts into `build/electron/`
-* `start:electron`: Starts the election app built via `build:electron`
-* `pack:electron`: Generates a native application into `dist/` that wraps the app built by `build:electron`
-* `dist:electron`: Generates a native application and installer in `dist/`
 
 
 ## What's unimplemented/buggy
 Relatively in the order in which I want to fix things:
 
-* The electron app doesn't resize the game's canvas to fit the window as it is resized
 * Sound effects don't always stop/restart properly when the game is paused
 * Intermissions are not yet implemented
 * Ghost AI is approximate to, but not exactly, the actual algorithms

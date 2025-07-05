@@ -11,10 +11,6 @@ import { MazeState } from './MazeState';
 import { Maze } from './Maze';
 import Constants from './Constants';
 
-interface ElectronEnhancedWindow {
-    process?: any;
-}
-
 /**
  * The default high score displayed in the game.
  */
@@ -374,8 +370,7 @@ export class PacmanGame extends Game {
     }
 
     private _isRunningInElectron(): boolean {
-        const eWindow: ElectronEnhancedWindow = window as any;
-        return eWindow && eWindow.process && eWindow.process.type;
+        return false;
     }
 
     loadNextLevel() {
