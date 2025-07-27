@@ -3,10 +3,8 @@ import { Maze } from './Maze';
 import { PacmanGame } from './PacmanGame';
 import Constants from './Constants';
 
-declare let game: PacmanGame;
-
 export class Fruit extends _BaseSprite {
-
+    private readonly game: PacmanGame;
     private readonly _row: number;
     private readonly _col: number;
     private readonly _pointsIndex: number;
@@ -17,9 +15,10 @@ export class Fruit extends _BaseSprite {
     private static readonly ROWS: number[] = [4, 4, 5, 5, 2, 6, 6, 3];
     private static readonly PTS_INDEX: number[] = [0, 2, 4, 5, 10, 7, 9, 11];
 
-    constructor() {
+    constructor(game: PacmanGame) {
         super(1);
 
+        this.game = game;
         this.setLocation(game.PENALTY_BOX_EXIT_X, 140);
         let level: number = game.level;
         if (level > 7) { // Level 8+ => any fruit is possible
@@ -61,7 +60,7 @@ export class Fruit extends _BaseSprite {
         const SPRITE_SIZE: number = Constants.SPRITE_SIZE;
         const srcX: number = this._col * SPRITE_SIZE;
         const srcY: number = this._row * SPRITE_SIZE;
-        game.drawSprite(this.x, this.y, srcX, srcY);
+        this.game.drawSprite(this.x, this.y, srcX, srcY);
     }
 
     protected updatePositionImpl(maze: Maze) {

@@ -5,8 +5,6 @@ import { Maze } from './Maze';
 import { Pacman } from './Pacman';
 import Constants from './Constants';
 
-declare let game: PacmanGame;
-
 /**
  * Pinky, the pink ghost.  If PacMan is "visible" to Pinky (i.e., in the
  * same row or column), he'll chase him
@@ -37,7 +35,7 @@ export class Pinky extends Ghost {
 
         const moveAmount: number = this.moveAmount;
 
-        const pacman: Pacman = game.pacman;
+        const pacman: Pacman = this.game.pacman;
         const pacRow: number = pacman.row;
         const pacCol: number = pacman.column;
         const row: number = this.row;
@@ -55,7 +53,7 @@ export class Pinky extends Ghost {
                     // We need to check whether Pinky can go right here or not.
                     // In the case where pacCol==col, if God Mode is enabled,
                     // PacMan won't die just because Pinky is on him.  And so,
-                    // in this case, if PacMan is in a "corner," Pinky  may not
+                    // in this case, if PacMan is in a "corner," Pinky may not
                     // be able to keep traveling to the right.  In normal play
                     // though, this check wouldn't be necessary.
                     if (!this.goRightIfPossible(maze, moveAmount)) {
@@ -97,7 +95,7 @@ export class Pinky extends Ghost {
         }
 
         // Switch over to scatter mode if it's time to do so.
-        if (game.playTime >= this.startScatteringTime) {
+        if (this.game.playTime >= this.startScatteringTime) {
             this.motionState = MotionState.SCATTERING;
         }
 

@@ -101,7 +101,7 @@ export class PacmanGame extends Game {
 
     addFruit() {
         if (!this.fruit) { // Should always be true.
-            this.fruit = new Fruit(); // Made appropriate for current level.
+            this.fruit = new Fruit(this); // Made appropriate for current level.
             this.fruitScoreIndex = -1;
             this.fruitScoreEndTime = -1;
         }
