@@ -4,8 +4,6 @@ import { Direction } from './Direction';
 import { Maze } from './Maze';
 import Constants from './Constants';
 
-declare let game: PacmanGame;
-
 /**
  * Clyde, the orange ghost.
  */
@@ -47,7 +45,7 @@ export class Clyde extends Ghost {
         }
 
         // Switch over to scatter mode if it's time to do so.
-        if (game.playTime >= this.startScatteringTime) {
+        if (this.game.playTime >= this.startScatteringTime) {
             this.motionState = MotionState.SCATTERING;
         }
 

@@ -490,7 +490,7 @@ export abstract class Ghost extends _BaseSprite {
 
         // Use game.playTime to ensure proper exit delay, even if game is
         // paused, etc.
-        if (game.playTime >= this.exitBlueTime) {
+        if (this.game.playTime >= this.exitBlueTime) {
             this._motionState = this.previousState;
         }
 
@@ -661,7 +661,7 @@ export abstract class Ghost extends _BaseSprite {
 
         // Use game.playTime to ensure proper exit delay, even if game is
         // paused, etc.
-        if (game.playTime >= this.getFirstExitDelayMillis()) {
+        if (this.game.playTime >= this.getFirstExitDelayMillis()) {
             this._motionState = MotionState.LEAVING_BOX;
         }
 
@@ -752,7 +752,7 @@ export abstract class Ghost extends _BaseSprite {
             this.continueInCurrentDirection(moveAmount);
         }
 
-        if (game.playTime >= this.exitScatteringTime) {
+        if (this.game.playTime >= this.exitScatteringTime) {
             this._motionState = MotionState.CHASING_PACMAN;
         }
     }
