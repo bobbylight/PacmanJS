@@ -285,7 +285,7 @@ export class Maze {
      * Returns whether a sprite can move onto the specified tile.
      * @param row The row to check.
      * @param col The column to check.
-     * @return Whether a sprite can walk ono the specified tile.
+     * @return Whether a sprite can walk onto the specified tile.
      */
     isWalkable(row: number, col: number): boolean {
         const tile: number = this.getTileAt(row, col);
