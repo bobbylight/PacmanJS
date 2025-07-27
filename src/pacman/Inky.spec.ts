@@ -13,8 +13,12 @@ describe('Inky', () => {
     const mockGame: any /* PacmanGame */ = {
         checkLoopedSound: () => {},
         getGhost: () => blinky,
-        get PENALTY_BOX_EXIT_X() { return 100 },
-        get PENALTY_BOX_EXIT_Y() { return 100 },
+        get PENALTY_BOX_EXIT_X() {
+            return 100
+        },
+        get PENALTY_BOX_EXIT_Y() {
+            return 100
+        },
         pacman,
     };
 

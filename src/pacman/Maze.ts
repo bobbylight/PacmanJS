@@ -117,7 +117,7 @@ export class Maze {
     }
 
     getPathBreadthFirst(fromRow: number, fromCol: number, toRow: number,
-                        toCol: number): MazeNode | null {
+        toCol: number): MazeNode | null {
 
         this.open.forEach((node: MazeNode) => {
             this.data[node.row][node.col] &= 0xff;

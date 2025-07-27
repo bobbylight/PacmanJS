@@ -6,7 +6,9 @@ describe('Fruit', () => {
     const mockGame: any /* PacmanGame */ = {
         checkLoopedSound: () => {},
         drawSprite: vi.fn(),
-        get PENALTY_BOX_EXIT_X() { return 100 },
+        get PENALTY_BOX_EXIT_X() {
+            return 100
+        },
         level: 0,
         randomInt: () => 0,
     };
