@@ -300,7 +300,7 @@ export abstract class Ghost extends _BaseSprite {
             case MotionState.CHASING_PACMAN:
             case MotionState.SCATTERING:
             case MotionState.BLUE:
-                this._motionState = MotionState.BLUE;
+                this.motionState = MotionState.BLUE;
                 return true;
             default:
                 // Do nothing; in other states, we don't turn blue.
@@ -392,7 +392,7 @@ export abstract class Ghost extends _BaseSprite {
                     }
                     break;
                 default:
-                    throw  new Error('Unexpected state: ' + this._motionState);
+                    throw new Error('Unexpected state: ' + this._motionState);
             }
             this._motionState = motionState;
         }

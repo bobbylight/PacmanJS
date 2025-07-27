@@ -78,7 +78,6 @@ export class Blinky extends Ghost {
         if (this.game.playTime >= this.startScatteringTime) {
             this.motionState = MotionState.SCATTERING;
         }
-
     }
 
 }
