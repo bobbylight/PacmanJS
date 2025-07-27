@@ -259,13 +259,13 @@ export abstract class Ghost extends _BaseSprite {
         const SPRITE_SIZE: number = Constants.SPRITE_SIZE;
         let srcX: number,
             srcY: number;
+        const playTime: number = game.playTime;
 
         switch (this._motionState) {
 
             case MotionState.BLUE:
                 srcX = (10 + this.getFrame()) * SPRITE_SIZE;
                 srcY = 3 * SPRITE_SIZE;
-                const playTime: number = game.playTime;
                 if ((this.exitBlueTime - playTime) <= 1000) { // 1 sec. remaining
                     if (((playTime / 250) & 1) !== 0) {
                         srcY += SPRITE_SIZE; // Flash 4 times in last second
@@ -368,6 +368,8 @@ export abstract class Ghost extends _BaseSprite {
             const blueTime: number = this.getBlueTimeForLevel(game.level);
             const playTime: number = game.playTime;
             this.exitBlueTime = playTime + blueTime;
+            // Keep previous "previousState".
+            const prevBlueTimeRemaining: number = this.exitBlueTime - playTime;
             // Remember previous state and modify its "end time" to
             // include the blue time.
             switch (this._motionState) {
@@ -380,8 +382,6 @@ export abstract class Ghost extends _BaseSprite {
                     this.exitScatteringTime += blueTime;
                     break;
                 case MotionState.BLUE:
-                    // Keep previous "previousState".
-                    const prevBlueTimeRemaining: number = this.exitBlueTime - playTime;
                     switch (this.previousState) {
                         case MotionState.CHASING_PACMAN:
                             this.startScatteringTime += prevBlueTimeRemaining + blueTime;

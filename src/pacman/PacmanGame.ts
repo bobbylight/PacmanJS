@@ -109,9 +109,9 @@ export class PacmanGame extends Game {
 
     checkForCollisions(): Ghost | null {
 
-        for (let i: number = 0; i < this.ghosts.length; i++) {
-            if (this.pacman.intersects(this.ghosts[i])) {
-                return this.ghosts[i];
+        for (const ghost of this.ghosts) {
+            if (this.pacman.intersects(ghost)) {
+                return ghost;
             }
         }
 
@@ -138,12 +138,12 @@ export class PacmanGame extends Game {
 
         let blue: boolean = false;
 
-        for (let i: number = 0; i < this.ghosts.length; i++) {
-            if (this.ghosts[i].isEyes()) {
+        for (const ghost of this.ghosts) {
+            if (ghost.isEyes()) {
                 this.setLoopedSound(SOUNDS.EYES_RUNNING);
                 return; // "eye" noise trumps blue noise.
             }
-            else if (this.ghosts[i].isBlue()) {
+            else if (ghost.isBlue()) {
                 blue = true;
             }
         }
@@ -235,7 +235,7 @@ export class PacmanGame extends Game {
     }
 
     drawString(x: number, y: number, text: string | number,
-               ctx: CanvasRenderingContext2D = this.canvas.getContext('2d')!) {
+        ctx: CanvasRenderingContext2D = this.canvas.getContext('2d')!) {
 
         const str: string = text.toString(); // Allow us to pass in stuff like numerics
 
