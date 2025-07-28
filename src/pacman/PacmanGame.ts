@@ -91,7 +91,7 @@ export class PacmanGame extends Game {
         this.chompSound = 0;
         this._ghostUpdateStrategy = GhostUpdateStrategy.UPDATE_ALL;
         this.score = 0; // For title screen
-        this.desktopGame = args.desktopGame ? args.desktopGame : this._isRunningInElectron();
+        this.desktopGame = args?.desktopGame ? args.desktopGame : this._isRunningInElectron();
 
         this.extraPointsArray = [100, 200, 300, 400, 500, 700, 800,
             1000, 1600, 2000, 3000, 5000];
@@ -99,12 +99,13 @@ export class PacmanGame extends Game {
         this._possiblyRegisterDesktopModeListeners();
     }
 
-    addFruit() {
+    addFruit(): Fruit {
         if (!this.fruit) { // Should always be true.
             this.fruit = new Fruit(this); // Made appropriate for current level.
             this.fruitScoreIndex = -1;
             this.fruitScoreEndTime = -1;
         }
+        return this.fruit;
     }
 
     checkForCollisions(): Ghost | null {
@@ -285,6 +286,14 @@ export class PacmanGame extends Game {
 
     getGhost(index: number): Ghost {
         return this.ghosts[index];
+    }
+
+    getHighScore(): number {
+        return this.highScore;
+    }
+
+    getScore(): number {
+        return this.score;
     }
 
     get godMode(): boolean {

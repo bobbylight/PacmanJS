@@ -259,7 +259,7 @@ export abstract class Ghost extends _BaseSprite {
         const SPRITE_SIZE: number = Constants.SPRITE_SIZE;
         let srcX: number,
             srcY: number;
-        const playTime: number = game.playTime;
+        const playTime: number = this.game.playTime;
 
         switch (this._motionState) {
 
@@ -271,21 +271,21 @@ export abstract class Ghost extends _BaseSprite {
                         srcY += SPRITE_SIZE; // Flash 4 times in last second
                     }
                 }
-                game.drawSprite(destX, destY, srcX, srcY);
+                this.game.drawSprite(destX, destY, srcX, srcY);
                 break;
 
             case MotionState.EYES:
             case MotionState.EYES_ENTERING_BOX:
                 srcX = this.direction * SPRITE_SIZE;
                 srcY = 4 * SPRITE_SIZE;
-                game.drawSprite(destX, destY, srcX, srcY);
+                this.game.drawSprite(destX, destY, srcX, srcY);
                 break;
 
             default:
                 srcX = this.direction * SPRITE_SIZE * this.getFrameCount() +
                     this.getFrame() * SPRITE_SIZE;
                 srcY = this.spriteSheetY;
-                game.drawSprite(destX, destY, srcX, srcY);
+                this.game.drawSprite(destX, destY, srcX, srcY);
                 break;
 
         }
