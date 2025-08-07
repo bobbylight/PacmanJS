@@ -37,12 +37,13 @@ export class MazeState extends _BaseState {
         return this.firstTimeThrough ? 4500 : 2000;
     }
 
-    override enter() {
+    override enter(game: PacmanGame) {
 
+        this.game = game;
         game.pacman.reset();
         game.resetGhosts();
 
-        this.maze = new Maze(this._mazeFile);
+        this.maze = new Maze(game, this._mazeFile);
         this.firstTimeThrough = true;
         this.updateScoreIndex = -1;
 
@@ -64,6 +65,7 @@ export class MazeState extends _BaseState {
         // (extra life count, possible fruits, etc.).
         const BOTTOM_INDENT: number = 24;
         const TILE_SIZE: number = 8;
+        const game = this.game;
 
         const lives: number = game.lives;
         if (lives > 0) {
@@ -83,6 +85,7 @@ export class MazeState extends _BaseState {
         // (extra life count, possible fruits, etc.).
         const BOTTOM_INDENT: number = 12;
         const TILE_SIZE: number = Constants.TILE_SIZE;
+        const game = this.game;
 
         const x: number = game.getWidth() - BOTTOM_INDENT - 2 * TILE_SIZE;
         const y: number = game.getHeight() - 2 * TILE_SIZE;
@@ -120,8 +123,8 @@ export class MazeState extends _BaseState {
 
         super.render(ctx);
         this.maze.render(ctx);
+        const game = this.game;
 
-        // "window.pacman" because of hoisting of pacman let below
         const TILE_SIZE: number = 8;
         const mazeY: number = game.getHeight() - 2 * TILE_SIZE -
             Maze.TILE_COUNT_VERTICAL * TILE_SIZE;
@@ -180,20 +183,21 @@ export class MazeState extends _BaseState {
 
     reset() {
         this.maze.reset();
-        game.resetPlayTime();
-        game.pacman.reset();
-        game.resetGhosts(); // Do AFTER resetting playtime!
+        this.game.resetPlayTime();
+        this.game.pacman.reset();
+        this.game.resetGhosts(); // Do AFTER resetting playtime!
         this.substate = 'READY';
         this.substateStartTime = 0; // Play time was just reset
         this._lastSpriteFrameTime = 0;
 
         // Prevents the user's "Enter" press to start the game from being
         // picked up by our handleInput().
-        this.lastMazeScreenKeypressTime = game.playTime + MazeState.INPUT_REPEAT_MILLIS;
+        this.lastMazeScreenKeypressTime = this.game.playTime + MazeState.INPUT_REPEAT_MILLIS;
     }
 
     private handleInput(delta: number, time: number) {
 
+        const game = this.game;
         this.handleDefaultKeys();
         const input: InputManager = game.inputManager;
 
@@ -250,6 +254,7 @@ export class MazeState extends _BaseState {
 
     override update(delta: number) {
         super.update(delta);
+        const game = this.game;
 
         // playTime may reset in handleInput, so we fetch it again afterward
         this.handleInput(delta, game.playTime);
@@ -316,6 +321,7 @@ export class MazeState extends _BaseState {
         this._updateSpriteFrames();
 
         // Update Pacman's, ghosts', and possibly fruit's positions
+        const game = this.game;
         game.updateSpritePositions(this.maze, time);
 
         // If Pacman hit a ghost, decide what to do

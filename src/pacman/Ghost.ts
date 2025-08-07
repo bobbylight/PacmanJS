@@ -170,7 +170,7 @@ export abstract class Ghost extends _BaseSprite {
      * @param level The current game level.
      * @return The length of time a ghost should stay blue.
      */
-    private getBlueTimeForLevel(level: number): number {
+    getBlueTimeForLevel(level: number): number {
         switch (level) {
             case 0:
             case 1:
@@ -209,7 +209,7 @@ export abstract class Ghost extends _BaseSprite {
 
     /**
      * Returns the number of milliseconds that should pass between the times
-     * this ghost moves.  This value is dependant on the ghost's current
+     * this ghost moves.  This value is dependent on the ghost's current
      * state.
      *
      * @return The update delay, in milliseconds.
@@ -259,7 +259,7 @@ export abstract class Ghost extends _BaseSprite {
         const SPRITE_SIZE: number = Constants.SPRITE_SIZE;
         let srcX: number,
             srcY: number;
-        const playTime: number = game.playTime;
+        const playTime: number = this.game.playTime;
 
         switch (this._motionState) {
 
@@ -271,21 +271,21 @@ export abstract class Ghost extends _BaseSprite {
                         srcY += SPRITE_SIZE; // Flash 4 times in last second
                     }
                 }
-                game.drawSprite(destX, destY, srcX, srcY);
+                this.game.drawSprite(destX, destY, srcX, srcY);
                 break;
 
             case MotionState.EYES:
             case MotionState.EYES_ENTERING_BOX:
                 srcX = this.direction * SPRITE_SIZE;
                 srcY = 4 * SPRITE_SIZE;
-                game.drawSprite(destX, destY, srcX, srcY);
+                this.game.drawSprite(destX, destY, srcX, srcY);
                 break;
 
             default:
                 srcX = this.direction * SPRITE_SIZE * this.getFrameCount() +
                     this.getFrame() * SPRITE_SIZE;
                 srcY = this.spriteSheetY;
-                game.drawSprite(destX, destY, srcX, srcY);
+                this.game.drawSprite(destX, destY, srcX, srcY);
                 break;
 
         }
@@ -425,7 +425,7 @@ export abstract class Ghost extends _BaseSprite {
         // If we're at an intersection and can change direction...
         if (this.atIntersection(maze)) {
 
-            const pacman: Pacman = game.pacman;
+            const pacman: Pacman = this.game.pacman;
             const pacRow: number = pacman.row;
             const pacCol: number = pacman.column;
             const row: number = this.row;
@@ -525,8 +525,8 @@ export abstract class Ghost extends _BaseSprite {
 
             const fromRow: number = this.row;
             const fromCol: number = this.column;
-            const toRow: number = Math.floor((game.PENALTY_BOX_EXIT_Y + 8) / Constants.TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
-            let toCol: number = Math.floor((game.PENALTY_BOX_EXIT_X) / Constants.TILE_SIZE); //xToColumn(game.PENALTY_BOX_EXIT_X);
+            const toRow: number = Math.floor((this.game.PENALTY_BOX_EXIT_Y + 8) / Constants.TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
+            let toCol: number = Math.floor((this.game.PENALTY_BOX_EXIT_X) / Constants.TILE_SIZE); //xToColumn(game.PENALTY_BOX_EXIT_X);
             if (fromCol <= toCol) {
                 toCol++; // Approaching from the left.
             }
@@ -563,9 +563,9 @@ export abstract class Ghost extends _BaseSprite {
         else {
 
             const fromRow: number = this.row;
-            const toRow: number = Math.floor((game.PENALTY_BOX_EXIT_Y + 8) / Constants.TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
+            const toRow: number = Math.floor((this.game.PENALTY_BOX_EXIT_Y + 8) / Constants.TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
 
-            if (fromRow === toRow && this.x === game.PENALTY_BOX_EXIT_X) {
+            if (fromRow === toRow && this.x === this.game.PENALTY_BOX_EXIT_X) {
                 this._motionState = MotionState.EYES_ENTERING_BOX;
             }
             else {
@@ -587,7 +587,7 @@ export abstract class Ghost extends _BaseSprite {
         const moveAmount: number = GHOST_IN_BOX_SPEED; //getMoveAmount();
 
         const y: number = this.y;
-        if (y < game.PENALTY_BOX_EXIT_Y + 3 * Constants.SPRITE_SIZE / 2) {
+        if (y < this.game.PENALTY_BOX_EXIT_Y + 3 * Constants.SPRITE_SIZE / 2) {
             this.direction = Direction.SOUTH; // May be redundant.
             this.incY(moveAmount);
         }
@@ -675,6 +675,7 @@ export abstract class Ghost extends _BaseSprite {
     private updatePositionLeavingBox(maze: Maze) {
 
         const moveAmount: number = GHOST_IN_BOX_SPEED; //getMoveAmount();
+        const game = this.game;
 
         const x: number = this.x;
         if (x < game.PENALTY_BOX_EXIT_X) {

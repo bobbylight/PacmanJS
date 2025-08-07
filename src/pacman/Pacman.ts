@@ -10,9 +10,11 @@ declare let game: PacmanGame;
 export class Pacman extends _BaseSprite {
 
     _dyingFrame: number;
+    private readonly game: PacmanGame;
 
-    constructor() {
+    constructor(game: PacmanGame) {
         super(3);
+        this.game = game;
         this._dyingFrame = 0;
     }
 
@@ -22,7 +24,7 @@ export class Pacman extends _BaseSprite {
 
     handleInput(maze: Maze) {
 
-        const input: InputManager = game.inputManager;
+        const input: InputManager = this.game.inputManager;
 
         if (input.left()) {
             if (this.getCanMoveLeft(maze)) {
@@ -75,7 +77,7 @@ export class Pacman extends _BaseSprite {
             srcY = 80;
         }
 
-        game.drawSprite(x, y, srcX, srcY);
+        this.game.drawSprite(x, y, srcX, srcY);
     }
 
     override reset() {
@@ -115,6 +117,6 @@ export class Pacman extends _BaseSprite {
                 break;
         }
 
-        game.increaseScore(maze.checkForDot(this.row, this.column));
+        this.game.increaseScore(maze.checkForDot(this.row, this.column));
     }
 }
