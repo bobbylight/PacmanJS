@@ -4,7 +4,7 @@ import { Pacman } from './Pacman';
 import { Direction } from './Direction';
 import { Ghost } from './Ghost';
 import SOUNDS from './Sounds';
-import { BaseStateArgs, Game, Image, InputManager, SpriteSheet } from 'gtp';
+import { Game, Image, InputManager, SpriteSheet } from 'gtp';
 import Constants from './Constants';
 
 declare let game: PacmanGame;
@@ -17,28 +17,28 @@ export class TitleState extends _BaseState {
     /**
      * State that renders the title screen.
      */
-    constructor(args?: PacmanGame | BaseStateArgs<PacmanGame>) {
+    constructor(args: PacmanGame) {
 
         super(args);
         // Initialize our sprites not just in enter() so they are positioned
         // correctly while FadeOutInState is running
-        this._initSprites();
+        this._initSprites(args);
 
         this.handleStart = this.handleStart.bind(this);
     }
 
-    override enter() {
-
+    override enter(game: PacmanGame) {
+        this.game = game;
         super.enter(game);
 
         game.canvas.addEventListener('touchstart', this.handleStart, { capture: false, passive: true });
         this.choice = 0;
         this.lastKeypressTime = game.playTime;
 
-        this._initSprites();
+        this._initSprites(game);
     }
 
-    private _initSprites() {
+    private _initSprites(game: PacmanGame) {
         const pacman: Pacman = game.pacman;
         pacman.setLocation(game.getWidth() / 2, 240);
         pacman.direction = Direction.EAST;
@@ -57,7 +57,7 @@ export class TitleState extends _BaseState {
     }
 
     override render(ctx: CanvasRenderingContext2D) {
-
+        const game = this.game;
         const SCREEN_WIDTH: number = game.getWidth(),
             SCREEN_HEIGHT: number = game.getHeight(),
             charWidth: number = 9;
@@ -88,17 +88,17 @@ export class TitleState extends _BaseState {
     }
 
     private stringWidth(str: string): number {
-        const font: SpriteSheet = game.assets.get('font');
+        const font: SpriteSheet = this.game.assets.get('font');
         return font.cellW * str.length;
     }
 
     private renderNoSoundMessage() {
 
-        const w: number = game.getWidth();
+        const w: number = this.game.getWidth();
 
         let text: string = 'SOUND IS DISABLED AS';
         let x: number = (w - this.stringWidth(text)) / 2;
-        let y: number = game.getHeight() - 20 - 9 * 3;
+        let y: number = this.game.getHeight() - 20 - 9 * 3;
         this.game.drawString(x, y, text);
         text = 'YOUR BROWSER DOES NOT';
         x = (w - this.stringWidth(text)) / 2;
@@ -112,15 +112,14 @@ export class TitleState extends _BaseState {
 
     // TODO: Move this stuff into an image that gets rendered each frame?
     private renderStaticStuff(ctx: CanvasRenderingContext2D) {
-
-        const game: Game = this.game;
+        const game = this.game;
         game.clearScreen('rgb(0,0,0)');
         const SCREEN_WIDTH: number = game.getWidth();
         const charWidth: number = 9;
 
         // Render the "scores" stuff at the top.
-        (game as PacmanGame).drawScores(ctx);
-        (game as PacmanGame).drawScoresHeaders(ctx);
+        game.drawScores(ctx);
+        game.drawScoresHeaders(ctx);
 
         // Title image
         const titleImage: Image = game.assets.get('title');
@@ -157,11 +156,11 @@ export class TitleState extends _BaseState {
     }
 
     private startGame() {
-        game.startGame(this.choice);
+        this.game.startGame(this.choice);
     }
 
     override update(delta: number) {
-
+        const game = this.game;
         this.handleDefaultKeys();
 
         const playTime: number = game.playTime;

@@ -2,7 +2,7 @@ import { _BaseState } from './_BaseState';
 import SOUNDS from './Sounds';
 import { PacmanGame } from './PacmanGame';
 import { TitleState } from './TitleState';
-import { BaseStateArgs, FadeOutInState, Game, Utils } from 'gtp';
+import { BaseStateArgs, FadeOutInState, Utils } from 'gtp';
 import { fixLevelDatas } from './Util';
 
 export class LoadingState extends _BaseState {
@@ -24,7 +24,7 @@ export class LoadingState extends _BaseState {
         if (!this.assetsLoaded) {
 
             this.assetsLoaded = true;
-            const game: Game = this.game;
+            const game = this.game;
 
             // Load assets used by this state first
             game.assets.addImage('loading', 'res/loadingMessage.png');
@@ -57,7 +57,7 @@ export class LoadingState extends _BaseState {
                         this.game.startGame(0);
                     }
                     else {
-                        game.setState(new FadeOutInState(this, new TitleState()));
+                        game.setState(new FadeOutInState(this, new TitleState(game)));
                     }
                 });
 

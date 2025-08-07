@@ -26,7 +26,8 @@ export class _BaseState extends State<PacmanGame> {
         // We use a timestamp instead of game.playTime since game.playTime gets
         // reset, which messes us up
         const time: number = Utils.timestamp(); // this.game.playTime;
-        const im: InputManager = this.game.inputManager;
+        const game = this.game;
+        const im: InputManager = game.inputManager;
 
         if (time > (this._lastConfigKeypressTime + _BaseState.INPUT_REPEAT_MILLIS)) {
 
@@ -84,12 +85,12 @@ export class _BaseState extends State<PacmanGame> {
     }
 
     protected _updateSpriteFrames() {
-        const time: number = game.playTime;
+        const time: number = this.game.playTime;
         // Don't update sprite frame at each rendered frame; that would be
         // too fast
         if (time >= this._lastSpriteFrameTime + 100) {
             this._lastSpriteFrameTime = time;
-            game.updateSpriteFrames();
+            this.game.updateSpriteFrames();
         }
     }
 

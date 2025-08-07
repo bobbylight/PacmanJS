@@ -40,7 +40,7 @@ describe('Maze', () => {
         let maze: Maze;
 
         beforeEach(() => {
-            maze = new Maze(levelData);
+            maze = new Maze(game, levelData);
         });
 
         describe('big dots', () => {
@@ -112,7 +112,7 @@ describe('Maze', () => {
             let maze: Maze;
 
             beforeEach(() => {
-                maze = new Maze(levelData);
+                maze = new Maze(game, levelData);
             });
 
             it('returns a path to an adjacent node', () => {
@@ -144,7 +144,7 @@ describe('Maze', () => {
             let maze: Maze;
 
             beforeEach(() => {
-                maze = new Maze(levelData);
+                maze = new Maze(game, levelData);
             });
 
             it('returns the expected path', () => {
@@ -209,7 +209,7 @@ describe('Maze', () => {
         let maze: Maze;
 
         beforeEach(() => {
-            maze = new Maze(levelData);
+            maze = new Maze(game, levelData);
         });
 
         it('returns true for a clear shot column', () => {
@@ -231,7 +231,7 @@ describe('Maze', () => {
         let maze: Maze;
 
         beforeEach(() => {
-            maze = new Maze(levelData);
+            maze = new Maze(game, levelData);
         });
 
         it('returns true for a clear shot row', () => {
@@ -250,7 +250,7 @@ describe('Maze', () => {
         let maze: Maze;
 
         beforeEach(() => {
-            maze = new Maze(levelData);
+            maze = new Maze(game, levelData);
         });
 
         it('returns true and false appropriately', () => {
@@ -301,7 +301,7 @@ describe('Maze', () => {
         let maze: Maze;
 
         beforeEach(() => {
-            maze = new Maze(levelData);
+            maze = new Maze(game, levelData);
         });
 
         it('renders small dots', () => {

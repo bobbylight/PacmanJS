@@ -74,7 +74,7 @@ export class PacmanGame extends Game {
      * The playtime (in nanoseconds) after which an eaten fruit's score
      * should stop displaying.
      */
-    private fruitScoreEndTime: number;
+    fruitScoreEndTime: number;
 
     /**
      * The index into scores of the current fruit.
@@ -86,12 +86,12 @@ export class PacmanGame extends Game {
     constructor(args?: any) {
         super(args);
         this.highScore = DEFAULT_HIGH_SCORE;
-        this.pacman = new Pacman();
+        this.pacman = new Pacman(this);
         this.ghosts = this._createGhostArray();
         this.chompSound = 0;
         this._ghostUpdateStrategy = GhostUpdateStrategy.UPDATE_ALL;
         this.score = 0; // For title screen
-        this.desktopGame = args.desktopGame ? args.desktopGame : this._isRunningInElectron();
+        this.desktopGame = args?.desktopGame ? args.desktopGame : this._isRunningInElectron();
 
         this.extraPointsArray = [100, 200, 300, 400, 500, 700, 800,
             1000, 1600, 2000, 3000, 5000];
@@ -99,12 +99,14 @@ export class PacmanGame extends Game {
         this._possiblyRegisterDesktopModeListeners();
     }
 
-    addFruit() {
+    addFruit(): Fruit | null {
         if (!this.fruit) { // Should always be true.
             this.fruit = new Fruit(this); // Made appropriate for current level.
             this.fruitScoreIndex = -1;
             this.fruitScoreEndTime = -1;
+            return this.fruit;
         }
+        return null;
     }
 
     checkForCollisions(): Ghost | null {
@@ -319,6 +321,9 @@ export class PacmanGame extends Game {
         return 750;
     }
 
+    getStretchMode(): StretchMode {
+        return this.stretchMode;
+    }
     ghostEaten(ghost: Ghost): number {
 
         switch (this.eatenGhostPointsIndex) {
@@ -473,6 +478,14 @@ export class PacmanGame extends Game {
         this._ghostUpdateStrategy = strategy;
     }
 
+    setStretchMode(stretchMode: StretchMode) {
+        if (this.isDesktopGame()) {
+            this.setStatusMessage('Stretch mode: ' + this.stretchMode);
+            this.stretchMode = stretchMode;
+            CanvasResizer.resize(this.canvas, this.stretchMode);
+        }
+    }
+
     startGame(level: number) {
 
         this._lives = 3;
@@ -515,8 +528,7 @@ export class PacmanGame extends Game {
                     this.stretchMode = StretchMode.STRETCH_NONE;
                     break;
             }
-            this.setStatusMessage('Stretch mode: ' + this.stretchMode);
-            CanvasResizer.resize(this.canvas, this.stretchMode);
+            this.setStretchMode(this.stretchMode);
         }
     }
 
