@@ -84,12 +84,12 @@ export class _BaseState extends State<PacmanGame> {
     }
 
     protected _updateSpriteFrames() {
-        const time: number = game.playTime;
+        const time: number = this.game.playTime;
         // Don't update sprite frame at each rendered frame; that would be
         // too fast
         if (time >= this._lastSpriteFrameTime + 100) {
             this._lastSpriteFrameTime = time;
-            game.updateSpriteFrames();
+            this.game.updateSpriteFrames();
         }
     }
 

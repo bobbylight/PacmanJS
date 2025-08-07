@@ -3,7 +3,7 @@ import { Maze } from './Maze';
 import { PacmanGame } from './PacmanGame';
 import { describe, expect, it } from 'vitest';
 
-const game: any = {
+const mockGame: any = {
     checkLoopedSound: () => {},
     level: 0,
     playTime: 5000,
@@ -11,8 +11,8 @@ const game: any = {
 
 export class ConcreteGhost extends Ghost {
 
-    constructor() {
-        super(game as PacmanGame, 0, 0);
+    constructor(game: PacmanGame) {
+        super(game, 0, 0);
         this.motionState = MotionState.CHASING_PACMAN;
     }
 
@@ -23,14 +23,14 @@ export class ConcreteGhost extends Ghost {
 describe('Ghost', () => {
 
     it('can be subclassed', () => {
-        const ghost: ConcreteGhost = new ConcreteGhost();
+        const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
         expect(ghost).toBeDefined();
     });
 
     describe('possiblyTurnBlue', () => {
         [ MotionState.EYES, MotionState.EYES_ENTERING_BOX, MotionState.IN_BOX, MotionState.LEAVING_BOX ].forEach(state => {
             it(`does nothing if they are ${state}`, () => {
-                const ghost: ConcreteGhost = new ConcreteGhost();
+                const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
                 ghost.motionState = state;
                 ghost.possiblyTurnBlue();
                 expect(ghost.isBlue()).toBe(false);
@@ -39,7 +39,7 @@ describe('Ghost', () => {
 
         [ MotionState.SCATTERING, MotionState.CHASING_PACMAN, MotionState.BLUE ].forEach(state => {
             it(`turns blue if they are ${state}`, () => {
-                const ghost: ConcreteGhost = new ConcreteGhost();
+                const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
                 ghost.motionState = state;
                 ghost.possiblyTurnBlue();
                 expect(ghost.isBlue()).toBe(true);

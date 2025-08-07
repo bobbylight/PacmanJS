@@ -1,0 +1,30 @@
+import { describe, expect, test } from 'vitest';
+import { fixLevelDatas } from './Util';
+
+describe('Util', () => {
+    describe('fixLevelDatas', () => {
+        test('converts all hex strings in levelDatas to integers', () => {
+            const levelDatas = [
+                [
+                    ['1', 'A', 'f', '00', 'fe'],
+                    ['10', '0', 'ff']
+                ],
+                [
+                    ['2', 'b'],
+                    ['c', 'd']
+                ]
+            ];
+            fixLevelDatas(levelDatas);
+            expect(levelDatas).toEqual([
+                [
+                    [1, 10, 15, 0, 254],
+                    [16, 0, 255]
+                ],
+                [
+                    [2, 11],
+                    [12, 13]
+                ]
+            ]);
+        });
+    });
+});

@@ -8,7 +8,7 @@ declare let game: PacmanGame;
 const DOT_POINTS: number[] = [50, 10];
 
 export class Maze {
-
+    private game: PacmanGame;
     private data: number[][];
     private mazeCanvas: HTMLCanvasElement;
     private eatenDotCount: number;
@@ -24,7 +24,8 @@ export class Maze {
      */
     private nodeCache: Pool<MazeNode>;
 
-    constructor(mazeInfo: number[][]) {
+    constructor(game: PacmanGame, mazeInfo: number[][]) {
+        this.game = game;
         this.data = [];
         this.reset(mazeInfo);
     }
@@ -46,6 +47,7 @@ export class Maze {
 
         let score: number = 0;
         const tile: number = this.getTileAt(row, col);
+        const game = this.game;
 
         if (tile >= 0xfe) { // Small dot or big dot.
             game.playChompSound();
@@ -250,10 +252,12 @@ export class Maze {
      */
     private getTileAt(row: number, col: number): number {
         // Forgive bounds errors in case the user is going through the tunnel.
-        if (col < 0 || col >= Maze.TILE_COUNT_HORIZONTAL) {
+        const maxCol = Math.min(this.data[0].length, Maze.TILE_COUNT_HORIZONTAL);
+        if (col < 0 || col >= maxCol) {
             return -1;
         }
-        if (row < 0 || row >= Maze.TILE_COUNT_VERTICAL) {
+        const maxRow = Math.min(this.data.length, Maze.TILE_COUNT_VERTICAL);
+        if (row < 0 || row >= maxRow) {
             return -1;
         }
         return this.data[row][col] & 0xff; // Remove internally-used high bits
@@ -298,6 +302,7 @@ export class Maze {
         ctx.drawImage(this.mazeCanvas, 0, 0);
 
         const TILE_SIZE: number = 8;
+        const game: PacmanGame = this.game;
 
         // Draw the dots
         ctx.fillStyle = '#ffffff';
@@ -326,10 +331,9 @@ export class Maze {
      *        is assumed that we are simply resetting to load a new level.
      */
     reset(mazeInfo?: number[][]) {
-        'use strict';
-
         const TILE_SIZE: number = Constants.TILE_SIZE;
         const firstTime: boolean = mazeInfo != null;
+        const game = this.game;
 
         // Load (or reset) map data
         if (firstTime) {
