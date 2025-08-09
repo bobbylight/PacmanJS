@@ -209,7 +209,7 @@ export abstract class Ghost extends _BaseSprite {
 
     /**
      * Returns the number of milliseconds that should pass between the times
-     * this ghost moves.  This value is dependant on the ghost's current
+     * this ghost moves.  This value is dependent on the ghost's current
      * state.
      *
      * @return The update delay, in milliseconds.
@@ -259,7 +259,7 @@ export abstract class Ghost extends _BaseSprite {
         const SPRITE_SIZE: number = Constants.SPRITE_SIZE;
         let srcX: number,
             srcY: number;
-        const playTime: number = game.playTime;
+        const playTime: number = this.game.playTime;
 
         switch (this._motionState) {
 
@@ -285,7 +285,7 @@ export abstract class Ghost extends _BaseSprite {
                 srcX = this.direction * SPRITE_SIZE * this.getFrameCount() +
                     this.getFrame() * SPRITE_SIZE;
                 srcY = this.spriteSheetY;
-                game.drawSprite(destX, destY, srcX, srcY);
+                this.game.drawSprite(destX, destY, srcX, srcY);
                 break;
 
         }

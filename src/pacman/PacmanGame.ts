@@ -86,7 +86,7 @@ export class PacmanGame extends Game {
     constructor(args?: any) {
         super(args);
         this.highScore = DEFAULT_HIGH_SCORE;
-        this.pacman = new Pacman();
+        this.pacman = new Pacman(this);
         this.ghosts = this._createGhostArray();
         this.chompSound = 0;
         this._ghostUpdateStrategy = GhostUpdateStrategy.UPDATE_ALL;
