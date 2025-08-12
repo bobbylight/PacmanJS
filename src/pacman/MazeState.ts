@@ -8,8 +8,6 @@ import { Ghost, MotionState } from './Ghost';
 import { InputManager, Keys } from 'gtp';
 import Constants from './Constants';
 
-declare let game: PacmanGame;
-
 type Substate = 'READY' | 'IN_GAME' | 'DYING' | 'GAME_OVER';
 
 export class MazeState extends _BaseState {

@@ -7,8 +7,6 @@ import SOUNDS from './Sounds';
 import { Game, Image, InputManager, SpriteSheet } from 'gtp';
 import Constants from './Constants';
 
-declare let game: PacmanGame;
-
 export class TitleState extends _BaseState {
 
     private choice: number;
@@ -23,15 +21,13 @@ export class TitleState extends _BaseState {
         // Initialize our sprites not just in enter() so they are positioned
         // correctly while FadeOutInState is running
         this._initSprites(args);
-
-        this.handleStart = this.handleStart.bind(this);
     }
 
     override enter(game: PacmanGame) {
         this.game = game;
         super.enter(game);
 
-        game.canvas.addEventListener('touchstart', this.handleStart, { capture: false, passive: true });
+        game.canvas.addEventListener('touchstart', this.handleStart.bind(this), { capture: false, passive: true });
         this.choice = 0;
         this.lastKeypressTime = game.playTime;
 
@@ -48,7 +44,7 @@ export class TitleState extends _BaseState {
     }
 
     override leaving(game: Game) {
-        game.canvas.removeEventListener('touchstart', this.handleStart, false);
+        game.canvas.removeEventListener('touchstart', this.handleStart.bind(this), false);
     }
 
     handleStart() {

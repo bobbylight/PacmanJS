@@ -4,22 +4,28 @@ import tseslint from 'typescript-eslint';
 
 export default [
     js.configs.recommended,
-    ...tseslint.configs.strict,
-    ...tseslint.configs.stylistic,
+    ...tseslint.configs.strictTypeChecked,
+    ...tseslint.configs.stylisticTypeChecked,
 
+    {
+        ignores: [
+            ".eslintrc.config.js",
+            "jest.config.js",
+            "vite.config.js",
+            "**/*.spec.ts", // TODO: Remove me
+        ],
+    },
     {
         languageOptions: {
             globals: {
                 ...globals.browser,
                 ...globals.node,
-            }
+            },
+            parserOptions: {
+                projectService: true,
+                tsconfigRootDir: import.meta.dirname,
+            },
         },
-
-        ignores: [
-            ".eslintrc.config.js",
-            "jest.config.js",
-            "vite.config.js",
-        ],
 
         files: [
             '**/*.ts',
@@ -36,6 +42,7 @@ export default [
             "@typescript-eslint/no-inferrable-types": 0, // TODO
             "@typescript-eslint/no-non-null-assertion": 0,
             "@typescript-eslint/no-unused-vars": 0,
+            "@typescript-eslint/restrict-template-expressions": ["error", { "allowNumber": true }],
             "brace-style": ["error", "stroustrup"],
             indent: ["error", 4, {"SwitchCase": 1}],
             "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",

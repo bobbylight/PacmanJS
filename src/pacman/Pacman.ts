@@ -5,8 +5,6 @@ import { InputManager } from 'gtp';
 import { PacmanGame } from './PacmanGame';
 import Constants from './Constants';
 
-declare let game: PacmanGame;
-
 export class Pacman extends _BaseSprite {
 
     _dyingFrame: number;
