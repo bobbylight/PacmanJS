@@ -7,8 +7,6 @@ import { MazeNode } from './MazeNode';
 import { Pacman } from './Pacman';
 import Constants from './Constants';
 
-declare let game: PacmanGame;
-
 const GHOST_IN_BOX_SPEED: number = 0.5;
 
 export enum MotionState {
@@ -69,7 +67,7 @@ export abstract class Ghost extends _BaseSprite {
      * The motion state to revert back to when a ghost leaves "blue mode."
      * If a ghost is not in "blue mode," this value is invalid.
      */
-    private previousState: number;
+    private previousState: MotionState;
 
     /**
      * The y-coordinate of the sprites in the sprite sheet to use.
@@ -392,7 +390,7 @@ export abstract class Ghost extends _BaseSprite {
                     }
                     break;
                 default:
-                    throw new Error('Unexpected state: ' + this._motionState);
+                    throw new Error(`Unexpected state: ${this._motionState}`);
             }
             this._motionState = motionState;
         }

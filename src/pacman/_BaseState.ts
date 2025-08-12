@@ -1,8 +1,6 @@
 import { BaseStateArgs, InputManager, Keys, State, Utils } from 'gtp';
 import { PacmanGame } from './PacmanGame';
 
-declare let game: PacmanGame;
-
 export class _BaseState extends State<PacmanGame> {
 
     private _lastConfigKeypressTime: number;
@@ -44,13 +42,13 @@ export class _BaseState extends State<PacmanGame> {
                 if (im.isKeyDown(Keys.KEY_P, true)) {
                     const style: CSSStyleDeclaration = game.canvas.style;
                     if (!style.width) {
-                        style.width = game.canvas.width + 'px';
+                        style.width = `${game.canvas.width}px`;
                     }
                     if (!style.height) {
-                        style.height = game.canvas.height + 'px';
+                        style.height = `${game.canvas.height}px`;
                     }
-                    style.width = (parseInt(style.width.substring(0, style.width.length - 2), 10) + 1) + 'px';
-                    style.height = (parseInt(style.height.substring(0, style.height.length - 2), 10) + 1) + 'px';
+                    style.width = `${parseInt(style.width.substring(0, style.width.length - 2), 10) + 1}px`;
+                    style.height = `${parseInt(style.height.substring(0, style.height.length - 2), 10) + 1}px`;
                     game.setStatusMessage(`Canvas size now: (${style.width}, ${style.height})`);
                     this._lastConfigKeypressTime = time;
                 }
@@ -59,13 +57,13 @@ export class _BaseState extends State<PacmanGame> {
                 else if (im.isKeyDown(Keys.KEY_L, true)) {
                     const style: CSSStyleDeclaration = game.canvas.style;
                     if (!style.width) {
-                        style.width = game.canvas.width + 'px';
+                        style.width = `${game.canvas.width}px`;
                     }
                     if (!style.height) {
-                        style.height = game.canvas.height + 'px';
+                        style.height = `${game.canvas.height}px`;
                     }
-                    style.width = (parseInt(style.width.substring(0, style.width.length - 2), 10) - 1) + 'px';
-                    style.height = (parseInt(style.height.substring(0, style.height.length - 2), 10) - 1) + 'px';
+                    style.width = `${parseInt(style.width.substring(0, style.width.length - 2), 10) - 1}px`;
+                    style.height = `${parseInt(style.height.substring(0, style.height.length - 2), 10) - 1}px`;
                     game.setStatusMessage(`Canvas size now: (${style.width}, ${style.height})`);
                     this._lastConfigKeypressTime = time;
                 }

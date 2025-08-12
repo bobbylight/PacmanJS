@@ -3,8 +3,6 @@ import { MazeNode } from './MazeNode';
 import { PacmanGame } from './PacmanGame';
 import Constants from './Constants';
 
-declare let game: PacmanGame;
-
 const DOT_POINTS: number[] = [50, 10];
 
 export class Maze {
@@ -22,7 +20,7 @@ export class Maze {
     /**
      * A cache of nodes to speed up search operations.
      */
-    private nodeCache: Pool<MazeNode>;
+    private nodeCache?: Pool<MazeNode>;
 
     constructor(game: PacmanGame, mazeInfo: number[][]) {
         this.game = game;
@@ -30,8 +28,8 @@ export class Maze {
         this.reset(mazeInfo);
     }
 
-    private static _cloneObjectOfPrimitives(obj: any): any {
-        return JSON.parse(JSON.stringify(obj));
+    private static _cloneObjectOfPrimitives<T>(obj: T): T {
+        return JSON.parse(JSON.stringify(obj)) as T;
     }
 
     /**
@@ -121,6 +119,9 @@ export class Maze {
     getPathBreadthFirst(fromRow: number, fromCol: number, toRow: number,
         toCol: number): MazeNode | null {
 
+        if (!this.nodeCache) {
+            return null; // Never true, needed for tsc
+        }
         this.open.forEach((node: MazeNode) => {
             this.data[node.row][node.col] &= 0xff;
         });
@@ -208,8 +209,7 @@ export class Maze {
         }
 
         // No path found - should never happen
-        throw new Error('No path found from (' + fromRow + ', ' + fromCol +
-            ') to (' + toRow + ', ' + toCol + ')');
+        throw new Error(`No path found from (${fromRow}, ${fromCol}) to (${toRow}, ${toCol})`);
     }
 
     /**
@@ -332,13 +332,14 @@ export class Maze {
      */
     reset(mazeInfo?: number[][]) {
         const TILE_SIZE: number = Constants.TILE_SIZE;
-        const firstTime: boolean = mazeInfo != null;
+        let firstTime = false; // Must do it this way to appease tsc
         const game = this.game;
 
         // Load (or reset) map data
-        if (firstTime) {
+        if (mazeInfo != null) {
             // First time through, we cache a pristine view of our maze data
             this.origMazeInfo = Maze._cloneObjectOfPrimitives(mazeInfo);
+            firstTime = true;
         }
         // Next, we create a working copy of our maze data, since we mutate it
         this.data = Maze._cloneObjectOfPrimitives(this.origMazeInfo);
@@ -391,9 +392,7 @@ export class Maze {
                 }
             }
 
-            if (!this.nodeCache) {
-                this.nodeCache = new Pool(MazeNode, walkableCount);
-            }
+            this.nodeCache ??= new Pool(MazeNode, walkableCount);
         }
     }
 }

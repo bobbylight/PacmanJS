@@ -10,6 +10,7 @@ import { Clyde } from './Clyde';
 import { MazeState } from './MazeState';
 import { Maze } from './Maze';
 import Constants from './Constants';
+import { GameArgs } from 'gtp/lib/gtp/Game';
 
 /**
  * The default high score displayed in the game.
@@ -83,7 +84,7 @@ export class PacmanGame extends Game {
 
     private _godMode: boolean;
 
-    constructor(args?: any) {
+    constructor(args?: GameArgs  & { desktopGame?: boolean }) {
         super(args);
         this.highScore = DEFAULT_HIGH_SCORE;
         this.pacman = new Pacman(this);
@@ -91,7 +92,7 @@ export class PacmanGame extends Game {
         this.chompSound = 0;
         this._ghostUpdateStrategy = GhostUpdateStrategy.UPDATE_ALL;
         this.score = 0; // For title screen
-        this.desktopGame = args?.desktopGame ? args.desktopGame : this._isRunningInElectron();
+        this.desktopGame = args?.desktopGame ?? this._isRunningInElectron();
 
         this.extraPointsArray = [100, 200, 300, 400, 500, 700, 800,
             1000, 1600, 2000, 3000, 5000];
@@ -480,7 +481,7 @@ export class PacmanGame extends Game {
 
     setStretchMode(stretchMode: StretchMode) {
         if (this.isDesktopGame()) {
-            this.setStatusMessage('Stretch mode: ' + this.stretchMode);
+            this.setStatusMessage(`Stretch mode: ${this.stretchMode}`);
             this.stretchMode = stretchMode;
             CanvasResizer.resize(this.canvas, this.stretchMode);
         }
@@ -492,9 +493,9 @@ export class PacmanGame extends Game {
         this.score = 0;
         this._level = 0;
 
-        const levelsData: any = this.assets.get('levels');
-        const levelData: any = levelsData[level];
-        const mazeState: any = new MazeState(levelData);
+        const levelsData: number[][][] = this.assets.get('levels');
+        const levelData = levelsData[level];
+        const mazeState = new MazeState(levelData);
         //this.setState(new FadeOutInState(this.state, mazeState));
         this.setState(mazeState); // The original did not fade in/out
     }

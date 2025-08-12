@@ -24,7 +24,7 @@ export class MazeNode {
     }
 
     toString() {
-        return '[MazeNode: (' + this.row + ',' + this.col + ')]';
+        return `[MazeNode: (${this.row},${this.col})]`;
     }
 
 }
