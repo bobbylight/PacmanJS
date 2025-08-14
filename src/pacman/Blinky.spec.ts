@@ -27,13 +27,13 @@ describe('Blinky', () => {
     test('reset() works as expected', () => {
         ghost.reset();
         expect(ghost.direction).toEqual(Direction.WEST);
-        expect(ghost.motionState).toEqual(MotionState.SCATTERING);
+        expect(ghost.getMotionState()).toEqual(MotionState.SCATTERING);
     });
 
     describe('updatePosition', () => {
         describe('when chasing Pacman', () => {
             beforeEach(() => {
-                ghost.motionState = MotionState.CHASING_PACMAN;
+                ghost.setMotionState(MotionState.CHASING_PACMAN);
             });
 
             describe('when not at an intersection', () => {

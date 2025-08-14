@@ -1,18 +1,18 @@
-import { _BaseState } from './_BaseState';
+import { BaseState } from './BaseState';
 import { Maze } from './Maze';
 import { PacmanGame } from './PacmanGame';
 import { Pacman } from './Pacman';
 import { TitleState } from './TitleState';
-import SOUNDS from './Sounds';
+import Sounds from './Sounds';
 import { Ghost, MotionState } from './Ghost';
 import { InputManager, Keys } from 'gtp';
 import Constants from './Constants';
 
 type Substate = 'READY' | 'IN_GAME' | 'DYING' | 'GAME_OVER';
 
-export class MazeState extends _BaseState {
+export class MazeState extends BaseState {
 
-    private readonly _mazeFile: number[][];
+    private readonly mazeFile: number[][];
     private maze: Maze;
     private firstTimeThrough: boolean;
     private updateScoreIndex: number;
@@ -24,7 +24,7 @@ export class MazeState extends _BaseState {
 
     constructor(mazeFile: number[][]) {
         super();
-        this._mazeFile = mazeFile;
+        this.mazeFile = mazeFile;
     }
 
     private static get DYING_FRAME_DELAY_MILLIS(): number {
@@ -41,7 +41,7 @@ export class MazeState extends _BaseState {
         game.pacman.reset();
         game.resetGhosts();
 
-        this.maze = new Maze(game, this._mazeFile);
+        this.maze = new Maze(game, this.mazeFile);
         this.firstTimeThrough = true;
         this.updateScoreIndex = -1;
 
@@ -54,7 +54,7 @@ export class MazeState extends _BaseState {
         this.substateStartTime = 0;
         this.nextDyingFrameTime = 0;
         this.nextUpdateTime = 0;
-        this._lastSpriteFrameTime = 0;
+        this.lastSpriteFrameTime = 0;
     }
 
     private paintExtraLives(ctx: CanvasRenderingContext2D) {
@@ -65,7 +65,7 @@ export class MazeState extends _BaseState {
         const TILE_SIZE: number = 8;
         const game = this.game;
 
-        const lives: number = game.lives;
+        const lives: number = game.getLives();
         if (lives > 0) {
             let x: number = BOTTOM_INDENT;
             const y: number = game.getHeight() - 2 * TILE_SIZE;
@@ -88,7 +88,7 @@ export class MazeState extends _BaseState {
         const x: number = game.getWidth() - BOTTOM_INDENT - 2 * TILE_SIZE;
         const y: number = game.getHeight() - 2 * TILE_SIZE;
 
-        switch (game.level) {
+        switch (game.getLevel()) {
             default:
             case 7: // Key
                 game.drawSprite(x - 112, y, 13 * 16, 3 * 16);
@@ -186,7 +186,7 @@ export class MazeState extends _BaseState {
         this.game.resetGhosts(); // Do AFTER resetting playtime!
         this.substate = 'READY';
         this.substateStartTime = 0; // Play time was just reset
-        this._lastSpriteFrameTime = 0;
+        this.lastSpriteFrameTime = 0;
 
         // Prevents the user's "Enter" press to start the game from being
         // picked up by our handleInput().
@@ -263,14 +263,14 @@ export class MazeState extends _BaseState {
             case 'READY':
                 if (this.firstTimeThrough && this.substateStartTime === 0) {
                     this.substateStartTime = time;
-                    game.audio.playSound(SOUNDS.OPENING);
+                    game.audio.playSound(Sounds.OPENING);
                 }
                 if (time >= this.substateStartTime + this.readyDelayMillis) {
                     this.substate = 'IN_GAME';
                     this.substateStartTime = time;
                     game.resetPlayTime();
                     this.lastMazeScreenKeypressTime = game.playTime;
-                    game.setLoopedSound(SOUNDS.SIREN);
+                    game.setLoopedSound(Sounds.SIREN);
                     this.firstTimeThrough = false;
                 }
                 break;
@@ -292,7 +292,7 @@ export class MazeState extends _BaseState {
                             game.resetGhosts(); // Do AFTER resetting play time!
                             this.substate = 'READY';
                             this.substateStartTime = 0; // Play time was just reset
-                            this._lastSpriteFrameTime = 0;
+                            this.lastSpriteFrameTime = 0;
                         }
                     }
                     else {
@@ -316,7 +316,7 @@ export class MazeState extends _BaseState {
         this.nextUpdateTime = 0;
         this.updateScoreIndex = -1;
 
-        this._updateSpriteFrames();
+        this.updateSpriteFrames();
 
         // Update Pacman's, ghosts', and possibly fruit's positions
         const game = this.game;
@@ -326,11 +326,11 @@ export class MazeState extends _BaseState {
         const ghostHit: Ghost | null = game.checkForCollisions();
         if (ghostHit) {
 
-            switch (ghostHit.motionState) {
+            switch (ghostHit.getMotionState()) {
 
                 case MotionState.BLUE:
                     this.nextUpdateTime = time + PacmanGame.SCORE_DISPLAY_LENGTH;
-                    ghostHit.motionState = MotionState.EYES;
+                    ghostHit.setMotionState(MotionState.EYES);
                     this.updateScoreIndex = game.ghostEaten(ghostHit);
                     break;
 
@@ -340,7 +340,7 @@ export class MazeState extends _BaseState {
                     break;
 
                 default:
-                    if (!game.godMode) {
+                    if (!game.isGodMode()) {
                         game.startPacmanDying();
                         this.substate = 'DYING';
                         this.nextDyingFrameTime = game.playTime + MazeState.DYING_FRAME_DELAY_MILLIS;

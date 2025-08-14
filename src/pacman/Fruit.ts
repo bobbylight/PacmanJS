@@ -1,13 +1,13 @@
-import { _BaseSprite } from './_BaseSprite';
+import { BaseSprite } from './BaseSprite';
 import { Maze } from './Maze';
 import { PacmanGame } from './PacmanGame';
 import Constants from './Constants';
 
-export class Fruit extends _BaseSprite {
+export class Fruit extends BaseSprite {
     private readonly game: PacmanGame;
-    private readonly _row: number;
-    private readonly _col: number;
-    private readonly _pointsIndex: number;
+    private readonly spriteSheetRow: number;
+    private readonly spriteSheetCol: number;
+    private readonly pointsIndex: number;
 
     // 0=Cherry, 1=Strawberry, 2=Peach, 3=Yellow bell, 4=Apple,
     // 5=Green thing (grapes?), 6=Space Invaders ship, 7=Key
@@ -20,14 +20,14 @@ export class Fruit extends _BaseSprite {
 
         this.game = game;
         this.setLocation(game.PENALTY_BOX_EXIT_X, 140);
-        let level: number = game.level;
+        let level: number = game.getLevel();
         if (level > 7) { // Level 8+ => any fruit is possible
             level = game.randomInt(8);
         }
 
-        this._col = Fruit.COLS[level];
-        this._row = Fruit.ROWS[level];
-        this._pointsIndex = Fruit.PTS_INDEX[level];
+        this.spriteSheetCol = Fruit.COLS[level];
+        this.spriteSheetRow = Fruit.ROWS[level];
+        this.pointsIndex = Fruit.PTS_INDEX[level];
     }
 
     /**
@@ -37,8 +37,8 @@ export class Fruit extends _BaseSprite {
      * @return The index into the "points" array that contains this
      *         fruit's point value.
      */
-    get pointsIndex(): number {
-        return this._pointsIndex;
+    getPointsIndex(): number {
+        return this.pointsIndex;
     }
 
     /**
@@ -58,8 +58,8 @@ export class Fruit extends _BaseSprite {
      */
     paint(ctx: CanvasRenderingContext2D) {
         const SPRITE_SIZE: number = Constants.SPRITE_SIZE;
-        const srcX: number = this._col * SPRITE_SIZE;
-        const srcY: number = this._row * SPRITE_SIZE;
+        const srcX: number = this.spriteSheetCol * SPRITE_SIZE;
+        const srcY: number = this.spriteSheetRow * SPRITE_SIZE;
         this.game.drawSprite(this.x, this.y, srcX, srcY);
     }
 

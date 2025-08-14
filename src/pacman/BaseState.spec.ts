@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { _BaseState } from './_BaseState';
+import { BaseState } from './BaseState';
 import { PacmanGame } from './PacmanGame';
 import { Keys } from 'gtp';
 
@@ -9,7 +9,7 @@ const mocks = vi.hoisted(() => {
     };
 });
 
-class TestableState extends _BaseState {
+class TestableState extends BaseState {
     constructor(game: PacmanGame) {
         super({ game });
     }
@@ -19,7 +19,7 @@ class TestableState extends _BaseState {
     }
 }
 
-describe('_BaseState', () => {
+describe('BaseState', () => {
     let canvas: HTMLCanvasElement;
     const mockGame: any /* PacmanGame */ = {
         checkLoopedSound: () => {},
@@ -80,7 +80,7 @@ describe('_BaseState', () => {
 
                     beforeEach(() => {
                         mockGame.inputManager = {
-                            isKeyDown: vi.fn((key: number, clear?: boolean) => {
+                            isKeyDown: vi.fn((key: Keys, clear?: boolean) => {
                                 return !!(key === Keys.KEY_Z || (key === Keys.KEY_P && clear));
                             }),
                         };
@@ -112,7 +112,7 @@ describe('_BaseState', () => {
 
                     beforeEach(() => {
                         mockGame.inputManager = {
-                            isKeyDown: vi.fn((key: number, clear?: boolean) => {
+                            isKeyDown: vi.fn((key: Keys, clear?: boolean) => {
                                 return !!(key === Keys.KEY_Z || (key === Keys.KEY_L && clear));
                             }),
                         };
@@ -141,7 +141,7 @@ describe('_BaseState', () => {
 
                 it('toggles god mode if G is pressed', () => {
                     mockGame.inputManager = {
-                        isKeyDown: vi.fn((key: number, clear?: boolean) => {
+                        isKeyDown: vi.fn((key: Keys, clear?: boolean) => {
                             return !!(key === Keys.KEY_Z || (key === Keys.KEY_G && clear));
                         }),
                     };

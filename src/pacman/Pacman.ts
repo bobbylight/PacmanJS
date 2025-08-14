@@ -1,19 +1,19 @@
 import { Maze } from './Maze';
 import { Direction } from './Direction';
-import { _BaseSprite } from './_BaseSprite';
+import { BaseSprite } from './BaseSprite';
 import { InputManager } from 'gtp';
 import { PacmanGame } from './PacmanGame';
 import Constants from './Constants';
 
-export class Pacman extends _BaseSprite {
+export class Pacman extends BaseSprite {
 
-    _dyingFrame: number;
+    dyingFrame: number;
     private readonly game: PacmanGame;
 
     constructor(game: PacmanGame) {
         super(3);
         this.game = game;
-        this._dyingFrame = 0;
+        this.dyingFrame = 0;
     }
 
     getUpdateDelayMillis(): number {
@@ -52,8 +52,8 @@ export class Pacman extends _BaseSprite {
      * @return Whether Pacman is still in his dying animation.
      */
     incDying(): boolean {
-        this._dyingFrame = (this._dyingFrame + 1) % 12;
-        return this._dyingFrame !== 0;
+        this.dyingFrame = (this.dyingFrame + 1) % 12;
+        return this.dyingFrame !== 0;
     }
 
     render(ctx: CanvasRenderingContext2D) {
@@ -65,8 +65,8 @@ export class Pacman extends _BaseSprite {
 
         let srcX: number,
             srcY: number;
-        if (this._dyingFrame > 0) {
-            srcX = SPRITE_SIZE * this._dyingFrame;
+        if (this.dyingFrame > 0) {
+            srcX = SPRITE_SIZE * this.dyingFrame;
             srcY = 96;
         }
         else {
@@ -85,7 +85,7 @@ export class Pacman extends _BaseSprite {
         super.reset();
         this.direction = Direction.WEST;
         this.setLocation(13 * TILE_SIZE, 24 * TILE_SIZE - TILE_SIZE / 2);
-        this._frame = 0;
+        this.frame = 0;
     }
 
     override setLocation(x: number, y: number) {
@@ -93,7 +93,7 @@ export class Pacman extends _BaseSprite {
     }
 
     startDying() {
-        this._dyingFrame = 1;
+        this.dyingFrame = 1;
     }
 
     protected updatePositionImpl(maze: Maze) {

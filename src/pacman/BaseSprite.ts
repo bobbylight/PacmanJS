@@ -3,22 +3,22 @@ import { Direction } from './Direction';
 import { Maze } from './Maze';
 import Constants from './Constants';
 
-export abstract class _BaseSprite {
+export abstract class BaseSprite {
 
     bounds: Rectangle;
-    private readonly _intersectBounds: Rectangle;
+    private readonly intersectBounds: Rectangle;
     direction: Direction;
-    _frame: number;
-    private readonly _frameCount: number;
-    private _lastUpdateTime: number;
+    frame: number;
+    private readonly frameCount: number;
+    private lastUpdateTime: number;
 
     constructor(frameCount: number) {
         this.bounds = new Rectangle(0, 0, Constants.SPRITE_SIZE, Constants.SPRITE_SIZE);
-        this._intersectBounds = new Rectangle();
+        this.intersectBounds = new Rectangle();
         this.direction = Direction.EAST;
-        this._frame = 0;
-        this._frameCount = frameCount;
-        this._lastUpdateTime = 0;
+        this.frame = 0;
+        this.frameCount = frameCount;
+        this.lastUpdateTime = 0;
     }
 
     atIntersection(maze: Maze): boolean {
@@ -121,17 +121,17 @@ export abstract class _BaseSprite {
     }
 
     getFrame() {
-        return this._frame;
+        return this.frame;
     }
 
     getFrameCount() {
-        return this._frameCount;
+        return this.frameCount;
     }
 
-    private get intersectBounds(): Rectangle {
-        this._intersectBounds.set(this.bounds.x + 2, this.bounds.y - 2,
+    private getIntersectBounds(): Rectangle {
+        this.intersectBounds.set(this.bounds.x + 2, this.bounds.y - 2,
             this.bounds.w - 4, this.bounds.h - 4);
-        return this._intersectBounds;
+        return this.intersectBounds;
     }
 
     get moveAmount(): number {
@@ -221,13 +221,13 @@ export abstract class _BaseSprite {
      * @param sprite2 The other sprite.
      * @return Whether these two sprites intersect.
      */
-    intersects(sprite2: _BaseSprite): boolean {
+    intersects(sprite2: BaseSprite): boolean {
         //return bounds.intersects(sprite2.bounds);
-        return this.intersectBounds.intersects(sprite2.intersectBounds);
+        return this.getIntersectBounds().intersects(sprite2.getIntersectBounds());
     }
 
     reset() {
-        this._lastUpdateTime = 0;
+        this.lastUpdateTime = 0;
     }
 
     get SCREEN_WIDTH(): number { // TODO: Move somewhere more generic
@@ -240,12 +240,12 @@ export abstract class _BaseSprite {
     }
 
     updateFrame() {
-        this._frame = (this._frame + 1) % this.getFrameCount();
+        this.frame = (this.frame + 1) % this.getFrameCount();
     }
 
     updatePosition(maze: Maze, time: number) {
-        if (time > this._lastUpdateTime + this.getUpdateDelayMillis()) {
-            this._lastUpdateTime = time;
+        if (time > this.lastUpdateTime + this.getUpdateDelayMillis()) {
+            this.lastUpdateTime = time;
             this.updatePositionImpl(maze);
         }
     }

@@ -9,25 +9,25 @@ describe('Fruit', () => {
         get PENALTY_BOX_EXIT_X() {
             return 100
         },
-        level: 0,
+        getLevel: () => 0,
         randomInt: () => 0,
     };
 
     it('constructor should pick the right fruit for the level', () => {
-        expect(new Fruit({ ...mockGame, level: 0 }).pointsIndex).toBe(0);
-        expect(new Fruit({ ...mockGame, level: 1 }).pointsIndex).toBe(2);
-        expect(new Fruit({ ...mockGame, level: 2 }).pointsIndex).toBe(4);
-        expect(new Fruit({ ...mockGame, level: 3 }).pointsIndex).toBe(5);
-        expect(new Fruit({ ...mockGame, level: 4 }).pointsIndex).toBe(10);
-        expect(new Fruit({ ...mockGame, level: 5 }).pointsIndex).toBe(7);
-        expect(new Fruit({ ...mockGame, level: 6 }).pointsIndex).toBe(9);
-        expect(new Fruit({ ...mockGame, level: 7 }).pointsIndex).toBe(11);
+        expect(new Fruit({ ...mockGame, getLevel: () => 0 }).getPointsIndex()).toBe(0);
+        expect(new Fruit({ ...mockGame, getLevel: () => 1 }).getPointsIndex()).toBe(2);
+        expect(new Fruit({ ...mockGame, getLevel: () => 2 }).getPointsIndex()).toBe(4);
+        expect(new Fruit({ ...mockGame, getLevel: () => 3 }).getPointsIndex()).toBe(5);
+        expect(new Fruit({ ...mockGame, getLevel: () => 4 }).getPointsIndex()).toBe(10);
+        expect(new Fruit({ ...mockGame, getLevel: () => 5 }).getPointsIndex()).toBe(7);
+        expect(new Fruit({ ...mockGame, getLevel: () => 6 }).getPointsIndex()).toBe(9);
+        expect(new Fruit({ ...mockGame, getLevel: () => 7 }).getPointsIndex()).toBe(11);
     });
 
     it('constructor should pick a random fruit for levels above 7', () => {
-        const fruit = new Fruit({ ...mockGame, level: 8 });
-        expect(fruit.pointsIndex).toBeGreaterThanOrEqual(0);
-        expect(fruit.pointsIndex).toBeLessThanOrEqual(11);
+        const fruit = new Fruit({ ...mockGame, getLevel: () => 8 });
+        expect(fruit.getPointsIndex()).toBeGreaterThanOrEqual(0);
+        expect(fruit.getPointsIndex()).toBeLessThanOrEqual(11);
     });
 
     it('getUpdateDelayMillis should return a large number', () => {

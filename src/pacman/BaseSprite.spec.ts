@@ -1,8 +1,8 @@
-import { _BaseSprite } from './_BaseSprite';
+import { BaseSprite } from './BaseSprite';
 import { Maze } from './Maze';
 import { describe, expect, test } from 'vitest';
 
-class ConcreteSprite extends _BaseSprite {
+class ConcreteSprite extends BaseSprite {
 
     constructor() {
         super(2);
@@ -17,7 +17,7 @@ class ConcreteSprite extends _BaseSprite {
 
 }
 
-describe('_BaseSprite', () => {
+describe('BaseSprite', () => {
 
     test('can be subclassed', () => {
         const sprite: ConcreteSprite = new ConcreteSprite();

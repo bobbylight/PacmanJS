@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, MockInstance, vi } from 'vitest';
 import { GhostUpdateStrategy, PacmanGame } from './PacmanGame';
-import SOUNDS from './Sounds';
+import Sounds from './Sounds';
 import { MotionState } from './Ghost';
 import { Fruit } from './Fruit';
 import { MazeState } from './MazeState';
@@ -50,7 +50,7 @@ describe('PacmanGame', () => {
                 game.pacman.setLocation(fruit.x, fruit.y);
                 expect(game.checkForCollisions()).toBeNull();
                 expect(game.increaseScore).toHaveBeenCalledOnce();
-                expect(game.audio.playSound).toHaveBeenCalledWith(SOUNDS.EATING_FRUIT, false);
+                expect(game.audio.playSound).toHaveBeenCalledWith(Sounds.EATING_FRUIT, false);
             }
         });
     });
@@ -65,52 +65,52 @@ describe('PacmanGame', () => {
 
         it('plays a siren sound by default', () => {
             game.checkLoopedSound();
-            expect(setLoopedSound).toHaveBeenCalledWith(SOUNDS.SIREN);
+            expect(setLoopedSound).toHaveBeenCalledWith(Sounds.SIREN);
         });
 
         describe('when a ghost is blue', () => {
             beforeEach(() => {
                 // State transitions are verified in the game logic so must be valid here
-                game.getGhost(2).motionState = MotionState.CHASING_PACMAN;
-                game.getGhost(2).motionState = MotionState.BLUE;
+                game.getGhost(2).setMotionState(MotionState.CHASING_PACMAN);
+                game.getGhost(2).setMotionState(MotionState.BLUE);
             });
 
             it('plays a different sound', () => {
                 game.checkLoopedSound();
-                expect(setLoopedSound).toHaveBeenCalledWith(SOUNDS.CHASING_GHOSTS);
+                expect(setLoopedSound).toHaveBeenCalledWith(Sounds.CHASING_GHOSTS);
             });
 
             describe('and an earlier ghost is eyes', () => {
                 beforeEach(() => {
-                    game.getGhost(1).motionState = MotionState.EYES;
+                    game.getGhost(1).setMotionState(MotionState.EYES);
                 });
 
                 it('plays the eyes sound', () => {
                     game.checkLoopedSound();
-                    expect(setLoopedSound).toHaveBeenCalledWith(SOUNDS.EYES_RUNNING);
+                    expect(setLoopedSound).toHaveBeenCalledWith(Sounds.EYES_RUNNING);
                 });
             });
 
             describe('and a later ghost is eyes', () => {
                 beforeEach(() => {
-                    game.getGhost(3).motionState = MotionState.EYES;
+                    game.getGhost(3).setMotionState(MotionState.EYES);
                 });
 
                 it('plays the eyes sound', () => {
                     game.checkLoopedSound();
-                    expect(setLoopedSound).toHaveBeenCalledWith(SOUNDS.EYES_RUNNING);
+                    expect(setLoopedSound).toHaveBeenCalledWith(Sounds.EYES_RUNNING);
                 });
             });
         });
 
         describe('when a ghost is eyes', () => {
             beforeEach(() => {
-                game.getGhost(2).motionState = MotionState.EYES;
+                game.getGhost(2).setMotionState(MotionState.EYES);
             });
 
             it('plays the eyes sound', () => {
                 game.checkLoopedSound();
-                expect(setLoopedSound).toHaveBeenCalledWith(SOUNDS.EYES_RUNNING);
+                expect(setLoopedSound).toHaveBeenCalledWith(Sounds.EYES_RUNNING);
             });
         });
     });
@@ -150,7 +150,7 @@ describe('PacmanGame', () => {
 
         beforeEach(() => {
             game = new PacmanGame();
-            vi.spyOn(game, 'level', 'get').mockReturnValue(1);
+            vi.spyOn(game, 'getLevel').mockReturnValue(1);
             paintPointsEarned = vi.spyOn(PacmanGame.prototype, 'paintPointsEarned').mockImplementation(() => {});
         });
 
@@ -295,7 +295,7 @@ describe('PacmanGame', () => {
     });
 
     it('godMode()', () => {
-        expect(new PacmanGame().godMode).toBeFalsy();
+        expect(new PacmanGame().isGodMode()).toBeFalsy();
     });
 
     it('ghostEaten()', () => {
@@ -306,7 +306,7 @@ describe('PacmanGame', () => {
         for (let i = 0; i < 4; i++) {
             expect(game.ghostEaten(game.getGhost(i))).toBeGreaterThan(0);
             expect(game.increaseScore).toHaveBeenCalled();
-            expect(game.audio.playSound).toHaveBeenCalledWith(SOUNDS.EATING_GHOST);
+            expect(game.audio.playSound).toHaveBeenCalledWith(Sounds.EATING_GHOST);
         }
     });
 
@@ -373,9 +373,9 @@ describe('PacmanGame', () => {
         it('alternates between two sounds', () => {
             vi.spyOn(game.audio, 'playSound');
             game.playChompSound();
-            expect(game.audio.playSound).toHaveBeenCalledWith(SOUNDS.CHOMP_1);
+            expect(game.audio.playSound).toHaveBeenCalledWith(Sounds.CHOMP_1);
             game.playChompSound();
-            expect(game.audio.playSound).toHaveBeenCalledWith(SOUNDS.CHOMP_2);
+            expect(game.audio.playSound).toHaveBeenCalledWith(Sounds.CHOMP_2);
         });
     });
 
@@ -405,7 +405,7 @@ describe('PacmanGame', () => {
         it('plays the pacman death sound', () => {
             vi.spyOn(game.audio, 'playSound').mockImplementation(() => 1);
             game.startPacmanDying();
-            expect(game.audio.playSound).toHaveBeenCalledWith(SOUNDS.DIES);
+            expect(game.audio.playSound).toHaveBeenCalledWith(Sounds.DIES);
         });
 
         it('starts the pacman dying animation', () => {
@@ -418,9 +418,9 @@ describe('PacmanGame', () => {
     it('toggleGodMode()', () => {
         const game = new PacmanGame();
         vi.spyOn(game, 'toggleGodMode');
-        expect(game.godMode).toBeFalsy();
+        expect(game.isGodMode()).toBeFalsy();
         expect(game.toggleGodMode()).toBeTruthy();
-        expect(game.godMode).toBeTruthy();
+        expect(game.isGodMode()).toBeTruthy();
     });
 
     describe('toggleStretchMode()', () => {
@@ -492,7 +492,7 @@ describe('PacmanGame', () => {
 
         describe('with ghost strategy UPDATE_NONE', () => {
             beforeEach(() => {
-                game.ghostUpdateStrategy = GhostUpdateStrategy.UPDATE_NONE;
+                game.setGhostUpdateStrategy(GhostUpdateStrategy.UPDATE_NONE);
             });
 
             it('updates no ghosts', () => {
@@ -505,7 +505,7 @@ describe('PacmanGame', () => {
 
         describe('with ghost strategy UPDATE_ONE', () => {
             beforeEach(() => {
-                game.ghostUpdateStrategy = GhostUpdateStrategy.UPDATE_ONE;
+                game.setGhostUpdateStrategy(GhostUpdateStrategy.UPDATE_ONE);
             });
 
             it('updates only the first ghost', () => {

@@ -35,7 +35,7 @@ beforeEach(() => {
         playTime: 0,
         resetPlayTime: vi.fn(),
         paused: false,
-        level: 0,
+        getLevel: () => 0,
         audio: {playSound: vi.fn()},
         setLoopedSound: vi.fn(),
         ghostEaten: vi.fn(),
@@ -46,7 +46,7 @@ beforeEach(() => {
         loadNextLevel: vi.fn(),
         startPacmanDying: vi.fn(),
         godMode: false,
-        lives: 3
+        getLives: () => 3
     };
 });
 
