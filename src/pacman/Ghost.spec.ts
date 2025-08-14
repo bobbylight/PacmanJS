@@ -11,7 +11,7 @@ const mockGame: any = {
     PENALTY_BOX_EXIT_Y: 120,
     checkLoopedSound: () => {},
     drawSprite: vi.fn(),
-    level: 0,
+    getLevel: () => 0,
     playTime: 5000,
 };
 const mockPacman = {
@@ -24,7 +24,7 @@ export class ConcreteGhost extends Ghost {
 
     constructor(game: PacmanGame) {
         super(game, 0, 0);
-        this.motionState = MotionState.CHASING_PACMAN;
+        this.setMotionState(MotionState.CHASING_PACMAN);
     }
 
     protected updatePositionChasingPacman(maze: Maze): void {
@@ -354,7 +354,7 @@ describe('Ghost', () => {
         const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
 
         it('returns the proper value for blue ghosts', () => {
-            ghost.motionState = MotionState.BLUE;
+            ghost.setMotionState(MotionState.BLUE);
             expect(ghost.getUpdateDelayMillis()).toBe(25);
         });
 
@@ -367,7 +367,7 @@ describe('Ghost', () => {
             MotionState.LEAVING_BOX
         ].forEach(state => {
             it(`returns the proper value for non-blue ghosts when they are ${state}`, () => {
-                ghost.motionState = state;
+                ghost.setMotionState(state);
                 expect(ghost.getUpdateDelayMillis()).toBe(10);
             });
         });
@@ -375,10 +375,10 @@ describe('Ghost', () => {
 
     it('returns the proper value for isEyes()', () => {
         const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
-        ghost.motionState = MotionState.EYES;
+        ghost.setMotionState(MotionState.EYES);
         expect(ghost.isEyes()).toBe(true);
 
-        ghost.motionState = MotionState.EYES_ENTERING_BOX;
+        ghost.setMotionState(MotionState.EYES_ENTERING_BOX);
         expect(ghost.isEyes()).toBe(true);
 
         [
@@ -388,7 +388,7 @@ describe('Ghost', () => {
             MotionState.CHASING_PACMAN,
             MotionState.BLUE
         ].forEach(state => {
-            ghost.motionState = state;
+            ghost.setMotionState(state);
             expect(ghost.isEyes()).toBe(false);
         });
     });
@@ -398,7 +398,7 @@ describe('Ghost', () => {
 
         describe('when they are blue', () => {
             beforeEach(() => {
-                ghost.motionState = MotionState.BLUE;
+                ghost.setMotionState(MotionState.BLUE);
             });
 
             it('paints the blue ghost', () => {
@@ -424,7 +424,7 @@ describe('Ghost', () => {
         ].forEach(state => {
             describe(`when they are ${state}`, () => {
                 beforeEach(() => {
-                    ghost.motionState = state;
+                    ghost.setMotionState(state);
                 });
 
                 it('paints the eyes', () => {
@@ -436,7 +436,7 @@ describe('Ghost', () => {
 
         describe('when they are not blue or eyes', () => {
             beforeEach(() => {
-                ghost.motionState = MotionState.CHASING_PACMAN;
+                ghost.setMotionState(MotionState.CHASING_PACMAN);
             });
 
             it('paints the normal ghost', () => {
@@ -450,7 +450,7 @@ describe('Ghost', () => {
         [ MotionState.EYES, MotionState.EYES_ENTERING_BOX, MotionState.IN_BOX, MotionState.LEAVING_BOX ].forEach(state => {
             it(`does nothing if they are ${state}`, () => {
                 const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
-                ghost.motionState = state;
+                ghost.setMotionState(state);
                 ghost.possiblyTurnBlue();
                 expect(ghost.isBlue()).toBe(false);
             });
@@ -459,7 +459,7 @@ describe('Ghost', () => {
         [ MotionState.SCATTERING, MotionState.CHASING_PACMAN, MotionState.BLUE ].forEach(state => {
             it(`turns blue if they are ${state}`, () => {
                 const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
-                ghost.motionState = state;
+                ghost.setMotionState(state);
                 ghost.possiblyTurnBlue();
                 expect(ghost.isBlue()).toBe(true);
                 expect(ghost.exitBlueTime).toBeGreaterThan(0); // Fix #16
@@ -476,7 +476,7 @@ describe('Ghost', () => {
         const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
 
         beforeEach(() => {
-            ghost.motionState = MotionState.BLUE;
+            ghost.setMotionState(MotionState.BLUE);
         });
 
         afterEach(() => {
@@ -758,7 +758,7 @@ describe('Ghost', () => {
         it('returns to chasing Pacman after enough time', () => {
             mockGame.playTime += 12000;
             ghost.updatePosition({} as Maze, 1000);
-            expect(ghost.motionState).toEqual(MotionState.CHASING_PACMAN);
+            expect(ghost.getMotionState()).toEqual(MotionState.CHASING_PACMAN);
         });
     });
 
@@ -767,7 +767,7 @@ describe('Ghost', () => {
 
         beforeEach(() => {
             ghost.reset();
-            ghost.motionState = MotionState.EYES;
+            ghost.setMotionState(MotionState.EYES);
         });
 
         describe('when not at an intersection', () => {
@@ -790,7 +790,7 @@ describe('Ghost', () => {
 
                 it('changes to the EYES_ENTERING_BOX state', () => {
                     ghost.updatePosition({} as Maze, 1000);
-                    expect(ghost.motionState).toEqual(MotionState.EYES_ENTERING_BOX);
+                    expect(ghost.getMotionState()).toEqual(MotionState.EYES_ENTERING_BOX);
                     expect(ghost.continueInCurrentDirection).not.toHaveBeenCalled();
                 });
             });
@@ -811,7 +811,7 @@ describe('Ghost', () => {
             it('when null is returned, changes to the EYES_ENTERING_BOX state', () => {
                 getPathBreadthFirst.mockReturnValue(null);
                 ghost.updatePosition(mockMaze, 1000);
-                expect(ghost.motionState).toEqual(MotionState.EYES_ENTERING_BOX);
+                expect(ghost.getMotionState()).toEqual(MotionState.EYES_ENTERING_BOX);
                 expect(getPathBreadthFirst).toHaveBeenCalledOnce();
             });
 
@@ -854,7 +854,7 @@ describe('Ghost', () => {
 
         beforeEach(() => {
             ghost.reset();
-            ghost.motionState = MotionState.EYES_ENTERING_BOX;
+            ghost.setMotionState(MotionState.EYES_ENTERING_BOX);
             vi.spyOn(ghost, 'incY');
         });
 
@@ -873,7 +873,7 @@ describe('Ghost', () => {
 
             it('changes the leaving the box state', () => {
                 ghost.updatePosition({} as Maze, 1000);
-                expect(ghost.motionState).toEqual(MotionState.LEAVING_BOX);
+                expect(ghost.getMotionState()).toEqual(MotionState.LEAVING_BOX);
                 expect(ghost.incY).not.toHaveBeenCalled();
             });
         });
@@ -884,7 +884,7 @@ describe('Ghost', () => {
 
         beforeEach(() => {
             ghost.reset();
-            ghost.motionState = MotionState.IN_BOX;
+            ghost.setMotionState(MotionState.IN_BOX);
             vi.spyOn(ghost, 'incY');
         });
 
@@ -950,7 +950,7 @@ describe('Ghost', () => {
 
         beforeEach(() => {
             ghost.reset();
-            ghost.motionState = MotionState.LEAVING_BOX;
+            ghost.setMotionState(MotionState.LEAVING_BOX);
             vi.spyOn(ghost, 'incX');
         });
 
@@ -998,7 +998,7 @@ describe('Ghost', () => {
 
                 it('changes to the SCATTERING state', () => {
                     ghost.updatePosition({} as Maze, 1000);
-                    expect(ghost.motionState).toEqual(MotionState.SCATTERING);
+                    expect(ghost.getMotionState()).toEqual(MotionState.SCATTERING);
                     expect(ghost.direction).toEqual(Direction.WEST);
                 });
             });
@@ -1010,7 +1010,7 @@ describe('Ghost', () => {
 
         beforeEach(() => {
             ghost.reset();
-            ghost.motionState = MotionState.SCATTERING;
+            ghost.setMotionState(MotionState.SCATTERING);
             vi.spyOn(ghost, 'incX');
             vi.spyOn(ghost, 'incY');
         });
@@ -1076,7 +1076,7 @@ describe('Ghost', () => {
             it('goes back to chasing Pacman after a while', () => {
                 mockGame.playTime += 10000;
                 ghost.updatePosition(mockMaze, 1000);
-                expect(ghost.motionState).toEqual(MotionState.CHASING_PACMAN);
+                expect(ghost.getMotionState()).toEqual(MotionState.CHASING_PACMAN);
             });
         });
     });

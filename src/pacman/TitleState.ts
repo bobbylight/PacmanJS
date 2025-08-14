@@ -1,13 +1,13 @@
-import { _BaseState } from './_BaseState';
+import { BaseState } from './BaseState';
 import { PacmanGame } from './PacmanGame';
 import { Pacman } from './Pacman';
 import { Direction } from './Direction';
 import { Ghost } from './Ghost';
-import SOUNDS from './Sounds';
+import Sounds from './Sounds';
 import { Game, Image, InputManager, SpriteSheet } from 'gtp';
 import Constants from './Constants';
 
-export class TitleState extends _BaseState {
+export class TitleState extends BaseState {
 
     private choice: number;
     private lastKeypressTime: number;
@@ -20,7 +20,7 @@ export class TitleState extends _BaseState {
         super(args);
         // Initialize our sprites not just in enter() so they are positioned
         // correctly while FadeOutInState is running
-        this._initSprites(args);
+        this.initSprites(args);
     }
 
     override enter(game: PacmanGame) {
@@ -31,10 +31,10 @@ export class TitleState extends _BaseState {
         this.choice = 0;
         this.lastKeypressTime = game.playTime;
 
-        this._initSprites(game);
+        this.initSprites(game);
     }
 
-    private _initSprites(game: PacmanGame) {
+    private initSprites(game: PacmanGame) {
         const pacman: Pacman = game.pacman;
         pacman.setLocation(game.getWidth() / 2, 240);
         pacman.direction = Direction.EAST;
@@ -54,16 +54,16 @@ export class TitleState extends _BaseState {
 
     override render(ctx: CanvasRenderingContext2D) {
         const game = this.game;
-        const SCREEN_WIDTH: number = game.getWidth(),
-            SCREEN_HEIGHT: number = game.getHeight(),
+        const screenWidth: number = game.getWidth(),
+            screenHeight: number = game.getHeight(),
             charWidth: number = 9;
 
         this.renderStaticStuff(ctx);
 
         // Draw the menu "choice" arrow
         // " - 5" to account for differently sized choices
-        let x: number = (SCREEN_WIDTH - charWidth * 15) / 2 - 5;
-        let y: number = (SCREEN_HEIGHT - 15 * 2) / 2;
+        let x: number = (screenWidth - charWidth * 15) / 2 - 5;
+        let y: number = (screenHeight - 15 * 2) / 2;
         this.game.drawString(x, y + this.choice * 15, '>');
 
         // Draw the small and big dots
@@ -110,7 +110,7 @@ export class TitleState extends _BaseState {
     private renderStaticStuff(ctx: CanvasRenderingContext2D) {
         const game = this.game;
         game.clearScreen('rgb(0,0,0)');
-        const SCREEN_WIDTH: number = game.getWidth();
+        const screenHeight: number = game.getWidth();
         const charWidth: number = 9;
 
         // Render the "scores" stuff at the top.
@@ -119,7 +119,7 @@ export class TitleState extends _BaseState {
 
         // Title image
         const titleImage: Image = game.assets.get('title');
-        let x: number = (SCREEN_WIDTH - titleImage.width) / 2;
+        let x: number = (screenHeight - titleImage.width) / 2;
         let y: number = titleImage.height * 1.2;
         titleImage.draw(ctx, x, y);
 
@@ -127,7 +127,7 @@ export class TitleState extends _BaseState {
         let temp: string = 'STANDARD MAZE';
         let charCount: number = temp.length - 1; // "-1" for selection arrow
         // " - 5" to account for differently sized choices
-        x = (SCREEN_WIDTH - charWidth * charCount) / 2 - 5;
+        x = (screenHeight - charWidth * charCount) / 2 - 5;
         y = (game.getHeight() - 15 * 2) / 2;
         this.game.drawString(x, y, temp, ctx);
         temp = 'ALTERNATE MAZE';
@@ -146,7 +146,7 @@ export class TitleState extends _BaseState {
 
         // Copyright
         temp = '2015 OLD MAN GAMES';
-        x = (SCREEN_WIDTH - charWidth * temp.length) / 2;
+        x = (screenHeight - charWidth * temp.length) / 2;
         y = game.getHeight() - 20;
         this.game.drawString(x, y, temp, ctx);
     }
@@ -160,18 +160,18 @@ export class TitleState extends _BaseState {
         this.handleDefaultKeys();
 
         const playTime: number = game.playTime;
-        if (playTime > this.lastKeypressTime + _BaseState.INPUT_REPEAT_MILLIS + 100) {
+        if (playTime > this.lastKeypressTime + BaseState.INPUT_REPEAT_MILLIS + 100) {
 
             const im: InputManager = game.inputManager;
 
             if (im.up()) {
                 this.choice = Math.abs(this.choice - 1);
-                game.audio.playSound(SOUNDS.TOKEN);
+                game.audio.playSound(Sounds.TOKEN);
                 this.lastKeypressTime = playTime;
             }
             else if (im.down()) {
                 this.choice = (this.choice + 1) % 2;
-                game.audio.playSound(SOUNDS.TOKEN);
+                game.audio.playSound(Sounds.TOKEN);
                 this.lastKeypressTime = playTime;
             }
             else if (im.enter(true)) {
@@ -202,6 +202,6 @@ export class TitleState extends _BaseState {
             pacman.direction = ghost.direction = Direction.EAST;
         }
 
-        this._updateSpriteFrames();
+        this.updateSpriteFrames();
     }
 }

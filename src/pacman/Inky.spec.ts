@@ -27,7 +27,7 @@ describe('Inky', () => {
         ghost.reset();
 
         expect(ghost.direction).toEqual(Direction.SOUTH);
-        expect(ghost.motionState).toEqual(MotionState.IN_BOX);
+        expect(ghost.getMotionState()).toEqual(MotionState.IN_BOX);
     });
 
     describe('updatePosition', () => {
@@ -40,7 +40,7 @@ describe('Inky', () => {
 
         describe('when chasing Pacman', () => {
             beforeEach(() => {
-                ghost.motionState = MotionState.CHASING_PACMAN;
+                ghost.setMotionState(MotionState.CHASING_PACMAN);
             });
 
             describe('when at an intersection', () => {

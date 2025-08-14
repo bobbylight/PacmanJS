@@ -22,7 +22,7 @@ export class Blinky extends Ghost {
         super.reset();
         this.direction = Direction.WEST;
         this.setLocation(this.game.PENALTY_BOX_EXIT_X, this.game.PENALTY_BOX_EXIT_Y);
-        this.motionState = MotionState.SCATTERING;
+        this.setMotionState(MotionState.SCATTERING);
     }
 
     /**
@@ -76,7 +76,7 @@ export class Blinky extends Ghost {
 
         // Switch over to scatter mode if it's time to do so.
         if (this.game.playTime >= this.startScatteringTime) {
-            this.motionState = MotionState.SCATTERING;
+            this.setMotionState(MotionState.SCATTERING);
         }
     }
 

@@ -154,7 +154,7 @@ describe('Pacman', () => {
         test('sets dying frame to 1', () => {
             const pacman = new Pacman(mockGame);
             pacman.startDying();
-            expect(pacman._dyingFrame).toEqual(1);
+            expect(pacman.dyingFrame).toEqual(1);
         });
     });
 

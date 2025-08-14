@@ -1,4 +1,4 @@
-import { _BaseSprite } from './_BaseSprite';
+import { BaseSprite } from './BaseSprite';
 import { Point, Utils } from 'gtp';
 import { Maze } from './Maze';
 import { Direction } from './Direction';
@@ -19,17 +19,17 @@ export enum MotionState {
     EYES_ENTERING_BOX = 6
 }
 
-export abstract class Ghost extends _BaseSprite {
+export abstract class Ghost extends BaseSprite {
 
     /**
      * TODO: Remove the need for this variable!  Yucky!
      */
-    game: PacmanGame;
+    readonly game: PacmanGame;
 
     /**
      * The ghost's current motion state.
      */
-    private _motionState: MotionState;
+    private motionState: MotionState;
 
     /**
      * The "corner" this ghost will retreat to when in "scatter" mode.
@@ -201,8 +201,8 @@ export abstract class Ghost extends _BaseSprite {
         return 2;
     }
 
-    get motionState(): MotionState {
-        return this._motionState;
+    getMotionState(): MotionState {
+        return this.motionState;
     }
 
     /**
@@ -213,7 +213,7 @@ export abstract class Ghost extends _BaseSprite {
      * @return The update delay, in milliseconds.
      */
     getUpdateDelayMillis(): number {
-        switch (this._motionState) {
+        switch (this.motionState) {
             case MotionState.BLUE:
                 return 25;
             case MotionState.EYES:
@@ -231,7 +231,7 @@ export abstract class Ghost extends _BaseSprite {
      * @see #isEyes()
      */
     isBlue(): boolean {
-        return this._motionState === MotionState.BLUE;
+        return this.motionState === MotionState.BLUE;
     }
 
     /**
@@ -241,8 +241,8 @@ export abstract class Ghost extends _BaseSprite {
      * @see #isBlue()
      */
     isEyes(): boolean {
-        return this._motionState === MotionState.EYES ||
-            this._motionState === MotionState.EYES_ENTERING_BOX;
+        return this.motionState === MotionState.EYES ||
+            this.motionState === MotionState.EYES_ENTERING_BOX;
     }
 
     /**
@@ -259,7 +259,7 @@ export abstract class Ghost extends _BaseSprite {
             srcY: number;
         const playTime: number = this.game.playTime;
 
-        switch (this._motionState) {
+        switch (this.motionState) {
 
             case MotionState.BLUE:
                 srcX = (10 + this.getFrame()) * SPRITE_SIZE;
@@ -294,11 +294,11 @@ export abstract class Ghost extends _BaseSprite {
      * currently floating eyes.
      */
     possiblyTurnBlue(): boolean {
-        switch (this._motionState) {
+        switch (this.motionState) {
             case MotionState.CHASING_PACMAN:
             case MotionState.SCATTERING:
             case MotionState.BLUE:
-                this.motionState = MotionState.BLUE;
+                this.setMotionState(MotionState.BLUE);
                 return true;
             default:
                 // Do nothing; in other states, we don't turn blue.
@@ -335,7 +335,7 @@ export abstract class Ghost extends _BaseSprite {
         this.corner.y = corner.y;
     }
 
-    set motionState(motionState: MotionState) {
+    setMotionState(motionState: MotionState) {
 
         const game: PacmanGame = this.game;
 
@@ -349,34 +349,34 @@ export abstract class Ghost extends _BaseSprite {
                 case 0:
                 case 1:
                     this.exitScatteringTime = game.playTime + 7000;
-                    this._motionState = motionState;
+                    this.motionState = motionState;
                     break;
                 case 2:
                 case 3:
                     this.exitScatteringTime = game.playTime + 5000;
-                    this._motionState = motionState;
+                    this.motionState = motionState;
                     break;
                 default:
-                    this._motionState = MotionState.CHASING_PACMAN;
+                    this.motionState = MotionState.CHASING_PACMAN;
                     break;
             }
         }
 
         else if (motionState === MotionState.BLUE) {
-            const blueTime: number = this.getBlueTimeForLevel(game.level);
+            const blueTime: number = this.getBlueTimeForLevel(game.getLevel());
             const playTime: number = game.playTime;
             this.exitBlueTime = playTime + blueTime;
             // Keep previous "previousState".
             const prevBlueTimeRemaining: number = this.exitBlueTime - playTime;
             // Remember previous state and modify its "end time" to
             // include the blue time.
-            switch (this._motionState) {
+            switch (this.motionState) {
                 case MotionState.CHASING_PACMAN:
-                    this.previousState = this._motionState;
+                    this.previousState = this.motionState;
                     this.startScatteringTime += blueTime;
                     break;
                 case MotionState.SCATTERING:
-                    this.previousState = this._motionState;
+                    this.previousState = this.motionState;
                     this.exitScatteringTime += blueTime;
                     break;
                 case MotionState.BLUE:
@@ -390,17 +390,17 @@ export abstract class Ghost extends _BaseSprite {
                     }
                     break;
                 default:
-                    throw new Error(`Unexpected state: ${this._motionState}`);
+                    throw new Error(`Unexpected state: ${this.motionState}`);
             }
-            this._motionState = motionState;
+            this.motionState = motionState;
         }
 
         // Any states other than "scatter mode" and "blue" aren't special.
         else {
-            if (this._motionState === MotionState.CHASING_PACMAN) {
+            if (this.motionState === MotionState.CHASING_PACMAN) {
                 this.startScatteringTime = game.playTime + 20000;
             }
-            this._motionState = motionState;
+            this.motionState = motionState;
         }
 
         this.game.checkLoopedSound();
@@ -489,7 +489,7 @@ export abstract class Ghost extends _BaseSprite {
         // Use game.playTime to ensure proper exit delay, even if game is
         // paused, etc.
         if (this.game.playTime >= this.exitBlueTime) {
-            this._motionState = this.previousState;
+            this.motionState = this.previousState;
         }
 
     }
@@ -533,7 +533,7 @@ export abstract class Ghost extends _BaseSprite {
             if (node == null) { // i.e. ghost is actually at the penalty box.
                 // Should never happen; we should always catch the ghost
                 // before getting to its destination in the "else" below.
-                this._motionState = MotionState.EYES_ENTERING_BOX;
+                this.motionState = MotionState.EYES_ENTERING_BOX;
             }
             else {
                 if (node.col < fromCol) {
@@ -564,7 +564,7 @@ export abstract class Ghost extends _BaseSprite {
             const toRow: number = Math.floor((this.game.PENALTY_BOX_EXIT_Y + 8) / Constants.TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
 
             if (fromRow === toRow && this.x === this.game.PENALTY_BOX_EXIT_X) {
-                this._motionState = MotionState.EYES_ENTERING_BOX;
+                this.motionState = MotionState.EYES_ENTERING_BOX;
             }
             else {
                 this.continueInCurrentDirection(moveAmount);
@@ -590,7 +590,7 @@ export abstract class Ghost extends _BaseSprite {
             this.incY(moveAmount);
         }
         else {
-            this._motionState = MotionState.LEAVING_BOX;
+            this.motionState = MotionState.LEAVING_BOX;
         }
 
     }
@@ -602,7 +602,7 @@ export abstract class Ghost extends _BaseSprite {
      */
     protected updatePositionImpl(maze: Maze) {
 
-        switch (this._motionState) {
+        switch (this.motionState) {
             case MotionState.IN_BOX:
                 this.updatePositionInBox(maze);
                 break;
@@ -660,7 +660,7 @@ export abstract class Ghost extends _BaseSprite {
         // Use game.playTime to ensure proper exit delay, even if game is
         // paused, etc.
         if (this.game.playTime >= this.getFirstExitDelayMillis()) {
-            this._motionState = MotionState.LEAVING_BOX;
+            this.motionState = MotionState.LEAVING_BOX;
         }
 
     }
@@ -691,7 +691,7 @@ export abstract class Ghost extends _BaseSprite {
             // shouldn't, but still)
             if (y <= game.PENALTY_BOX_EXIT_Y) {
                 y = game.PENALTY_BOX_EXIT_Y; // Should be unnecessary
-                this._motionState = MotionState.SCATTERING;
+                this.motionState = MotionState.SCATTERING;
                 this.direction = Direction.WEST;
             }
             else {
@@ -752,7 +752,7 @@ export abstract class Ghost extends _BaseSprite {
         }
 
         if (this.game.playTime >= this.exitScatteringTime) {
-            this._motionState = MotionState.CHASING_PACMAN;
+            this.motionState = MotionState.CHASING_PACMAN;
         }
     }
 }

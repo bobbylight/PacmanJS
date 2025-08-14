@@ -21,7 +21,7 @@ export class Clyde extends Ghost {
         this.direction = Direction.SOUTH;
         this.setLocation(16 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2 - 4,
             15 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2);
-        this.motionState = MotionState.IN_BOX;
+        this.setMotionState(MotionState.IN_BOX);
     }
 
     /**
@@ -46,7 +46,7 @@ export class Clyde extends Ghost {
 
         // Switch over to scatter mode if it's time to do so.
         if (this.game.playTime >= this.startScatteringTime) {
-            this.motionState = MotionState.SCATTERING;
+            this.setMotionState(MotionState.SCATTERING);
         }
 
     }

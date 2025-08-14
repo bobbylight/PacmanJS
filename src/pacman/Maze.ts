@@ -28,7 +28,7 @@ export class Maze {
         this.reset(mazeInfo);
     }
 
-    private static _cloneObjectOfPrimitives<T>(obj: T): T {
+    private static cloneObjectOfPrimitives<T>(obj: T): T {
         return JSON.parse(JSON.stringify(obj)) as T;
     }
 
@@ -75,7 +75,7 @@ export class Maze {
      *        breadth-first search.
      * @return The first node to move to.
      */
-    private static _constructPath(node: MazeNode): MazeNode/*MazeNode[]*/ | null {
+    private static constructPath(node: MazeNode): MazeNode/*MazeNode[]*/ | null {
         /*
          LinkedList<Node> path = new LinkedList<Node>();
          while (node.parent!=null) {
@@ -109,7 +109,7 @@ export class Maze {
      * @return The column to the "right" of <code>col</code>.
      * @see getPreviousColumn
      */
-    private static _getNextColumn(col: number): number {
+    private static getNextColumn(col: number): number {
         if (++col === Maze.TILE_COUNT_HORIZONTAL) {
             col = 0;
         }
@@ -143,7 +143,7 @@ export class Maze {
             const node: MazeNode = this.open.splice(0, 1)[0];
             if (node.equals(this.goalNode)) {
                 this.data[node.row][node.col] &= 0xff; // Won't be in open or closed lists
-                return Maze._constructPath(node);
+                return Maze.constructPath(node);
             }
 
             else {
@@ -177,7 +177,7 @@ export class Maze {
                     }
                 }
 
-                let col: number = Maze._getPreviousColumn(node.col);
+                let col: number = Maze.getPreviousColumn(node.col);
                 if (this.isWalkable(node.row, col)) {
                     //temp.set(node.row, col);
                     //if (!this.closed.contains(temp) && !this.open.contains(temp)) {
@@ -191,7 +191,7 @@ export class Maze {
                     }
                 }
 
-                col = Maze._getNextColumn(node.col);
+                col = Maze.getNextColumn(node.col);
                 if (this.isWalkable(node.row, col)) {
                     //temp.set(node.row, col);
                     //if (!this.closed.contains(temp) && !this.open.contains(temp)) {
@@ -220,7 +220,7 @@ export class Maze {
      * @return The column to the "left" of <code>col</code>.
      * @see getNextColumn
      */
-    private static _getPreviousColumn(col: number): number {
+    private static getPreviousColumn(col: number): number {
         if (col === 0) {
             col = Maze.TILE_COUNT_HORIZONTAL;
         }
@@ -338,11 +338,11 @@ export class Maze {
         // Load (or reset) map data
         if (mazeInfo != null) {
             // First time through, we cache a pristine view of our maze data
-            this.origMazeInfo = Maze._cloneObjectOfPrimitives(mazeInfo);
+            this.origMazeInfo = Maze.cloneObjectOfPrimitives(mazeInfo);
             firstTime = true;
         }
         // Next, we create a working copy of our maze data, since we mutate it
-        this.data = Maze._cloneObjectOfPrimitives(this.origMazeInfo);
+        this.data = Maze.cloneObjectOfPrimitives(this.origMazeInfo);
         this.eatenDotCount = 0;
 
         if (firstTime) {

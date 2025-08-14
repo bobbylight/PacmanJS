@@ -1,18 +1,18 @@
 import { BaseStateArgs, InputManager, Keys, State, Utils } from 'gtp';
 import { PacmanGame } from './PacmanGame';
 
-export class _BaseState extends State<PacmanGame> {
+export class BaseState extends State<PacmanGame> {
 
-    private _lastConfigKeypressTime: number;
-    protected _lastSpriteFrameTime: number;
+    private lastConfigKeypressTime: number;
+    protected lastSpriteFrameTime: number;
 
     /**
      * Functionality common amongst all states in this game.
      */
     constructor(args?: PacmanGame | BaseStateArgs<PacmanGame>) {
         super(args);
-        this._lastConfigKeypressTime = Utils.timestamp();
-        this._lastSpriteFrameTime = 0;
+        this.lastConfigKeypressTime = Utils.timestamp();
+        this.lastSpriteFrameTime = 0;
     }
 
     static get INPUT_REPEAT_MILLIS(): number {
@@ -27,12 +27,12 @@ export class _BaseState extends State<PacmanGame> {
         const game = this.game;
         const im: InputManager = game.inputManager;
 
-        if (time > (this._lastConfigKeypressTime + _BaseState.INPUT_REPEAT_MILLIS)) {
+        if (time > (this.lastConfigKeypressTime + BaseState.INPUT_REPEAT_MILLIS)) {
 
             // Audio stuff
             if (im.isKeyDown(Keys.KEY_M, true)) {
                 game.toggleMuted();
-                this._lastConfigKeypressTime = time;
+                this.lastConfigKeypressTime = time;
             }
 
             // Debugging actions
@@ -50,7 +50,7 @@ export class _BaseState extends State<PacmanGame> {
                     style.width = `${parseInt(style.width.substring(0, style.width.length - 2), 10) + 1}px`;
                     style.height = `${parseInt(style.height.substring(0, style.height.length - 2), 10) + 1}px`;
                     game.setStatusMessage(`Canvas size now: (${style.width}, ${style.height})`);
-                    this._lastConfigKeypressTime = time;
+                    this.lastConfigKeypressTime = time;
                 }
 
                 // Decrease canvas size
@@ -65,12 +65,12 @@ export class _BaseState extends State<PacmanGame> {
                     style.width = `${parseInt(style.width.substring(0, style.width.length - 2), 10) - 1}px`;
                     style.height = `${parseInt(style.height.substring(0, style.height.length - 2), 10) - 1}px`;
                     game.setStatusMessage(`Canvas size now: (${style.width}, ${style.height})`);
-                    this._lastConfigKeypressTime = time;
+                    this.lastConfigKeypressTime = time;
                 }
 
                 else if (im.isKeyDown(Keys.KEY_G, true)) {
                     game.toggleGodMode();
-                    this._lastConfigKeypressTime = time;
+                    this.lastConfigKeypressTime = time;
                 }
 
                 else if (im.isKeyDown(Keys.KEY_S, true)) {
@@ -82,12 +82,12 @@ export class _BaseState extends State<PacmanGame> {
 
     }
 
-    protected _updateSpriteFrames() {
+    protected updateSpriteFrames() {
         const time: number = this.game.playTime;
         // Don't update sprite frame at each rendered frame; that would be
         // too fast
-        if (time >= this._lastSpriteFrameTime + 100) {
-            this._lastSpriteFrameTime = time;
+        if (time >= this.lastSpriteFrameTime + 100) {
+            this.lastSpriteFrameTime = time;
             this.game.updateSpriteFrames();
         }
     }

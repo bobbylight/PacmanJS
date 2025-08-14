@@ -1,5 +1,5 @@
 import { CanvasResizer, Game, Image, Point, SpriteSheet, StretchMode, Utils } from 'gtp';
-import SOUNDS from './Sounds';
+import Sounds from './Sounds';
 import { Pacman } from './Pacman';
 import { Fruit } from './Fruit';
 import { Ghost } from './Ghost';
@@ -24,10 +24,10 @@ export enum GhostUpdateStrategy {
 export class PacmanGame extends Game {
 
     private highScore: number;
-    private _lives: number;
+    private lives: number;
     private score: number;
-    private _level: number;
-    private _ghostUpdateStrategy: GhostUpdateStrategy;
+    private level: number;
+    private ghostUpdateStrategy: GhostUpdateStrategy;
     private chompSound: number;
     pacman: Pacman;
     private fruit: Fruit | null;
@@ -82,22 +82,22 @@ export class PacmanGame extends Game {
      */
     private fruitScoreIndex: number;
 
-    private _godMode: boolean;
+    private godMode: boolean;
 
     constructor(args?: GameArgs  & { desktopGame?: boolean }) {
         super(args);
         this.highScore = DEFAULT_HIGH_SCORE;
         this.pacman = new Pacman(this);
-        this.ghosts = this._createGhostArray();
+        this.ghosts = this.createGhostArray();
         this.chompSound = 0;
-        this._ghostUpdateStrategy = GhostUpdateStrategy.UPDATE_ALL;
+        this.ghostUpdateStrategy = GhostUpdateStrategy.UPDATE_ALL;
         this.score = 0; // For title screen
-        this.desktopGame = args?.desktopGame ?? this._isRunningInElectron();
+        this.desktopGame = args?.desktopGame ?? this.isRunningInElectron();
 
         this.extraPointsArray = [100, 200, 300, 400, 500, 700, 800,
             1000, 1600, 2000, 3000, 5000];
 
-        this._possiblyRegisterDesktopModeListeners();
+        this.possiblyRegisterDesktopModeListeners();
     }
 
     addFruit(): Fruit | null {
@@ -120,9 +120,9 @@ export class PacmanGame extends Game {
 
         if (this.fruit && this.fruitScoreIndex === -1 &&
             this.pacman.intersects(this.fruit)) {
-            this.increaseScore(this.extraPointsArray[this.fruit.pointsIndex]);
-            this.audio.playSound(SOUNDS.EATING_FRUIT, false);
-            this.fruitScoreIndex = this.fruit.pointsIndex;
+            this.increaseScore(this.extraPointsArray[this.fruit.getPointsIndex()]);
+            this.audio.playSound(Sounds.EATING_FRUIT, false);
+            this.fruitScoreIndex = this.fruit.getPointsIndex();
             this.fruitScoreEndTime = this.playTime + PacmanGame.SCORE_DISPLAY_LENGTH;
         }
 
@@ -143,7 +143,7 @@ export class PacmanGame extends Game {
 
         for (const ghost of this.ghosts) {
             if (ghost.isEyes()) {
-                this.setLoopedSound(SOUNDS.EYES_RUNNING);
+                this.setLoopedSound(Sounds.EYES_RUNNING);
                 return; // "eye" noise trumps blue noise.
             }
             else if (ghost.isBlue()) {
@@ -151,7 +151,7 @@ export class PacmanGame extends Game {
             }
         }
 
-        this.setLoopedSound(blue ? SOUNDS.CHASING_GHOSTS : SOUNDS.SIREN);
+        this.setLoopedSound(blue ? Sounds.CHASING_GHOSTS : Sounds.SIREN);
 
     }
 
@@ -160,7 +160,7 @@ export class PacmanGame extends Game {
      *
      * @return The array of ghosts.
      */
-    private _createGhostArray(): Ghost[] {
+    private createGhostArray(): Ghost[] {
         const ghosts: Ghost[] = [];
         this.resettingGhostStates = true;
         ghosts.push(new Blinky(this));
@@ -290,20 +290,16 @@ export class PacmanGame extends Game {
         return this.ghosts[index];
     }
 
-    get godMode(): boolean {
-        return this._godMode;
-    }
-
     static get EXTRA_LIFE_SCORE(): number {
         return 10000;
     }
 
-    get level(): number {
-        return this._level;
+    getLevel(): number {
+        return this.level;
     }
 
-    get lives(): number {
-        return this._lives;
+    getLives(): number {
+        return this.lives;
     }
 
     get PENALTY_BOX_EXIT_X(): number {
@@ -325,6 +321,7 @@ export class PacmanGame extends Game {
     getStretchMode(): StretchMode {
         return this.stretchMode;
     }
+
     ghostEaten(ghost: Ghost): number {
 
         switch (this.eatenGhostPointsIndex) {
@@ -344,12 +341,12 @@ export class PacmanGame extends Game {
         }
         this.increaseScore(this.extraPointsArray[this.eatenGhostPointsIndex]);
 
-        this.audio.playSound(SOUNDS.EATING_GHOST);
+        this.audio.playSound(Sounds.EATING_GHOST);
         return this.eatenGhostPointsIndex;
     }
 
     increaseLives(amount: number): number {
-        return this._lives += amount;
+        return this.lives += amount;
     }
 
     increaseScore(amount: number) {
@@ -360,7 +357,7 @@ export class PacmanGame extends Game {
         }
 
         if (!this.earnedExtraLife && this.score >= PacmanGame.EXTRA_LIFE_SCORE) {
-            this.audio.playSound(SOUNDS.EXTRA_LIFE);
+            this.audio.playSound(Sounds.EXTRA_LIFE);
             this.increaseLives(1);
             this.earnedExtraLife = true;
         }
@@ -375,13 +372,17 @@ export class PacmanGame extends Game {
         return this.desktopGame;
     }
 
-    private _isRunningInElectron(): boolean {
+    isGodMode(): boolean {
+        return this.godMode;
+    }
+
+    private isRunningInElectron(): boolean {
         return false;
     }
 
     loadNextLevel() {
         this.setLoopedSound(null);
-        this._level++;
+        this.level++;
         this.fruit = null;
         this.fruitScoreIndex = -1;
         this.fruitScoreEndTime = -1;
@@ -417,14 +418,14 @@ export class PacmanGame extends Game {
      */
     playChompSound() {
         this.audio.playSound(this.chompSound === 0 ?
-            SOUNDS.CHOMP_1 : SOUNDS.CHOMP_2);
+            Sounds.CHOMP_1 : Sounds.CHOMP_2);
         this.chompSound = (this.chompSound + 1) % 2;
     }
 
     /**
      * Registers events that are specific to the desktop mode of the game.
      */
-    private _possiblyRegisterDesktopModeListeners() {
+    private possiblyRegisterDesktopModeListeners() {
         if (this.isDesktopGame()) {
 
             window.addEventListener('resize', () => {
@@ -475,8 +476,8 @@ export class PacmanGame extends Game {
      *
      * @param strategy How to update the ghosts.
      */
-    set ghostUpdateStrategy(strategy: GhostUpdateStrategy) {
-        this._ghostUpdateStrategy = strategy;
+    setGhostUpdateStrategy(strategy: GhostUpdateStrategy) {
+        this.ghostUpdateStrategy = strategy;
     }
 
     setStretchMode(stretchMode: StretchMode) {
@@ -489,9 +490,9 @@ export class PacmanGame extends Game {
 
     startGame(level: number) {
 
-        this._lives = 3;
+        this.lives = 3;
         this.score = 0;
-        this._level = 0;
+        this.level = 0;
 
         const levelsData: number[][][] = this.assets.get('levels');
         const levelData = levelsData[level];
@@ -502,7 +503,7 @@ export class PacmanGame extends Game {
 
     startPacmanDying() {
         this.setLoopedSound(null);
-        this.audio.playSound(SOUNDS.DIES);
+        this.audio.playSound(Sounds.DIES);
         this.pacman.startDying();
         this.fruit = null;
         this.fruitScoreIndex = -1;
@@ -510,9 +511,9 @@ export class PacmanGame extends Game {
     }
 
     toggleGodMode(): boolean {
-        this._godMode = !this._godMode;
-        this.setStatusMessage('God mode ' + (this._godMode ? 'enabled' : 'disabled'));
-        return this._godMode;
+        this.godMode = !this.godMode;
+        this.setStatusMessage('God mode ' + (this.godMode ? 'enabled' : 'disabled'));
+        return this.godMode;
     }
 
     toggleStretchMode() {
@@ -559,7 +560,7 @@ export class PacmanGame extends Game {
         // to them).  This is seen when PacMan eats the last dot in a level
         // and the next level is loaded.
 
-        switch (this._ghostUpdateStrategy) {
+        switch (this.ghostUpdateStrategy) {
             case GhostUpdateStrategy.UPDATE_ALL:
                 this.ghosts.forEach((ghost: Ghost) => {
                     ghost.updatePosition(maze, time);
