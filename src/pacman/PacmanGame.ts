@@ -174,7 +174,7 @@ export class PacmanGame extends Game {
     drawBigDot(x: number, y: number) {
         const ms: number = this.playTime;
         if (ms < 0 || (ms % 500) > 250) {
-            const ctx: CanvasRenderingContext2D = this.canvas.getContext('2d')!;
+            const ctx = this.getRenderingContext();
             const sx: number = 135,
                 sy: number = 38;
             const image: Image = this.assets.get('sprites');
@@ -227,18 +227,17 @@ export class PacmanGame extends Game {
     }
 
     drawSmallDot(x: number, y: number) {
-        const ctx: CanvasRenderingContext2D = this.canvas.getContext('2d')!;
-        ctx.fillRect(x, y, 2, 2);
+        this.getRenderingContext().fillRect(x, y, 2, 2);
     }
 
     drawSprite(dx: number, dy: number, sx: number, sy: number) {
         const image: Image = this.assets.get('sprites');
-        const ctx: CanvasRenderingContext2D = this.canvas.getContext('2d')!;
+        const ctx: CanvasRenderingContext2D = this.getRenderingContext();
         image.drawScaled2(ctx, sx, sy, 16, 16, dx, dy, 16, 16);
     }
 
     drawString(x: number, y: number, text: string | number,
-        ctx: CanvasRenderingContext2D = this.canvas.getContext('2d')!) {
+        ctx: CanvasRenderingContext2D = this.getRenderingContext()) {
 
         const str: string = text.toString(); // Allow us to pass in stuff like numerics
 
@@ -284,6 +283,14 @@ export class PacmanGame extends Game {
             fontImage.drawByIndex(ctx, x, y, index);
             x += 9; //CHAR_WIDTH
         }
+    }
+
+    getRenderingContext(): CanvasRenderingContext2D {
+        const ctx = this.canvas.getContext('2d');
+        if (!ctx) {
+            throw new Error('Failed to get 2D rendering context from canvas.');
+        }
+        return ctx;
     }
 
     getGhost(index: number): Ghost {

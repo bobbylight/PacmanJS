@@ -352,7 +352,10 @@ export class Maze {
             // Create an image for the maze
             const mazeY: number = 2 * TILE_SIZE;
             this.mazeCanvas = ImageUtils.createCanvas(game.getWidth(), game.getHeight());
-            const mazeCtx: CanvasRenderingContext2D = this.mazeCanvas.getContext('2d')!;
+            const mazeCtx = this.mazeCanvas.getContext('2d');
+            if (!mazeCtx) {
+                throw new Error('Failed to get 2D context for maze canvas');
+            }
             let walkableCount: number = 0;
             this.dotCount = 0;
 
