@@ -69,7 +69,7 @@ export class TitleState extends BaseState {
         // Draw the small and big dots
         x += charWidth * 1.5;
         y = 200;
-        game.canvas.getContext('2d')!.fillStyle = '#ffffff';
+        game.getRenderingContext().fillStyle = '#ffffff';
         game.drawSmallDot(x + 3, y + 2);
         y += 9;
         game.drawBigDot(x, y);

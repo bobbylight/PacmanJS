@@ -41,6 +41,7 @@ describe('TitleState', () => {
             drawString: vi.fn(),
             getGhost: () => ghost,
             getHeight: vi.fn(),
+            getRenderingContext: () => canvas.getContext('2d')!,
             getWidth: vi.fn(),
             inputManager: {
                 left: vi.fn(),
