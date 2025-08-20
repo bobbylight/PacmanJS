@@ -5,6 +5,10 @@ import { SPRITE_SIZE } from './Constants';
 
 export abstract class BaseSprite {
 
+    readonly SCREEN_WIDTH= 224; // TODO: Move somewhere more generic
+    readonly moveAmount = 1; // TODO: Perhaps this is no longer needed?
+    readonly TILE_SIZE = 8; // TODO: Move this somewhere more generic
+
     bounds: Rectangle;
     private readonly intersectBounds: Rectangle;
     direction: Direction;
@@ -134,14 +138,6 @@ export abstract class BaseSprite {
         return this.intersectBounds;
     }
 
-    get moveAmount(): number {
-        return 1; // TODO: Perhaps this is no longer needed?
-    }
-
-    get TILE_SIZE(): number {
-        return 8; // TODO: Move this somewhere more generic
-    }
-
     get width(): number {
         return this.bounds.w;
     }
@@ -228,10 +224,6 @@ export abstract class BaseSprite {
 
     reset() {
         this.lastUpdateTime = 0;
-    }
-
-    get SCREEN_WIDTH(): number { // TODO: Move somewhere more generic
-        return 224;
     }
 
     setLocation(x: number, y: number) {

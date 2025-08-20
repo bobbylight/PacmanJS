@@ -23,6 +23,14 @@ export enum GhostUpdateStrategy {
 
 export class PacmanGame extends Game {
 
+    static readonly EXTRA_LIFE_SCORE = 10000;
+
+    /**
+     * Amount of time, in milliseconds, that points earned by Pacman should
+     * be displayed (e.g. from eating a ghost or a fruit).
+     */
+    static readonly SCORE_DISPLAY_LENGTH = 750;
+
     private highScore: number;
     private lives: number;
     private score: number;
@@ -297,10 +305,6 @@ export class PacmanGame extends Game {
         return this.ghosts[index];
     }
 
-    static get EXTRA_LIFE_SCORE(): number {
-        return 10000;
-    }
-
     getLevel(): number {
         return this.level;
     }
@@ -315,14 +319,6 @@ export class PacmanGame extends Game {
 
     get PENALTY_BOX_EXIT_Y(): number {
         return 12 * TILE_SIZE - TILE_SIZE / 2;
-    }
-
-    /**
-     * Amount of time, in milliseconds, that points earned by Pacman should
-     * be displayed (e.g. from eating a ghost or a fruit).
-     */
-    static get SCORE_DISPLAY_LENGTH(): number {
-        return 750;
     }
 
     getStretchMode(): StretchMode {

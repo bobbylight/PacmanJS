@@ -34,7 +34,6 @@ export default [
         rules: {
             "no-unused-vars": 0,
             "@typescript-eslint/adjacent-overload-signatures": 0,
-            "@typescript-eslint/class-literal-property-style": 0, // TODO
             "@typescript-eslint/explicit-module-boundary-types": 0,
             "@typescript-eslint/naming-convention": [
                 "error",

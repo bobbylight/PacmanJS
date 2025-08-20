@@ -6,6 +6,22 @@ import { TILE_SIZE } from './Constants';
 const DOT_POINTS: number[] = [50, 10];
 
 export class Maze {
+
+    /**
+     * Returns the number of dots Pacman must eat before a fruit appears.
+     *
+     * @return The number of dots Pacman must eat.
+     */
+    static readonly FRUIT_DOT_COUNT = 64;
+
+    static readonly TILE_COUNT_HORIZONTAL = 28;
+
+    static readonly TILE_COUNT_VERTICAL = 32;
+
+    static readonly TILE_DOT_BIG = 0xfe;
+
+    static readonly TILE_DOT_SMALL = 0xff;
+
     private game: PacmanGame;
     private data: number[][];
     private mazeCanvas: HTMLCanvasElement;
@@ -90,15 +106,6 @@ export class Maze {
             node = node.parent;
         }
         return prev;
-    }
-
-    /**
-     * Returns the number of dots Pacman must eat before a fruit appears.
-     *
-     * @return The number of dots Pacman must eat.
-     */
-    static get FRUIT_DOT_COUNT(): number {
-        return 64;
     }
 
     /**
@@ -225,22 +232,6 @@ export class Maze {
             col = Maze.TILE_COUNT_HORIZONTAL;
         }
         return col - 1;
-    }
-
-    static get TILE_COUNT_HORIZONTAL(): number {
-        return 28;
-    }
-
-    static get TILE_COUNT_VERTICAL(): number {
-        return 32;
-    }
-
-    static get TILE_DOT_BIG(): number {
-        return 0xfe;
-    }
-
-    static get TILE_DOT_SMALL(): number {
-        return 0xff;
     }
 
     /**
