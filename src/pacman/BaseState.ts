@@ -3,6 +3,8 @@ import { PacmanGame } from './PacmanGame';
 
 export class BaseState extends State<PacmanGame> {
 
+    static readonly INPUT_REPEAT_MILLIS = 200;
+
     private lastConfigKeypressTime: number;
     protected lastSpriteFrameTime: number;
 
@@ -13,10 +15,6 @@ export class BaseState extends State<PacmanGame> {
         super(args);
         this.lastConfigKeypressTime = Utils.timestamp();
         this.lastSpriteFrameTime = 0;
-    }
-
-    static get INPUT_REPEAT_MILLIS(): number {
-        return 200;
     }
 
     protected handleDefaultKeys() {

@@ -22,13 +22,11 @@ export class MazeState extends BaseState {
     private nextDyingFrameTime: number;
     private lastMazeScreenKeypressTime: number;
 
+    private static readonly DYING_FRAME_DELAY_MILLIS = 75;
+
     constructor(mazeFile: number[][]) {
         super();
         this.mazeFile = mazeFile;
-    }
-
-    private static get DYING_FRAME_DELAY_MILLIS(): number {
-        return 75;
     }
 
     private get readyDelayMillis(): number {
