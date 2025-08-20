@@ -22,7 +22,7 @@ export class Maze {
 
     static readonly TILE_DOT_SMALL = 0xff;
 
-    private game: PacmanGame;
+    private readonly game: PacmanGame;
     private data: number[][];
     private mazeCanvas: HTMLCanvasElement;
     private eatenDotCount: number;
