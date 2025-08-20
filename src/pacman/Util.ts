@@ -9,10 +9,6 @@ const hexStrToInt: (str: string) => number = (str: string): number => {
     return parseInt(str, 16);
 };
 
-export const fixLevelDatas: (levelDatas: any[][][]) => void = (levelDatas: any[][][]) => {
-    levelDatas.forEach((levelData: any[][]) => {
-        for (let row = 0; row < levelData.length; row++) {
-            levelData[row] = levelData[row].map(hexStrToInt);
-        }
-    });
+export const fixLevelDatas: (levelDatas: string[][][]) => number[][][] = (levelDatas: string[][][]) => {
+    return levelDatas.map(levelData => levelData.map(row => row.map(hexStrToInt)));
 }

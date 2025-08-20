@@ -50,7 +50,7 @@ export class LoadingState extends BaseState {
                 game.assets.addSound(Sounds.TOKEN, 'res/sounds/token.wav');
                 game.assets.onLoad(() => {
 
-                    fixLevelDatas(game.assets.get('levels'));
+                    game.assets.set('levels', fixLevelDatas(game.assets.get('levels')));
 
                     const skipTitle: string | null = Utils.getRequestParam('skipTitle');
                     if (skipTitle !== null) { // Allow empty strings

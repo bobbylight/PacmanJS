@@ -35,6 +35,7 @@ describe('LoadingState', () => {
                         ]
                     )),
                     onLoad: vi.fn((callback) => callback()),
+                    set: vi.fn(),
                 },
                 checkLoopedSound: vi.fn(),
                 getGhost: () => new ConcreteGhost(mockGame),
@@ -57,6 +58,7 @@ describe('LoadingState', () => {
             expect(mockGame.assets.addSpriteSheet).toHaveBeenCalledWith('points', 'res/points.png', 18, 9, 0, 0);
             expect(mockGame.assets.addJson).toHaveBeenCalledWith('levels', 'res/levelData.json');
             expect(mockGame.assets.addSound).toHaveBeenCalledTimes(12); // Assuming there are 12 sounds
+            expect(mockGame.assets.set).toHaveBeenCalledExactlyOnceWith('levels', expect.anything());
         });
     });
 });
