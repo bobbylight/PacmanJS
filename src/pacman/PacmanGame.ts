@@ -15,7 +15,7 @@ import { GameArgs } from 'gtp/lib/gtp/Game';
 /**
  * The default high score displayed in the game.
  */
-const DEFAULT_HIGH_SCORE: number = 50000;
+const DEFAULT_HIGH_SCORE = 50000;
 
 export enum GhostUpdateStrategy {
     UPDATE_ALL, UPDATE_NONE, UPDATE_ONE
@@ -147,7 +147,7 @@ export class PacmanGame extends Game {
             return;
         }
 
-        let blue: boolean = false;
+        let blue = false;
 
         for (const ghost of this.ghosts) {
             if (ghost.isEyes()) {
@@ -183,8 +183,8 @@ export class PacmanGame extends Game {
         const ms: number = this.playTime;
         if (ms < 0 || (ms % 500) > 250) {
             const ctx = this.getRenderingContext();
-            const sx: number = 135,
-                sy: number = 38;
+            const sx = 135,
+                sy = 38;
             const image: Image = this.assets.get('sprites');
             image.drawScaled2(ctx, sx, sy, 8, 8, x, y, 8, 8);
         }
@@ -221,7 +221,7 @@ export class PacmanGame extends Game {
 
         let scoreStr: string = this.score.toString();
         let x: number = 55 - scoreStr.length * 8;
-        const y: number = 10;
+        const y = 10;
         this.drawString(x, y, scoreStr, ctx);
 
         scoreStr = this.highScore.toString();
@@ -256,7 +256,7 @@ export class PacmanGame extends Game {
         const numericOffs: number = '0'.charCodeAt(0);
         let index: number;
 
-        for (let i: number = 0; i < str.length; i++) {
+        for (let i = 0; i < str.length; i++) {
 
             const ch: string = str[i];
             const chCharCode: number = str.charCodeAt(i);
@@ -451,7 +451,7 @@ export class PacmanGame extends Game {
         ];
         const cornerSeed: number = Utils.randomInt(4);
 
-        for (let i: number = 0; i < this.ghosts.length; i++) {
+        for (let i = 0; i < this.ghosts.length; i++) {
             this.ghosts[i].reset();
             this.ghosts[i].setCorner(corners[(cornerSeed + i) % 4]);
         }

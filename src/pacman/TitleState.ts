@@ -56,7 +56,7 @@ export class TitleState extends BaseState {
         const game = this.game;
         const screenWidth: number = game.getWidth(),
             screenHeight: number = game.getHeight(),
-            charWidth: number = 9;
+            charWidth = 9;
 
         this.renderStaticStuff(ctx);
 
@@ -92,7 +92,7 @@ export class TitleState extends BaseState {
 
         const w: number = this.game.getWidth();
 
-        let text: string = 'SOUND IS DISABLED AS';
+        let text = 'SOUND IS DISABLED AS';
         let x: number = (w - this.stringWidth(text)) / 2;
         let y: number = this.game.getHeight() - 20 - 9 * 3;
         this.game.drawString(x, y, text);
@@ -111,7 +111,7 @@ export class TitleState extends BaseState {
         const game = this.game;
         game.clearScreen('rgb(0,0,0)');
         const screenHeight: number = game.getWidth();
-        const charWidth: number = 9;
+        const charWidth = 9;
 
         // Render the "scores" stuff at the top.
         game.drawScores(ctx);
@@ -124,7 +124,7 @@ export class TitleState extends BaseState {
         titleImage.draw(ctx, x, y);
 
         // Game menu
-        let temp: string = 'STANDARD MAZE';
+        let temp = 'STANDARD MAZE';
         let charCount: number = temp.length - 1; // "-1" for selection arrow
         // " - 5" to account for differently sized choices
         x = (screenHeight - charWidth * charCount) / 2 - 5;

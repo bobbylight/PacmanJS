@@ -59,7 +59,7 @@ export class Maze {
      */
     checkForDot(row: number, col: number): number {
 
-        let score: number = 0;
+        let score = 0;
         const tile: number = this.getTileAt(row, col);
         const game = this.game;
 
@@ -292,16 +292,16 @@ export class Maze {
         // Draw all static content
         ctx.drawImage(this.mazeCanvas, 0, 0);
 
-        const TILE_SIZE: number = 8;
+        const TILE_SIZE = 8;
         const game: PacmanGame = this.game;
 
         // Draw the dots
         ctx.fillStyle = '#ffffff';
-        for (let row: number = 0; row < Maze.TILE_COUNT_VERTICAL; row++) {
+        for (let row = 0; row < Maze.TILE_COUNT_VERTICAL; row++) {
 
             const y: number = row * TILE_SIZE + (2 * TILE_SIZE);
 
-            for (let col: number = 0; col < Maze.TILE_COUNT_HORIZONTAL; col++) {
+            for (let col = 0; col < Maze.TILE_COUNT_HORIZONTAL; col++) {
 
                 const tile: number = this.getTileAt(row, col);
                 const x: number = col * TILE_SIZE;
@@ -346,7 +346,7 @@ export class Maze {
             if (!mazeCtx) {
                 throw new Error('Failed to get 2D context for maze canvas');
             }
-            let walkableCount: number = 0;
+            let walkableCount = 0;
             this.dotCount = 0;
 
             mazeCtx.fillStyle = '#000000';
@@ -355,11 +355,11 @@ export class Maze {
             game.drawScoresHeaders(mazeCtx);
 
             // Render each tile from the map data
-            for (let row: number = 0; row < this.data.length; row++) {
+            for (let row = 0; row < this.data.length; row++) {
 
                 const rowData: number[] = this.data[row];
 
-                for (let col: number = 0; col < rowData.length; col++) {
+                for (let col = 0; col < rowData.length; col++) {
 
                     let tile: number = rowData[col];
                     if (tile === 0 || tile >= 0xf0) {
