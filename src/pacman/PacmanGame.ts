@@ -9,7 +9,7 @@ import { Inky } from './Inky';
 import { Clyde } from './Clyde';
 import { MazeState } from './MazeState';
 import { Maze } from './Maze';
-import Constants from './Constants';
+import { SPRITE_SIZE, TILE_SIZE } from './Constants';
 import { GameArgs } from 'gtp/lib/gtp/Game';
 
 /**
@@ -310,11 +310,11 @@ export class PacmanGame extends Game {
     }
 
     get PENALTY_BOX_EXIT_X(): number {
-        return (this.getWidth() - Constants.SPRITE_SIZE) / 2;
+        return (this.getWidth() - SPRITE_SIZE) / 2;
     }
 
     get PENALTY_BOX_EXIT_Y(): number {
-        return 12 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2;
+        return 12 * TILE_SIZE - TILE_SIZE / 2;
     }
 
     /**

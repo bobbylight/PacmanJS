@@ -3,7 +3,7 @@ import { PacmanGame } from './PacmanGame';
 import { Direction } from './Direction';
 import { Maze } from './Maze';
 import { MazeNode } from './MazeNode';
-import Constants from './Constants';
+import { SPRITE_SIZE, TILE_SIZE } from './Constants';
 
 /**
  * Inky, the blue ghost.  Inky is "bashful" and only chases after Pacman if
@@ -15,14 +15,14 @@ export class Inky extends Ghost {
      * Constructor.
      */
     constructor(game: PacmanGame) {
-        super(game, 1 * Constants.SPRITE_SIZE, 8);
+        super(game, 1 * SPRITE_SIZE, 8);
     }
 
     override reset() {
         super.reset();
         this.direction = Direction.SOUTH;
-        this.setLocation(12 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2 - 4,
-            15 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2);
+        this.setLocation(12 * TILE_SIZE - TILE_SIZE / 2 - 4,
+            15 * TILE_SIZE - TILE_SIZE / 2);
         this.setMotionState(MotionState.IN_BOX);
     }
 

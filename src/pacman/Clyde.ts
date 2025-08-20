@@ -2,7 +2,7 @@ import { Ghost, MotionState } from './Ghost';
 import { PacmanGame } from './PacmanGame';
 import { Direction } from './Direction';
 import { Maze } from './Maze';
-import Constants from './Constants';
+import { SPRITE_SIZE, TILE_SIZE } from './Constants';
 
 /**
  * Clyde, the orange ghost.
@@ -13,14 +13,14 @@ export class Clyde extends Ghost {
      * Constructor.
      */
     constructor(game: PacmanGame) {
-        super(game, 3 * Constants.SPRITE_SIZE, 14);
+        super(game, 3 * SPRITE_SIZE, 14);
     }
 
     override reset() {
         super.reset();
         this.direction = Direction.SOUTH;
-        this.setLocation(16 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2 - 4,
-            15 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2);
+        this.setLocation(16 * TILE_SIZE - TILE_SIZE / 2 - 4,
+            15 * TILE_SIZE - TILE_SIZE / 2);
         this.setMotionState(MotionState.IN_BOX);
     }
 

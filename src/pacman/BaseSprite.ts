@@ -1,7 +1,7 @@
 import { Rectangle } from 'gtp';
 import { Direction } from './Direction';
 import { Maze } from './Maze';
-import Constants from './Constants';
+import { SPRITE_SIZE } from './Constants';
 
 export abstract class BaseSprite {
 
@@ -13,7 +13,7 @@ export abstract class BaseSprite {
     private lastUpdateTime: number;
 
     constructor(frameCount: number) {
-        this.bounds = new Rectangle(0, 0, Constants.SPRITE_SIZE, Constants.SPRITE_SIZE);
+        this.bounds = new Rectangle(0, 0, SPRITE_SIZE, SPRITE_SIZE);
         this.intersectBounds = new Rectangle();
         this.direction = Direction.EAST;
         this.frame = 0;
