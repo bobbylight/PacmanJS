@@ -7,7 +7,7 @@ import { MazeNode } from './MazeNode';
 import { Pacman } from './Pacman';
 import { SPRITE_SIZE, TILE_SIZE } from './Constants';
 
-const GHOST_IN_BOX_SPEED: number = 0.5;
+const GHOST_IN_BOX_SPEED = 0.5;
 
 export enum MotionState {
     IN_BOX = 0,
@@ -427,7 +427,7 @@ export abstract class Ghost extends BaseSprite {
             const pacCol: number = pacman.column;
             const row: number = this.row;
             const col: number = this.column;
-            let moved: boolean = false;
+            let moved = false;
 
             // If PacMan has a straight shot to us in our row, try to go
             // in a direction other than towards PacMan.

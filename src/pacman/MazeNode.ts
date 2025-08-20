@@ -8,7 +8,7 @@ export class MazeNode {
     col: number;
     parent: MazeNode | null;
 
-    constructor(row: number = 0, col: number = 0) {
+    constructor(row = 0, col = 0) {
         this.row = row;
         this.col = col;
     }

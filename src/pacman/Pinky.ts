@@ -40,7 +40,7 @@ export class Pinky extends Ghost {
         const pacCol: number = pacman.column;
         const row: number = this.row;
         const col: number = this.column;
-        let moved: boolean = false;
+        let moved = false;
 
         if (this.atIntersection(maze)) {
 

@@ -5,8 +5,8 @@ import { LoadingState } from './pacman/LoadingState';
  * Game bootstrap code.  This can be in an inline <script> tag as well.
  */
 //var TILE_SIZE = 8;//16;
-const CANVAS_WIDTH: number = 224; //448;
-const CANVAS_HEIGHT: number = 288; //576;
+const CANVAS_WIDTH = 224; //448;
+const CANVAS_HEIGHT = 288; //576;
 
 declare global {
     interface Window {

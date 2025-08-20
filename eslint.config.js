@@ -45,7 +45,6 @@ export default [
                 { selector: "typeParameter", format: ["PascalCase"] },
                 { selector: "variable", modifiers: ["const"], format: ["camelCase", "UPPER_CASE"] },
             ],
-            "@typescript-eslint/no-inferrable-types": 0, // TODO
             "@typescript-eslint/no-unused-vars": 0,
             "@typescript-eslint/prefer-readonly": "error",
             "@typescript-eslint/restrict-template-expressions": ["error", { "allowNumber": true }],

@@ -59,8 +59,8 @@ export class MazeState extends BaseState {
 
         // The indentation on either side of the status stuff at the bottom
         // (extra life count, possible fruits, etc.).
-        const BOTTOM_INDENT: number = 24;
-        const TILE_SIZE: number = 8;
+        const BOTTOM_INDENT = 24;
+        const TILE_SIZE = 8;
         const game = this.game;
 
         const lives: number = game.getLives();
@@ -68,7 +68,7 @@ export class MazeState extends BaseState {
             let x: number = BOTTOM_INDENT;
             const y: number = game.getHeight() - 2 * TILE_SIZE;
             const w: number = 2 * TILE_SIZE;
-            for (let i: number = 0; i < lives; i++) {
+            for (let i = 0; i < lives; i++) {
                 game.drawSprite(x, y, 12 * 16, 3 * 16);
                 x += w;
             }
@@ -79,7 +79,7 @@ export class MazeState extends BaseState {
 
         // The indentation on either side of the status stuff at the bottom
         // (extra life count, possible fruits, etc.).
-        const BOTTOM_INDENT: number = 12;
+        const BOTTOM_INDENT = 12;
         const game = this.game;
 
         const x: number = game.getWidth() - BOTTOM_INDENT - 2 * TILE_SIZE;
@@ -120,7 +120,7 @@ export class MazeState extends BaseState {
         this.maze.render(ctx);
         const game = this.game;
 
-        const TILE_SIZE: number = 8;
+        const TILE_SIZE = 8;
         const mazeY: number = game.getHeight() - 2 * TILE_SIZE -
             Maze.TILE_COUNT_VERTICAL * TILE_SIZE;
         ctx.translate(0, mazeY);
@@ -150,7 +150,7 @@ export class MazeState extends BaseState {
         if (this.substate === 'READY') {
             // These calculations should be fast enough, especially considering
             // that "READY!" is only displayed for about 4 seconds.
-            const ready: string = 'READY!';
+            const ready = 'READY!';
             let x: number = (game.getWidth() - ready.length * 9) / 2;
             // Give "Ready!" a little nudge to the right.  This is because the
             // ending '!' doesn't fill up the standard 8 pixels for a character,
@@ -159,7 +159,7 @@ export class MazeState extends BaseState {
             game.drawString(x, 160, ready);
         }
         else if (this.substate === 'GAME_OVER') {
-            const gameOver: string = 'GAME OVER';
+            const gameOver = 'GAME OVER';
             const x: number = (game.getWidth() - gameOver.length * 9) / 2;
             game.drawString(x, 160, gameOver);
         }
@@ -170,7 +170,7 @@ export class MazeState extends BaseState {
             ctx.fillRect(0, 0, game.getWidth(), game.getHeight());
             ctx.globalAlpha = 1;
             ctx.fillRect(50, 100, game.getWidth() - 100, game.getHeight() - 200);
-            const paused: string = 'PAUSED';
+            const paused = 'PAUSED';
             const x: number = (game.getWidth() - paused.length * 9) / 2;
             game.drawString(x, (game.getHeight() - 18) / 2, paused);
         }

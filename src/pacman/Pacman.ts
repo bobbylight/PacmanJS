@@ -77,7 +77,7 @@ export class Pacman extends BaseSprite {
 
     override reset() {
 
-        const TILE_SIZE: number = 8;
+        const TILE_SIZE = 8;
 
         super.reset();
         this.direction = Direction.WEST;
