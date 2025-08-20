@@ -49,7 +49,6 @@ export default [
                 { selector: "variable", modifiers: ["const"], format: ["camelCase", "UPPER_CASE"] },
             ],
             "@typescript-eslint/no-empty-function": 0,
-            "@typescript-eslint/no-explicit-any": 0,
             "@typescript-eslint/no-extraneous-class": 0, // TODO
             "@typescript-eslint/no-inferrable-types": 0, // TODO
             "@typescript-eslint/no-unused-vars": 0,

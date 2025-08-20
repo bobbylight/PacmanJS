@@ -14,8 +14,8 @@ describe('Util', () => {
                     ['c', 'd']
                 ]
             ];
-            fixLevelDatas(levelDatas);
-            expect(levelDatas).toEqual([
+            const numericLevelDatas = fixLevelDatas(levelDatas);
+            expect(numericLevelDatas).toEqual([
                 [
                     [1, 10, 15, 0, 254],
                     [16, 0, 255]

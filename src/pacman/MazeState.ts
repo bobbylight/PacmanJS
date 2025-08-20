@@ -238,12 +238,10 @@ export class MazeState extends BaseState {
 
                 // Z+C => auto-death
                 else if (input.isKeyDown(Keys.KEY_C)) {
-                    if ((this.substate as any) !== 'DYING') { // <any> cast due to what seems to be a bug in tsc
-                        game.startPacmanDying();
-                        this.substate = 'DYING';
-                        this.nextDyingFrameTime = time + MazeState.DYING_FRAME_DELAY_MILLIS;
-                        this.lastMazeScreenKeypressTime = time;
-                    }
+                    game.startPacmanDying();
+                    this.substate = 'DYING';
+                    this.nextDyingFrameTime = time + MazeState.DYING_FRAME_DELAY_MILLIS;
+                    this.lastMazeScreenKeypressTime = time;
                 }
             }
 
