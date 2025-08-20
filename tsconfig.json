@@ -17,7 +17,7 @@
     "removeComments": false,
     "resolveJsonModule": true,
     "strict": true,
-    "strictPropertyInitialization": false,
+    "strictPropertyInitialization": false, // TODO
 
     "target": "es6",
     "module": "es2020",
