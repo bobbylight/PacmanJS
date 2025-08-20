@@ -3,7 +3,7 @@ import { PacmanGame } from './PacmanGame';
 import { Direction } from './Direction';
 import { Maze } from './Maze';
 import { Pacman } from './Pacman';
-import Constants from './Constants';
+import { SPRITE_SIZE, TILE_SIZE } from './Constants';
 
 /**
  * Pinky, the pink ghost.  If PacMan is "visible" to Pinky (i.e., in the
@@ -15,14 +15,14 @@ export class Pinky extends Ghost {
      * Constructor.
      */
     constructor(game: PacmanGame) {
-        super(game, 2 * Constants.SPRITE_SIZE, 2);
+        super(game, 2 * SPRITE_SIZE, 2);
     }
 
     override reset() {
         super.reset();
         this.direction = Direction.NORTH;
-        this.setLocation(14 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2 - 4,
-            15 * Constants.TILE_SIZE - Constants.TILE_SIZE / 2);
+        this.setLocation(14 * TILE_SIZE - TILE_SIZE / 2 - 4,
+            15 * TILE_SIZE - TILE_SIZE / 2);
         this.setMotionState(MotionState.IN_BOX);
     }
 

@@ -6,7 +6,7 @@ import { TitleState } from './TitleState';
 import Sounds from './Sounds';
 import { Ghost, MotionState } from './Ghost';
 import { InputManager, Keys } from 'gtp';
-import Constants from './Constants';
+import { TILE_SIZE } from './Constants';
 
 type Substate = 'READY' | 'IN_GAME' | 'DYING' | 'GAME_OVER';
 
@@ -82,7 +82,6 @@ export class MazeState extends BaseState {
         // The indentation on either side of the status stuff at the bottom
         // (extra life count, possible fruits, etc.).
         const BOTTOM_INDENT: number = 12;
-        const TILE_SIZE: number = Constants.TILE_SIZE;
         const game = this.game;
 
         const x: number = game.getWidth() - BOTTOM_INDENT - 2 * TILE_SIZE;

@@ -1,7 +1,7 @@
 import { ImageUtils, Pool, SpriteSheet } from 'gtp';
 import { MazeNode } from './MazeNode';
 import { PacmanGame } from './PacmanGame';
-import Constants from './Constants';
+import { TILE_SIZE } from './Constants';
 
 const DOT_POINTS: number[] = [50, 10];
 
@@ -331,7 +331,6 @@ export class Maze {
      *        is assumed that we are simply resetting to load a new level.
      */
     reset(mazeInfo?: number[][]) {
-        const TILE_SIZE: number = Constants.TILE_SIZE;
         let firstTime = false; // Must do it this way to appease tsc
         const game = this.game;
 

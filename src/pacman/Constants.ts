@@ -1,6 +1,3 @@
-export default class Constants {
+export const SPRITE_SIZE = 16;
 
-    static readonly SPRITE_SIZE: number = 16;
-
-    static readonly TILE_SIZE: number = 8;
-}
+export const TILE_SIZE = 8;
