@@ -9,8 +9,6 @@ export default [
 
     {
         ignores: [
-            ".eslintrc.config.js",
-            "jest.config.js",
             "vite.config.js",
             "**/*.spec.ts", // TODO: Remove me
         ],
@@ -49,6 +47,7 @@ export default [
             ],
             "@typescript-eslint/no-inferrable-types": 0, // TODO
             "@typescript-eslint/no-unused-vars": 0,
+            "@typescript-eslint/prefer-readonly": "error",
             "@typescript-eslint/restrict-template-expressions": ["error", { "allowNumber": true }],
             "brace-style": ["error", "stroustrup"],
             indent: ["error", 4, {"SwitchCase": 1}],
