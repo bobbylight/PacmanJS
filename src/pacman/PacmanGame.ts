@@ -18,7 +18,7 @@ import { GameArgs } from 'gtp/lib/gtp/Game';
 const DEFAULT_HIGH_SCORE = 50000;
 
 export enum GhostUpdateStrategy {
-    UPDATE_ALL, UPDATE_NONE, UPDATE_ONE
+    UPDATE_ALL, UPDATE_NONE, UPDATE_ONE,
 }
 
 export class PacmanGame extends Game {
@@ -92,7 +92,7 @@ export class PacmanGame extends Game {
 
     private godMode: boolean;
 
-    constructor(args?: GameArgs  & { desktopGame?: boolean }) {
+    constructor(args?: GameArgs & { desktopGame?: boolean }) {
         super(args);
         this.highScore = DEFAULT_HIGH_SCORE;
         this.pacman = new Pacman(this);
@@ -102,8 +102,8 @@ export class PacmanGame extends Game {
         this.score = 0; // For title screen
         this.desktopGame = args?.desktopGame ?? this.isRunningInElectron();
 
-        this.extraPointsArray = [100, 200, 300, 400, 500, 700, 800,
-            1000, 1600, 2000, 3000, 5000];
+        this.extraPointsArray = [ 100, 200, 300, 400, 500, 700, 800,
+            1000, 1600, 2000, 3000, 5000 ];
 
         this.possiblyRegisterDesktopModeListeners();
     }
@@ -447,7 +447,7 @@ export class PacmanGame extends Game {
             new Point(2, 1),
             new Point(2, Maze.TILE_COUNT_HORIZONTAL - 2),
             new Point(Maze.TILE_COUNT_VERTICAL - 2, 1),
-            new Point(Maze.TILE_COUNT_VERTICAL - 2, Maze.TILE_COUNT_HORIZONTAL - 2)
+            new Point(Maze.TILE_COUNT_VERTICAL - 2, Maze.TILE_COUNT_HORIZONTAL - 2),
         ];
         const cornerSeed: number = Utils.randomInt(4);
 

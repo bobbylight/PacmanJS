@@ -14,7 +14,7 @@ const sounds: Readonly<Record<string, string>> = {
     EYES_RUNNING: 'eyesRunning',
     OPENING: 'opening',
     SIREN: 'siren',
-    TOKEN: 'token'
+    TOKEN: 'token',
 };
 
 export default sounds;

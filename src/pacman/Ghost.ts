@@ -16,7 +16,7 @@ export enum MotionState {
     SCATTERING = 3,
     BLUE = 4,
     EYES = 5,
-    EYES_ENTERING_BOX = 6
+    EYES_ENTERING_BOX = 6,
 }
 
 export abstract class Ghost extends BaseSprite {
