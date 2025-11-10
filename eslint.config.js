@@ -1,6 +1,7 @@
 import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import stylistic from '@stylistic/eslint-plugin';
 
 export default [
     js.configs.recommended,
@@ -25,12 +26,22 @@ export default [
             },
         },
 
+        plugins: {
+            '@stylistic': stylistic,
+        },
+
         files: [
             '**/*.ts',
         ],
 
         rules: {
             "no-unused-vars": 0,
+            "@stylistic/array-bracket-spacing": ["error", "always"],
+            "@stylistic/brace-style": ["error", "stroustrup"],
+            "@stylistic/comma-dangle": ["error", "always-multiline"],
+            "@stylistic/no-multi-spaces": "error",
+            "@stylistic/no-tabs": "error",
+            "@stylistic/no-trailing-spaces": "error",
             "@typescript-eslint/adjacent-overload-signatures": 0,
             "@typescript-eslint/explicit-module-boundary-types": 0, // We don't want to specify ": void" everywhere
             "@typescript-eslint/naming-convention": [
@@ -48,7 +59,6 @@ export default [
             "@typescript-eslint/no-unused-vars": 0,
             "@typescript-eslint/prefer-readonly": "error",
             "@typescript-eslint/restrict-template-expressions": ["error", { "allowNumber": true }],
-            "brace-style": ["error", "stroustrup"],
             indent: ["error", 4, {"SwitchCase": 1}],
             "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
             "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",

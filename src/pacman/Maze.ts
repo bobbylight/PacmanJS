@@ -3,7 +3,7 @@ import { MazeNode } from './MazeNode';
 import { PacmanGame } from './PacmanGame';
 import { TILE_SIZE } from './Constants';
 
-const DOT_POINTS: number[] = [50, 10];
+const DOT_POINTS: number[] = [ 50, 10 ];
 
 export class Maze {
 

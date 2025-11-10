@@ -1,7 +1,6 @@
-# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Build
+name: Typecheck
 
 on:
   push:
@@ -10,13 +9,13 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  typecheck:
 
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [24.x, 25.x]
+        node-version: [ 24.x ]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -27,7 +26,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - name: Build
-      run: npm run build
-    - name: Run tests
-      run: npm run test
+    - name: Typecheck
+      run: npm run tsc

@@ -11,9 +11,9 @@ export class Fruit extends BaseSprite {
 
     // 0=Cherry, 1=Strawberry, 2=Peach, 3=Yellow bell, 4=Apple,
     // 5=Green thing (grapes?), 6=Space Invaders ship, 7=Key
-    private static readonly COLS: number[] = [12, 13, 12, 13, 13, 12, 13, 13];
-    private static readonly ROWS: number[] = [4, 4, 5, 5, 2, 6, 6, 3];
-    private static readonly PTS_INDEX: number[] = [0, 2, 4, 5, 10, 7, 9, 11];
+    private static readonly COLS: number[] = [ 12, 13, 12, 13, 13, 12, 13, 13 ];
+    private static readonly ROWS: number[] = [ 4, 4, 5, 5, 2, 6, 6, 3 ];
+    private static readonly PTS_INDEX: number[] = [ 0, 2, 4, 5, 10, 7, 9, 11 ];
 
     constructor(game: PacmanGame) {
         super(1);
