@@ -6,7 +6,7 @@ import { Direction } from './Direction';
 
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { SpriteSheet } from 'gtp';
-import Sounds from './Sounds';
+import { SOUNDS } from './Sounds';
 
 const mockSpriteSheet = {
     draw: () => {},
@@ -130,7 +130,7 @@ describe('TitleState', () => {
             mockGame.inputManager.up.mockReturnValue(true); // simulate up pressed
             state.update(500);
 
-            expect(mockGame.audio.playSound).toHaveBeenCalledWith(Sounds.TOKEN);
+            expect(mockGame.audio.playSound).toHaveBeenCalledWith(SOUNDS.TOKEN);
         });
 
         test('plays a sound when the user presses down', () => {
@@ -140,7 +140,7 @@ describe('TitleState', () => {
             mockGame.inputManager.down.mockReturnValue(true); // simulate down pressed
             state.update(500);
 
-            expect(mockGame.audio.playSound).toHaveBeenCalledWith(Sounds.TOKEN);
+            expect(mockGame.audio.playSound).toHaveBeenCalledWith(SOUNDS.TOKEN);
         });
 
         describe('when enter is pressed', () => {

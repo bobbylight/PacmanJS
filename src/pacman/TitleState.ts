@@ -1,10 +1,10 @@
+import { Game, Image, InputManager, SpriteSheet } from 'gtp';
 import { BaseState } from './BaseState';
 import { PacmanGame } from './PacmanGame';
 import { Pacman } from './Pacman';
 import { Direction } from './Direction';
 import { Ghost } from './Ghost';
-import Sounds from './Sounds';
-import { Game, Image, InputManager, SpriteSheet } from 'gtp';
+import { SOUNDS } from './Sounds';
 import { SPRITE_SIZE } from './Constants';
 
 export class TitleState extends BaseState {
@@ -166,12 +166,12 @@ export class TitleState extends BaseState {
 
             if (im.up()) {
                 this.choice = Math.abs(this.choice - 1);
-                game.audio.playSound(Sounds.TOKEN);
+                game.audio.playSound(SOUNDS.TOKEN);
                 this.lastKeypressTime = playTime;
             }
             else if (im.down()) {
                 this.choice = (this.choice + 1) % 2;
-                game.audio.playSound(Sounds.TOKEN);
+                game.audio.playSound(SOUNDS.TOKEN);
                 this.lastKeypressTime = playTime;
             }
             else if (im.enter(true)) {

@@ -1,11 +1,11 @@
+import { InputManager, Keys } from 'gtp';
 import { BaseState } from './BaseState';
 import { Maze } from './Maze';
 import { PacmanGame } from './PacmanGame';
 import { Pacman } from './Pacman';
 import { TitleState } from './TitleState';
-import Sounds from './Sounds';
+import { SOUNDS } from './Sounds';
 import { Ghost, MotionState } from './Ghost';
-import { InputManager, Keys } from 'gtp';
 import { TILE_SIZE } from './Constants';
 
 type Substate = 'READY' | 'IN_GAME' | 'DYING' | 'GAME_OVER';
@@ -258,14 +258,14 @@ export class MazeState extends BaseState {
             case 'READY':
                 if (this.firstTimeThrough && this.substateStartTime === 0) {
                     this.substateStartTime = time;
-                    game.audio.playSound(Sounds.OPENING);
+                    game.audio.playSound(SOUNDS.OPENING);
                 }
                 if (time >= this.substateStartTime + this.readyDelayMillis) {
                     this.substate = 'IN_GAME';
                     this.substateStartTime = time;
                     game.resetPlayTime();
                     this.lastMazeScreenKeypressTime = game.playTime;
-                    game.setLoopedSound(Sounds.SIREN);
+                    game.setLoopedSound(SOUNDS.SIREN);
                     this.firstTimeThrough = false;
                 }
                 break;

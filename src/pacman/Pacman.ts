@@ -1,7 +1,7 @@
+import { InputManager } from 'gtp';
 import { Maze } from './Maze';
 import { Direction } from './Direction';
 import { BaseSprite } from './BaseSprite';
-import { InputManager } from 'gtp';
 import { PacmanGame } from './PacmanGame';
 import { SPRITE_SIZE } from './Constants';
 

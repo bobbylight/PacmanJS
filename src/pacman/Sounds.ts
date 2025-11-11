@@ -2,7 +2,7 @@
  * Constants to use for keys in our assets.  We cannot use an enum since
  * TypeScript does not yet support enums of strings.
  */
-const sounds: Readonly<Record<string, string>> = {
+export const SOUNDS: Readonly<Record<string, string>> = {
     CHASING_GHOSTS: 'chasingGhosts',
     CHOMP_1: 'chomp1',
     CHOMP_2: 'chomp2',
@@ -16,5 +16,3 @@ const sounds: Readonly<Record<string, string>> = {
     SIREN: 'siren',
     TOKEN: 'token',
 };
-
-export default sounds;

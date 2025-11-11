@@ -1,5 +1,5 @@
-import { BaseSprite } from './BaseSprite';
 import { Point, Utils } from 'gtp';
+import { BaseSprite } from './BaseSprite';
 import { Maze } from './Maze';
 import { Direction } from './Direction';
 import { PacmanGame } from './PacmanGame';
