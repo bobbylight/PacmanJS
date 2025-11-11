@@ -1,5 +1,6 @@
 import { CanvasResizer, Game, Image, Point, SpriteSheet, StretchMode, Utils } from 'gtp';
-import Sounds from './Sounds';
+import { GameArgs } from 'gtp/lib/gtp/Game';
+import { SOUNDS } from './Sounds';
 import { Pacman } from './Pacman';
 import { Fruit } from './Fruit';
 import { Ghost } from './Ghost';
@@ -10,7 +11,6 @@ import { Clyde } from './Clyde';
 import { MazeState } from './MazeState';
 import { Maze } from './Maze';
 import { SPRITE_SIZE, TILE_SIZE } from './Constants';
-import { GameArgs } from 'gtp/lib/gtp/Game';
 
 /**
  * The default high score displayed in the game.
@@ -129,7 +129,7 @@ export class PacmanGame extends Game {
         if (this.fruit && this.fruitScoreIndex === -1 &&
             this.pacman.intersects(this.fruit)) {
             this.increaseScore(this.extraPointsArray[this.fruit.getPointsIndex()]);
-            this.audio.playSound(Sounds.EATING_FRUIT, false);
+            this.audio.playSound(SOUNDS.EATING_FRUIT, false);
             this.fruitScoreIndex = this.fruit.getPointsIndex();
             this.fruitScoreEndTime = this.playTime + PacmanGame.SCORE_DISPLAY_LENGTH;
         }
@@ -151,7 +151,7 @@ export class PacmanGame extends Game {
 
         for (const ghost of this.ghosts) {
             if (ghost.isEyes()) {
-                this.setLoopedSound(Sounds.EYES_RUNNING);
+                this.setLoopedSound(SOUNDS.EYES_RUNNING);
                 return; // "eye" noise trumps blue noise.
             }
             else if (ghost.isBlue()) {
@@ -159,7 +159,7 @@ export class PacmanGame extends Game {
             }
         }
 
-        this.setLoopedSound(blue ? Sounds.CHASING_GHOSTS : Sounds.SIREN);
+        this.setLoopedSound(blue ? SOUNDS.CHASING_GHOSTS : SOUNDS.SIREN);
 
     }
 
@@ -344,7 +344,7 @@ export class PacmanGame extends Game {
         }
         this.increaseScore(this.extraPointsArray[this.eatenGhostPointsIndex]);
 
-        this.audio.playSound(Sounds.EATING_GHOST);
+        this.audio.playSound(SOUNDS.EATING_GHOST);
         return this.eatenGhostPointsIndex;
     }
 
@@ -360,7 +360,7 @@ export class PacmanGame extends Game {
         }
 
         if (!this.earnedExtraLife && this.score >= PacmanGame.EXTRA_LIFE_SCORE) {
-            this.audio.playSound(Sounds.EXTRA_LIFE);
+            this.audio.playSound(SOUNDS.EXTRA_LIFE);
             this.increaseLives(1);
             this.earnedExtraLife = true;
         }
@@ -421,7 +421,7 @@ export class PacmanGame extends Game {
      */
     playChompSound() {
         this.audio.playSound(this.chompSound === 0 ?
-            Sounds.CHOMP_1 : Sounds.CHOMP_2);
+            SOUNDS.CHOMP_1 : SOUNDS.CHOMP_2);
         this.chompSound = (this.chompSound + 1) % 2;
     }
 
@@ -506,7 +506,7 @@ export class PacmanGame extends Game {
 
     startPacmanDying() {
         this.setLoopedSound(null);
-        this.audio.playSound(Sounds.DIES);
+        this.audio.playSound(SOUNDS.DIES);
         this.pacman.startDying();
         this.fruit = null;
         this.fruitScoreIndex = -1;

@@ -1,8 +1,8 @@
+import { BaseStateArgs, FadeOutInState, Utils } from 'gtp';
 import { BaseState } from './BaseState';
-import Sounds from './Sounds';
+import { SOUNDS } from './Sounds';
 import { PacmanGame } from './PacmanGame';
 import { TitleState } from './TitleState';
-import { BaseStateArgs, FadeOutInState, Utils } from 'gtp';
 import { fixLevelDatas } from './Util';
 
 export class LoadingState extends BaseState {
@@ -36,18 +36,18 @@ export class LoadingState extends BaseState {
                 game.assets.addSpriteSheet('mapTiles', 'res/map_tiles.png', 8, 8, 0, 0);
                 game.assets.addSpriteSheet('points', 'res/points.png', 18, 9, 0, 0);
                 game.assets.addJson('levels', 'res/levelData.json');
-                game.assets.addSound(Sounds.CHASING_GHOSTS, 'res/sounds/chasing_ghosts.wav');
-                game.assets.addSound(Sounds.CHOMP_1, 'res/sounds/chomp_1.wav');
-                game.assets.addSound(Sounds.CHOMP_2, 'res/sounds/chomp_2.wav');
-                game.assets.addSound(Sounds.DIES, 'res/sounds/dies.wav');
-                game.assets.addSound(Sounds.EATING_FRUIT, 'res/sounds/eating_fruit.wav');
-                game.assets.addSound(Sounds.EATING_GHOST, 'res/sounds/eating_ghost.wav');
-                game.assets.addSound(Sounds.EXTRA_LIFE, 'res/sounds/extra_life.wav');
-                game.assets.addSound(Sounds.EYES_RUNNING, 'res/sounds/eyes_running.wav');
-                game.assets.addSound(Sounds.INTERMISSION, 'res/sounds/intermission.wav');
-                game.assets.addSound(Sounds.OPENING, 'res/sounds/opening.wav');
-                game.assets.addSound(Sounds.SIREN, 'res/sounds/siren.wav');
-                game.assets.addSound(Sounds.TOKEN, 'res/sounds/token.wav');
+                game.assets.addSound(SOUNDS.CHASING_GHOSTS, 'res/sounds/chasing_ghosts.wav');
+                game.assets.addSound(SOUNDS.CHOMP_1, 'res/sounds/chomp_1.wav');
+                game.assets.addSound(SOUNDS.CHOMP_2, 'res/sounds/chomp_2.wav');
+                game.assets.addSound(SOUNDS.DIES, 'res/sounds/dies.wav');
+                game.assets.addSound(SOUNDS.EATING_FRUIT, 'res/sounds/eating_fruit.wav');
+                game.assets.addSound(SOUNDS.EATING_GHOST, 'res/sounds/eating_ghost.wav');
+                game.assets.addSound(SOUNDS.EXTRA_LIFE, 'res/sounds/extra_life.wav');
+                game.assets.addSound(SOUNDS.EYES_RUNNING, 'res/sounds/eyes_running.wav');
+                game.assets.addSound(SOUNDS.INTERMISSION, 'res/sounds/intermission.wav');
+                game.assets.addSound(SOUNDS.OPENING, 'res/sounds/opening.wav');
+                game.assets.addSound(SOUNDS.SIREN, 'res/sounds/siren.wav');
+                game.assets.addSound(SOUNDS.TOKEN, 'res/sounds/token.wav');
                 game.assets.onLoad(() => {
 
                     game.assets.set('levels', fixLevelDatas(game.assets.get('levels')));

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, MockInstance, vi } from 'vitest';
 import { GhostUpdateStrategy, PacmanGame } from './PacmanGame';
-import Sounds from './Sounds';
+import { SOUNDS } from './Sounds';
 import { MotionState } from './Ghost';
 import { Fruit } from './Fruit';
 import { MazeState } from './MazeState';
@@ -50,7 +50,7 @@ describe('PacmanGame', () => {
                 game.pacman.setLocation(fruit.x, fruit.y);
                 expect(game.checkForCollisions()).toBeNull();
                 expect(game.increaseScore).toHaveBeenCalledOnce();
-                expect(game.audio.playSound).toHaveBeenCalledWith(Sounds.EATING_FRUIT, false);
+                expect(game.audio.playSound).toHaveBeenCalledWith(SOUNDS.EATING_FRUIT, false);
             }
         });
     });
@@ -65,7 +65,7 @@ describe('PacmanGame', () => {
 
         it('plays a siren sound by default', () => {
             game.checkLoopedSound();
-            expect(setLoopedSound).toHaveBeenCalledWith(Sounds.SIREN);
+            expect(setLoopedSound).toHaveBeenCalledWith(SOUNDS.SIREN);
         });
 
         describe('when a ghost is blue', () => {
@@ -77,7 +77,7 @@ describe('PacmanGame', () => {
 
             it('plays a different sound', () => {
                 game.checkLoopedSound();
-                expect(setLoopedSound).toHaveBeenCalledWith(Sounds.CHASING_GHOSTS);
+                expect(setLoopedSound).toHaveBeenCalledWith(SOUNDS.CHASING_GHOSTS);
             });
 
             describe('and an earlier ghost is eyes', () => {
@@ -87,7 +87,7 @@ describe('PacmanGame', () => {
 
                 it('plays the eyes sound', () => {
                     game.checkLoopedSound();
-                    expect(setLoopedSound).toHaveBeenCalledWith(Sounds.EYES_RUNNING);
+                    expect(setLoopedSound).toHaveBeenCalledWith(SOUNDS.EYES_RUNNING);
                 });
             });
 
@@ -98,7 +98,7 @@ describe('PacmanGame', () => {
 
                 it('plays the eyes sound', () => {
                     game.checkLoopedSound();
-                    expect(setLoopedSound).toHaveBeenCalledWith(Sounds.EYES_RUNNING);
+                    expect(setLoopedSound).toHaveBeenCalledWith(SOUNDS.EYES_RUNNING);
                 });
             });
         });
@@ -110,7 +110,7 @@ describe('PacmanGame', () => {
 
             it('plays the eyes sound', () => {
                 game.checkLoopedSound();
-                expect(setLoopedSound).toHaveBeenCalledWith(Sounds.EYES_RUNNING);
+                expect(setLoopedSound).toHaveBeenCalledWith(SOUNDS.EYES_RUNNING);
             });
         });
     });
@@ -252,13 +252,10 @@ describe('PacmanGame', () => {
         const game = new PacmanGame();
 
         it('draws a small dot at the correct position', () => {
-            const ctx = game.canvas.getContext('2d');
-            expect(ctx).toBeDefined();
-            if (ctx) {
-                vi.spyOn(ctx, 'fillRect');
-                game.drawSmallDot(50, 50);
-                expect(ctx.fillRect).toHaveBeenCalledWith(50, 50, 2, 2);
-            }
+            const ctx = game.getRenderingContext();
+            vi.spyOn(ctx, 'fillRect');
+            game.drawSmallDot(50, 50);
+            expect(ctx.fillRect).toHaveBeenCalledWith(50, 50, 2, 2);
         });
     });
 
@@ -306,7 +303,7 @@ describe('PacmanGame', () => {
         for (let i = 0; i < 4; i++) {
             expect(game.ghostEaten(game.getGhost(i))).toBeGreaterThan(0);
             expect(game.increaseScore).toHaveBeenCalled();
-            expect(game.audio.playSound).toHaveBeenCalledWith(Sounds.EATING_GHOST);
+            expect(game.audio.playSound).toHaveBeenCalledWith(SOUNDS.EATING_GHOST);
         }
     });
 
@@ -373,9 +370,9 @@ describe('PacmanGame', () => {
         it('alternates between two sounds', () => {
             vi.spyOn(game.audio, 'playSound');
             game.playChompSound();
-            expect(game.audio.playSound).toHaveBeenCalledWith(Sounds.CHOMP_1);
+            expect(game.audio.playSound).toHaveBeenCalledWith(SOUNDS.CHOMP_1);
             game.playChompSound();
-            expect(game.audio.playSound).toHaveBeenCalledWith(Sounds.CHOMP_2);
+            expect(game.audio.playSound).toHaveBeenCalledWith(SOUNDS.CHOMP_2);
         });
     });
 
@@ -405,7 +402,7 @@ describe('PacmanGame', () => {
         it('plays the pacman death sound', () => {
             vi.spyOn(game.audio, 'playSound').mockImplementation(() => 1);
             game.startPacmanDying();
-            expect(game.audio.playSound).toHaveBeenCalledWith(Sounds.DIES);
+            expect(game.audio.playSound).toHaveBeenCalledWith(SOUNDS.DIES);
         });
 
         it('starts the pacman dying animation', () => {
