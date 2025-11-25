@@ -1,5 +1,4 @@
-import { CanvasResizer, Game, Image, Point, SpriteSheet, StretchMode, Utils } from 'gtp';
-import { GameArgs } from 'gtp/lib/gtp/Game';
+import { CanvasResizer, Game, GameArgs, Image, Point, SpriteSheet, StretchMode, Utils } from 'gtp';
 import { SOUNDS } from './Sounds';
 import { Pacman } from './Pacman';
 import { Fruit } from './Fruit';
@@ -291,14 +290,6 @@ export class PacmanGame extends Game {
             fontImage.drawByIndex(ctx, x, y, index);
             x += 9; //CHAR_WIDTH
         }
-    }
-
-    getRenderingContext(): CanvasRenderingContext2D {
-        const ctx = this.canvas.getContext('2d');
-        if (!ctx) {
-            throw new Error('Failed to get 2D rendering context from canvas.');
-        }
-        return ctx;
     }
 
     getGhost(index: number): Ghost {
