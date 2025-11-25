@@ -35,6 +35,6 @@
   },
   "dependencies": {
     "eslint-plugin-import": "2.32.0",
-    "gtp": "3.0.1"
+    "gtp": "4.1.0"
   }
 }
