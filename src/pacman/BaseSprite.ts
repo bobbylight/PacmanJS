@@ -87,7 +87,7 @@ export abstract class BaseSprite {
     getCanMoveUp(maze: Maze) {
         const x: number = this.centerX;
         const y: number = this.centerY;
-        if ((x % 1) !== 0 || (y % 1) !== 0) {
+        if (x % 1 !== 0 || y % 1 !== 0) {
             console.error(`Unexpected condition: x === ${x}, y === ${y}`);
         }
         const xRemainder: number = x % this.TILE_SIZE;

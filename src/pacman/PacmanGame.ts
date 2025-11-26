@@ -180,7 +180,7 @@ export class PacmanGame extends Game {
 
     drawBigDot(x: number, y: number) {
         const ms: number = this.playTime;
-        if (ms < 0 || (ms % 500) > 250) {
+        if (ms < 0 || ms % 500 > 250) {
             const ctx = this.getRenderingContext();
             const sx = 135,
                 sy = 38;

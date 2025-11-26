@@ -25,7 +25,7 @@ export class BaseState extends State<PacmanGame> {
         const game = this.game;
         const im: InputManager = game.inputManager;
 
-        if (time > (this.lastConfigKeypressTime + BaseState.INPUT_REPEAT_MILLIS)) {
+        if (time > this.lastConfigKeypressTime + BaseState.INPUT_REPEAT_MILLIS) {
 
             // Audio stuff
             if (im.isKeyDown(Keys.KEY_M, true)) {

@@ -299,7 +299,7 @@ export class Maze {
         ctx.fillStyle = '#ffffff';
         for (let row = 0; row < Maze.TILE_COUNT_VERTICAL; row++) {
 
-            const y: number = row * TILE_SIZE + (2 * TILE_SIZE);
+            const y: number = row * TILE_SIZE + 2 * TILE_SIZE;
 
             for (let col = 0; col < Maze.TILE_COUNT_HORIZONTAL; col++) {
 

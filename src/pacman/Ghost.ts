@@ -263,8 +263,8 @@ export abstract class Ghost extends BaseSprite {
             case MotionState.BLUE:
                 srcX = (10 + this.getFrame()) * SPRITE_SIZE;
                 srcY = 3 * SPRITE_SIZE;
-                if ((this.exitBlueTime - playTime) <= 1000) { // 1 sec. remaining
-                    if (((playTime / 250) & 1) !== 0) {
+                if (this.exitBlueTime - playTime <= 1000) { // 1 sec. remaining
+                    if ((playTime / 250 & 1) !== 0) {
                         srcY += SPRITE_SIZE; // Flash 4 times in last second
                     }
                 }
@@ -523,7 +523,7 @@ export abstract class Ghost extends BaseSprite {
             const fromRow: number = this.row;
             const fromCol: number = this.column;
             const toRow: number = Math.floor((this.game.PENALTY_BOX_EXIT_Y + 8) / TILE_SIZE); // yToRow(game.PENALTY_BOX_EXIT_Y);
-            let toCol: number = Math.floor((this.game.PENALTY_BOX_EXIT_X) / TILE_SIZE); //xToColumn(game.PENALTY_BOX_EXIT_X);
+            let toCol: number = Math.floor(this.game.PENALTY_BOX_EXIT_X / TILE_SIZE); //xToColumn(game.PENALTY_BOX_EXIT_X);
             if (fromCol <= toCol) {
                 toCol++; // Approaching from the left.
             }

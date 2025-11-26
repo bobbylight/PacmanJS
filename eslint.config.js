@@ -39,11 +39,19 @@ export default [
         rules: {
             "no-unused-vars": 0,
             "@stylistic/array-bracket-spacing": ["error", "always"],
+            "@stylistic/arrow-parens": ["error", "always"],
+            "@stylistic/arrow-spacing": "error",
             "@stylistic/brace-style": ["error", "stroustrup"],
             "@stylistic/comma-dangle": ["error", "always-multiline"],
+            "@stylistic/eol-last": "error",
+            "@stylistic/function-call-spacing": ["error", "never"],
+            "@stylistic/keyword-spacing": "error",
+            "@stylistic/no-extra-parens": "error",
+            "@stylistic/no-extra-semi": "error",
             "@stylistic/no-multi-spaces": "error",
             "@stylistic/no-tabs": "error",
             "@stylistic/no-trailing-spaces": "error",
+            "@stylistic/semi": ["error", "always"],
             "@typescript-eslint/adjacent-overload-signatures": 0,
             "@typescript-eslint/explicit-module-boundary-types": 0, // We don't want to specify ": void" everywhere
             "@typescript-eslint/naming-convention": [
@@ -58,6 +66,8 @@ export default [
                 { selector: "typeParameter", format: ["PascalCase"] },
                 { selector: "variable", modifiers: ["const"], format: ["camelCase", "UPPER_CASE"] },
             ],
+            "@typescript-eslint/no-empty-function": 0,
+            "@typescript-eslint/no-unnecessary-condition": ["error", { "allowConstantLoopConditions": true }],
             "@typescript-eslint/no-unused-vars": 0,
             "@typescript-eslint/prefer-readonly": "error",
             "@typescript-eslint/restrict-template-expressions": ["error", { "allowNumber": true }],

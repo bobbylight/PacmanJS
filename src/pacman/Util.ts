@@ -10,5 +10,5 @@ const hexStrToInt: (str: string) => number = (str: string): number => {
 };
 
 export const fixLevelDatas: (levelDatas: string[][][]) => number[][][] = (levelDatas: string[][][]) => {
-    return levelDatas.map(levelData => levelData.map(row => row.map(hexStrToInt)));
-}
+    return levelDatas.map((levelData) => levelData.map((row) => row.map(hexStrToInt)));
+};
