@@ -1,19 +1,22 @@
+import { afterEach, beforeEach, describe, expect, MockInstance, test, vi } from 'vitest';
 import { Direction } from './Direction';
 import { MotionState } from './Ghost';
 import { Pinky } from './Pinky';
-import { afterEach, beforeEach, describe, expect, MockInstance, test, vi } from 'vitest';
 import { Maze } from './Maze';
 import { Pacman } from './Pacman';
+import { PacmanGame } from './PacmanGame';
 
 describe('Pinky', () => {
     const pacman: Pacman = { row: 0, column: 0 } as never as Pacman;
-    const mockGame: any /* PacmanGame */ = {
-        checkLoopedSound: () => {},
-        pacman,
-    };
+    let game: PacmanGame;
+
+    beforeEach(() => {
+        game = new PacmanGame();
+        game.pacman = pacman;
+    });
 
     test('reset() works as expected', () => {
-        const ghost: Pinky = new Pinky(mockGame);
+        const ghost: Pinky = new Pinky(game);
         ghost.reset();
 
         expect(ghost.direction).toEqual(Direction.NORTH);
@@ -21,7 +24,11 @@ describe('Pinky', () => {
     });
 
     describe('updatePosition', () => {
-        const ghost: Pinky = new Pinky(mockGame);
+        let ghost: Pinky;
+
+        beforeEach(() => {
+            ghost = new Pinky(game);
+        });
 
         afterEach(() => {
             vi.restoreAllMocks();

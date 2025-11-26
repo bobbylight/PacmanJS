@@ -1,5 +1,5 @@
-import { MazeNode } from './MazeNode';
 import { describe, expect, test } from 'vitest';
+import { MazeNode } from './MazeNode';
 
 describe('MazeNode', () => {
 

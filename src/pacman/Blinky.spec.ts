@@ -1,19 +1,18 @@
+import { afterEach, beforeEach, describe, expect, MockInstance, test, vi } from 'vitest';
 import { Blinky } from './Blinky';
 import { Direction } from './Direction';
 import { MotionState } from './Ghost';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { Maze } from './Maze';
+import { PacmanGame } from './PacmanGame';
 
 describe('Blinky', () => {
-    const mockGame: any /* PacmanGame */ = {
-        PENALTY_BOX_EXIT_X: 20,
-        PENALTY_BOX_EXIT_Y: 20,
-        checkLoopedSound: () => {},
-        pacman: {
-            row: 5,
-            col: 5,
-        },
-    };
+    let game: PacmanGame;
+    let ghost: Blinky;
+
+    beforeEach(() => {
+        game = new PacmanGame();
+        ghost = new Blinky(game);
+    });
 
     afterEach(() => {
         vi.clearAllMocks();
@@ -21,8 +20,6 @@ describe('Blinky', () => {
         vi.restoreAllMocks();
         ghost.reset();
     });
-
-    const ghost: Blinky = new Blinky(mockGame);
 
     test('reset() works as expected', () => {
         ghost.reset();
@@ -52,6 +49,9 @@ describe('Blinky', () => {
 
             describe('when at an intersection', () => {
                 const mockGetPathBreadthFirst = vi.fn();
+                let incXSpy: MockInstance<Blinky['incX']>;
+                let incYSpy: MockInstance<Blinky['incY']>;
+
                 const maze = {
                     getPathBreadthFirst: mockGetPathBreadthFirst,
                 } as unknown as Maze;
@@ -59,8 +59,8 @@ describe('Blinky', () => {
                 beforeEach(() => {
                     const spy = vi.spyOn(ghost, 'atIntersection');
                     spy.mockReturnValue(true);
-                    vi.spyOn(ghost, 'incX');
-                    vi.spyOn(ghost, 'incY');
+                    incXSpy = vi.spyOn(ghost, 'incX');
+                    incYSpy = vi.spyOn(ghost, 'incY');
                 });
 
                 test('when a null node is returned, calls changeDirectionFallback', () => {
@@ -75,28 +75,28 @@ describe('Blinky', () => {
                     mockGetPathBreadthFirst.mockReturnValue({ row: ghost.row, col: ghost.column - 1 });
                     ghost.updatePosition(maze, 1000);
                     expect(ghost.direction).toEqual(Direction.WEST);
-                    expect(ghost.incX).toHaveBeenCalledWith(-ghost.moveAmount);
+                    expect(incXSpy).toHaveBeenCalledWith(-ghost.moveAmount);
                 });
 
                 test('moves east when necessary', () => {
                     mockGetPathBreadthFirst.mockReturnValue({ row: ghost.row, col: ghost.column + 1 });
                     ghost.updatePosition(maze, 1000);
                     expect(ghost.direction).toEqual(Direction.EAST);
-                    expect(ghost.incX).toHaveBeenCalledWith(ghost.moveAmount);
+                    expect(incXSpy).toHaveBeenCalledWith(ghost.moveAmount);
                 });
 
                 test('moves north when necessary', () => {
                     mockGetPathBreadthFirst.mockReturnValue({ row: ghost.row - 1, col: ghost.column });
                     ghost.updatePosition(maze, 1000);
                     expect(ghost.direction).toEqual(Direction.NORTH);
-                    expect(ghost.incY).toHaveBeenCalledWith(-ghost.moveAmount);
+                    expect(incYSpy).toHaveBeenCalledWith(-ghost.moveAmount);
                 });
 
                 test('moves south when necessary', () => {
                     mockGetPathBreadthFirst.mockReturnValue({ row: ghost.row + 1, col: ghost.column });
                     ghost.updatePosition(maze, 1000);
                     expect(ghost.direction).toEqual(Direction.SOUTH);
-                    expect(ghost.incY).toHaveBeenCalledWith(ghost.moveAmount);
+                    expect(incYSpy).toHaveBeenCalledWith(ghost.moveAmount);
                 });
             });
         });

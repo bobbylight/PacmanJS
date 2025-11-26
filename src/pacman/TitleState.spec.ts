@@ -1,10 +1,10 @@
+import { afterEach, beforeEach, describe, expect, MockInstance, test, vi } from 'vitest';
+import { SpriteSheet } from 'gtp';
 import { TitleState } from './TitleState';
 import { PacmanGame } from './PacmanGame';
 import { Pacman } from './Pacman';
 import { Direction } from './Direction';
 
-import { afterEach, beforeEach, describe, expect, MockInstance, test, vi } from 'vitest';
-import { SpriteSheet } from 'gtp';
 import { SOUNDS } from './Sounds';
 import { Ghost, MotionState } from './Ghost';
 import { Maze } from './Maze';
@@ -35,6 +35,7 @@ describe('TitleState', () => {
     let ghost: Ghost;
     let game: PacmanGame;
     let canvas: HTMLCanvasElement;
+    let ghostPaintSpy: MockInstance<Ghost['paint']>;
 
     beforeEach(() => {
 
@@ -47,7 +48,7 @@ describe('TitleState', () => {
         canvas = game.canvas;
         game.pacman = new Pacman(game);
         ghost = game.getGhost(0);
-        ghost.paint = vi.fn();
+        ghostPaintSpy = vi.spyOn(ghost, 'paint');
         ghost.direction = Direction.WEST;
     });
 
@@ -87,7 +88,7 @@ describe('TitleState', () => {
         });
 
         test('draws our screen', () => {
-            const ctx = canvas.getContext('2d')!;
+            const ctx = game.getRenderingContext();
             const state: TitleState = new TitleState(game);
             state.enter(game);
             state.render(ctx);
@@ -96,12 +97,12 @@ describe('TitleState', () => {
             expect(drawSmallDotSpy).toHaveBeenCalled();
             expect(drawBigDotSpy).toHaveBeenCalled();
             //expect(mockGame.pacman.render).toHaveBeenCalled();
-            expect(ghost.paint).toHaveBeenCalledWith(ctx);
+            expect(ghostPaintSpy).toHaveBeenCalledWith(ctx);
         });
 
         test('renders a message about no audio if audio is not initialized', () => {
             game.audio.isInitialized = () => false;
-            const ctx = canvas.getContext('2d')!;
+            const ctx = game.getRenderingContext();
             const state: TitleState = new TitleState(game);
             state.enter(game);
             state.render(ctx);
@@ -181,6 +182,6 @@ describe('TitleState', () => {
 
                 expect(startGameSpy).toHaveBeenCalledWith(1);
             });
-        })
+        });
     });
 });

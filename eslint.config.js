@@ -12,7 +12,6 @@ export default [
     {
         ignores: [
             "vite.config.js",
-            "**/*.spec.ts", // TODO: Remove me
         ],
     },
     {

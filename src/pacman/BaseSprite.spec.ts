@@ -1,6 +1,6 @@
+import { describe, expect, test } from 'vitest';
 import { BaseSprite } from './BaseSprite';
 import { Maze } from './Maze';
-import { describe, expect, test } from 'vitest';
 
 class ConcreteSprite extends BaseSprite {
 
