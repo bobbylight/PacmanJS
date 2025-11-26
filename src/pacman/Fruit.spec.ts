@@ -1,51 +1,78 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { SpriteSheet } from 'gtp';
 import { Fruit } from './Fruit';
 import { Maze } from './Maze';
+import { PacmanGame } from './PacmanGame';
+
+const mockSpriteSheet = {
+    drawByIndex: () => {},
+    drawScaled2: vi.fn(),
+} as unknown as SpriteSheet;
 
 describe('Fruit', () => {
-    const mockGame: any /* PacmanGame */ = {
-        checkLoopedSound: () => {},
-        drawSprite: vi.fn(),
-        get PENALTY_BOX_EXIT_X() {
-            return 100
-        },
-        getLevel: () => 0,
-        randomInt: () => 0,
-    };
+    let game: PacmanGame;
+
+    beforeEach(() => {
+        game = new PacmanGame();
+        game.assets.set('sprites', mockSpriteSheet);
+    });
+
+    afterEach(() => {
+        vi.resetAllMocks();
+        vi.restoreAllMocks();
+    });
 
     it('constructor should pick the right fruit for the level', () => {
-        expect(new Fruit({ ...mockGame, getLevel: () => 0 }).getPointsIndex()).toBe(0);
-        expect(new Fruit({ ...mockGame, getLevel: () => 1 }).getPointsIndex()).toBe(2);
-        expect(new Fruit({ ...mockGame, getLevel: () => 2 }).getPointsIndex()).toBe(4);
-        expect(new Fruit({ ...mockGame, getLevel: () => 3 }).getPointsIndex()).toBe(5);
-        expect(new Fruit({ ...mockGame, getLevel: () => 4 }).getPointsIndex()).toBe(10);
-        expect(new Fruit({ ...mockGame, getLevel: () => 5 }).getPointsIndex()).toBe(7);
-        expect(new Fruit({ ...mockGame, getLevel: () => 6 }).getPointsIndex()).toBe(9);
-        expect(new Fruit({ ...mockGame, getLevel: () => 7 }).getPointsIndex()).toBe(11);
+        const getLevelSpy = vi.spyOn(game, 'getLevel');
+        getLevelSpy.mockReturnValue(0);
+        expect(new Fruit(game).getPointsIndex()).toBe(0);
+
+        getLevelSpy.mockReturnValue(1);
+        expect(new Fruit(game).getPointsIndex()).toBe(2);
+
+        getLevelSpy.mockReturnValue(2);
+        expect(new Fruit(game).getPointsIndex()).toBe(4);
+
+        getLevelSpy.mockReturnValue(3);
+        expect(new Fruit(game).getPointsIndex()).toBe(5);
+
+        getLevelSpy.mockReturnValue(4);
+        expect(new Fruit(game).getPointsIndex()).toBe(10);
+
+        getLevelSpy.mockReturnValue(5);
+        expect(new Fruit(game).getPointsIndex()).toBe(7);
+
+        getLevelSpy.mockReturnValue(6);
+        expect(new Fruit(game).getPointsIndex()).toBe(9);
+
+        getLevelSpy.mockReturnValue(7);
+        expect(new Fruit(game).getPointsIndex()).toBe(11);
     });
 
     it('constructor should pick a random fruit for levels above 7', () => {
-        const fruit = new Fruit({ ...mockGame, getLevel: () => 8 });
+        vi.spyOn(game, 'getLevel').mockReturnValue(8);
+        const fruit = new Fruit(game);
         expect(fruit.getPointsIndex()).toBeGreaterThanOrEqual(0);
         expect(fruit.getPointsIndex()).toBeLessThanOrEqual(11);
     });
 
     it('getUpdateDelayMillis should return a large number', () => {
-        const fruit = new Fruit(mockGame);
+        const fruit = new Fruit(game);
         expect(fruit.getUpdateDelayMillis()).toBe(100000000000);
     });
 
     it('paint should draw the fruit at the correct location', () => {
-        const fruit = new Fruit(mockGame);
-        fruit.paint({} as unknown as CanvasRenderingContext2D);
-        expect(mockGame.drawSprite).toHaveBeenCalledWith(
+        const drawSpriteSpy = vi.spyOn(game, 'drawSprite');
+        const fruit = new Fruit(game);
+        fruit.paint(game.getRenderingContext());
+        expect(drawSpriteSpy).toHaveBeenCalledWith(
             fruit.x, fruit.y,
             expect.any(Number), expect.any(Number),
         );
     });
 
     it('never moves on update calls', () => {
-        const fruit = new Fruit(mockGame);
+        const fruit = new Fruit(game);
         const expectedX = fruit.x;
         const expectedY = fruit.y;
         fruit.updatePosition({} as Maze, fruit.getUpdateDelayMillis() + 1);

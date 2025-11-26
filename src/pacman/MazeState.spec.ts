@@ -1,13 +1,12 @@
 import { afterEach, describe, expect, test, vi, beforeEach, MockInstance } from 'vitest';
-import { MazeState } from './MazeState';
-import { Maze } from './Maze';
 import { SpriteSheet } from 'gtp';
+import { MazeState } from './MazeState';
 import { PacmanGame } from './PacmanGame';
 import { Pacman } from './Pacman';
 
 const mockMazeFile = [
-    [0, 1],
-    [1, 0]
+    [ 0, 1 ],
+    [ 1, 0 ],
 ];
 
 const mockImage = {
@@ -20,7 +19,7 @@ let game: PacmanGame;
 beforeEach(() => {
     const mockSpriteSheeet = {
         drawByIndex: () => {
-        }
+        },
     } as unknown as SpriteSheet;
 
     game = new PacmanGame();
@@ -48,46 +47,75 @@ describe('MazeState', () => {
         expect(state).toBeInstanceOf(MazeState);
     });
 
-    test('enter initializes game and maze', () => {
+    test('enter initializes Pacman and the ghosts', () => {
         const state = new MazeState(mockMazeFile);
         state.enter(game);
         expect(pacmanResetSpy).toHaveBeenCalled();
         expect(resetGhostsSpy).toHaveBeenCalled();
-        expect(state['maze']).toBeInstanceOf(Maze);
-        expect(state['substate']).toBe('READY');
     });
 
-    test('reset calls maze.reset and game.resetPlayTime', () => {
+    test('reset does not throw an error', () => {
         const state = new MazeState(mockMazeFile);
-        state['maze'] = {reset: vi.fn()} as unknown as Maze;
         state.enter(game);
-        expect(() => state.reset()).not.toThrow();
+        expect(() => {
+            state.reset();
+        }).not.toThrow();
     });
 
     test('update transitions READY to IN_GAME after delay', () => {
         const setLoopeSoundSpy = vi.spyOn(game, 'setLoopedSound');
         const state = new MazeState(mockMazeFile);
         state.enter(game);
-        state['substate'] = 'READY';
-        state['firstTimeThrough'] = true;
-        state['substateStartTime'] = 0;
+        expect(state.getSubstate()).toEqual('READY');
         vi.spyOn(game, 'playTime', 'get').mockReturnValue(5000);
         state.update(16);
         vi.spyOn(game, 'playTime', 'get').mockReturnValue(10000);
         state.update(16);
-        expect(state['substate']).toBe('IN_GAME');
+        expect(state.getSubstate()).toBe('IN_GAME');
         expect(setLoopeSoundSpy).toHaveBeenCalled();
     });
 
-    test('updateInGameImpl calls updateSpritePositions', () => {
+    test('when Pacman is hit with lives remaining, we go from DYING to READY after a delay', () => {
+        const setLoopeSoundSpy = vi.spyOn(game, 'setLoopedSound');
+        const state = new MazeState(mockMazeFile);
+        vi.spyOn(game, 'playTime', 'get').mockReturnValue(0);
+        vi.spyOn(game.pacman, 'incDying').mockReturnValue(false);
+        vi.spyOn(game, 'increaseLives').mockReturnValue(1);
+        state.enter(game);
+        state.enterDyingSubstate(0);
+        expect(state.getSubstate()).toEqual('DYING');
+        vi.spyOn(game, 'playTime', 'get').mockReturnValue(5000);
+        state.update(75);
+        vi.spyOn(game, 'playTime', 'get').mockReturnValue(10000);
+        state.update(75);
+        expect(state.getSubstate()).toBe('READY');
+        expect(setLoopeSoundSpy).toHaveBeenCalled();
+    });
+
+    test('when Pacman is hit with no lives remaining, we go from DYING to GAME_OVER after a delay', () => {
+        const setLoopeSoundSpy = vi.spyOn(game, 'setLoopedSound');
+        const state = new MazeState(mockMazeFile);
+        vi.spyOn(game, 'playTime', 'get').mockReturnValue(0);
+        vi.spyOn(game.pacman, 'incDying').mockReturnValue(false);
+        vi.spyOn(game, 'increaseLives').mockReturnValue(0);
+        state.enter(game);
+        state.enterDyingSubstate(0);
+        expect(state.getSubstate()).toEqual('DYING');
+        vi.spyOn(game, 'playTime', 'get').mockReturnValue(5000);
+        state.update(75);
+        vi.spyOn(game, 'playTime', 'get').mockReturnValue(10000);
+        state.update(75);
+        expect(state.getSubstate()).toBe('GAME_OVER');
+        expect(setLoopeSoundSpy).toHaveBeenCalled();
+    });
+
+    test('while IN_GAME updates alls prite positions', () => {
         const updateSpritePositionsSpy = vi.spyOn(game, 'updateSpritePositions');
         const state = new MazeState(mockMazeFile);
         state.enter(game);
-        state['substate'] = 'IN_GAME';
-        state['nextUpdateTime'] = 0;
-        state['updateScoreIndex'] = -1;
-        state['maze'] = new Maze(game, mockMazeFile);
-        state['updateInGameImpl'](game.playTime);
+        state.enterInGameSubstate();
+        vi.spyOn(game, 'playTime', 'get').mockReturnValue(5000);
+        state.update(75);
         expect(updateSpritePositionsSpy).toHaveBeenCalled();
     });
 
@@ -99,8 +127,10 @@ describe('MazeState', () => {
             fillStyle: '',
             fillRect: vi.fn(),
             globalAlpha: 1,
-            translate: vi.fn()
+            translate: vi.fn(),
         } as unknown as CanvasRenderingContext2D;
-        expect(() => state.render(ctx)).not.toThrow();
+        expect(() => {
+            state.render(ctx);
+        }).not.toThrow();
     });
 });

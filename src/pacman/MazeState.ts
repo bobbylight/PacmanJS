@@ -55,6 +55,26 @@ export class MazeState extends BaseState {
         this.lastSpriteFrameTime = 0;
     }
 
+    enterDyingSubstate(time = this.game.playTime) {
+        this.game.startPacmanDying();
+        this.substate = 'DYING';
+        this.nextDyingFrameTime = time + MazeState.DYING_FRAME_DELAY_MILLIS;
+        this.lastMazeScreenKeypressTime = time;
+    }
+
+    enterInGameSubstate(time = this.game.playTime) {
+        this.substate = 'IN_GAME';
+        this.substateStartTime = time;
+        this.game.resetPlayTime();
+        this.lastMazeScreenKeypressTime = this.game.playTime;
+        this.game.setLoopedSound(SOUNDS.SIREN);
+        this.firstTimeThrough = false;
+    }
+
+    getSubstate(): Substate {
+        return this.substate;
+    }
+
     private paintExtraLives(ctx: CanvasRenderingContext2D) {
 
         // The indentation on either side of the status stuff at the bottom
@@ -235,10 +255,7 @@ export class MazeState extends BaseState {
 
                 // Z+C => auto-death
                 else if (input.isKeyDown(Keys.KEY_C)) {
-                    game.startPacmanDying();
-                    this.substate = 'DYING';
-                    this.nextDyingFrameTime = time + MazeState.DYING_FRAME_DELAY_MILLIS;
-                    this.lastMazeScreenKeypressTime = time;
+                    this.enterDyingSubstate(time);
                 }
             }
 
@@ -261,12 +278,7 @@ export class MazeState extends BaseState {
                     game.audio.playSound(SOUNDS.OPENING);
                 }
                 if (time >= this.substateStartTime + this.readyDelayMillis) {
-                    this.substate = 'IN_GAME';
-                    this.substateStartTime = time;
-                    game.resetPlayTime();
-                    this.lastMazeScreenKeypressTime = game.playTime;
-                    game.setLoopedSound(SOUNDS.SIREN);
-                    this.firstTimeThrough = false;
+                    this.enterInGameSubstate(time);
                 }
                 break;
 

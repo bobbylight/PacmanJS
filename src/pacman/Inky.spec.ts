@@ -1,29 +1,22 @@
+import { afterEach, beforeEach, describe, expect, MockInstance, test, vi } from 'vitest';
 import { Direction } from './Direction';
 import { MotionState } from './Ghost';
 import { Inky } from './Inky';
-import { afterEach, beforeEach, describe, expect, MockInstance, test, vi } from 'vitest';
 import { Maze } from './Maze';
 import { Blinky } from './Blinky';
-import { Pacman } from './Pacman';
 import { MazeNode } from './MazeNode';
+import { PacmanGame } from './PacmanGame';
 
 describe('Inky', () => {
     const blinky: Blinky = { row: 0, column: 0 } as never as Blinky;
-    const pacman: Pacman = { row: 0, column: 0 } as never as Pacman;
-    const mockGame: any /* PacmanGame */ = {
-        checkLoopedSound: () => {},
-        getGhost: () => blinky,
-        get PENALTY_BOX_EXIT_X() {
-            return 100
-        },
-        get PENALTY_BOX_EXIT_Y() {
-            return 100
-        },
-        pacman,
-    };
+    let game: PacmanGame;
+
+    beforeEach(() => {
+        game = new PacmanGame();
+    });
 
     test('reset() works as expected', () => {
-        const ghost: Inky = new Inky(mockGame);
+        const ghost: Inky = new Inky(game);
         ghost.reset();
 
         expect(ghost.direction).toEqual(Direction.SOUTH);
@@ -31,7 +24,11 @@ describe('Inky', () => {
     });
 
     describe('updatePosition', () => {
-        const ghost: Inky = new Inky(mockGame);
+        let ghost: Inky;
+
+        beforeEach(() => {
+            ghost = new Inky(game);
+        });
 
         afterEach(() => {
             vi.restoreAllMocks();
@@ -53,13 +50,17 @@ describe('Inky', () => {
                 });
 
                 describe('and Blinky is too far away', () => {
+                    const mockMaze: Maze = {
+                        getPathBreadthFirst: vi.fn(),
+                    } as never as Maze;
+
                     beforeEach(() => {
                         const spy = vi.spyOn(blinky, 'row', 'get');
                         spy.mockReturnValue(100); // Simulate Blinky being far away
                     });
 
                     test('changes direction', () => {
-                        ghost.updatePosition({} as Maze, 1000);
+                        ghost.updatePosition(mockMaze, 1000);
                         expect(changeDirectionFallback).toHaveBeenCalled();
                     });
                 });

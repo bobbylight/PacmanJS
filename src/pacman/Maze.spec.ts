@@ -1,36 +1,25 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Maze } from './Maze';
 import { SpriteSheet } from 'gtp';
+import { Maze } from './Maze';
+import { PacmanGame } from './PacmanGame';
 
-const mapTilesSpriteSheet = {
+const mockSpriteSheet = {
     drawByIndex: () => {},
+    drawScaled2: vi.fn(),
 } as unknown as SpriteSheet;
 
-const game: any = {
-    assets: {
-        get: () => mapTilesSpriteSheet,
-    },
-    checkLoopedSound: () => {},
-    drawScoresHeaders: () => {},
-    drawSmallDot: () => {},
-    drawBigDot: () => {},
-    getHeight: () => 240,
-    getLevel: () => 0,
-    getWidth: () => 320,
-    makeGhostsBlue: () => {},
-    playChompSound: () => {},
-    playTime: 5000,
-};
-
 describe('Maze', () => {
+    let game: PacmanGame;
 
     beforeEach(() => {
-        (window as any).game = game; // Mock the global game object
+        game = new PacmanGame();
+        game.assets.set('mapTiles', mockSpriteSheet);
+        game.assets.set('font', mockSpriteSheet);
+        game.assets.set('sprites', mockSpriteSheet);
     });
 
     afterEach(() => {
         vi.restoreAllMocks();
-        (window as any).game = undefined;
     });
 
     describe('checkForDot', () => {
@@ -105,9 +94,9 @@ describe('Maze', () => {
     describe('getPathBreadthFirst', () => {
         describe('happy path and edge case tests', () => {
             const levelData = [
-                [0x02, 0x02, 0x02, 0x02],
-                [0x02, 0x00, 0x00, 0x02],
-                [0x02, 0x02, 0x02, 0x02],
+                [ 0x02, 0x02, 0x02, 0x02 ],
+                [ 0x02, 0x00, 0x00, 0x02 ],
+                [ 0x02, 0x02, 0x02, 0x02 ],
             ];
             let maze: Maze;
 
@@ -296,7 +285,7 @@ describe('Maze', () => {
             [ 0x07, 0xff, 0x0d, 0x0e, 0x0e, 0x0e, 0x0e, 0x1a, 0x05, 0x0e, 0x0e, 0x12, 0xff, 0x09, 0x0a, 0xff, 0x0d, 0x0e, 0x0e, 0x1a, 0x05, 0x0e, 0x0e, 0x0e, 0x0e, 0x12, 0xff, 0x0c ],
             [ 0x07, 0xff, 0x0f, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x10, 0xff, 0x0f, 0x10, 0xff, 0x0f, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x10, 0xff, 0x0c ],
             [ 0x07, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0c ],
-            [ 0x13, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x18 ]
+            [ 0x13, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x17, 0x18 ],
         ];
         let maze: Maze;
 
@@ -306,15 +295,13 @@ describe('Maze', () => {
 
         it('renders small dots', () => {
             const drawSmallDotSpy = vi.spyOn(game, 'drawSmallDot');
-            const canvas = document.createElement('canvas');
-            maze.render(canvas.getContext('2d')!);
+            maze.render(game.getRenderingContext());
             expect(drawSmallDotSpy).toHaveBeenCalledTimes(240);
         });
 
         it('renders big dots', () => {
             const drawBigDotSpy = vi.spyOn(game, 'drawBigDot');
-            const canvas = document.createElement('canvas');
-            maze.render(canvas.getContext('2d')!);
+            maze.render(game.getRenderingContext());
             expect(drawBigDotSpy).toHaveBeenCalledTimes(4);
         });
     });

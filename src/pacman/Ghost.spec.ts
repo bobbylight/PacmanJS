@@ -1,24 +1,20 @@
+import { afterEach, beforeEach, describe, expect, it, MockInstance, vi } from 'vitest';
+import { Point, SpriteSheet } from 'gtp';
 import { Ghost, MotionState } from './Ghost';
 import { Maze } from './Maze';
 import { PacmanGame } from './PacmanGame';
-import { afterEach, beforeEach, describe, expect, it, MockInstance, vi } from 'vitest';
 import { Direction } from './Direction';
-import { Point } from 'gtp';
 import { Pacman } from './Pacman';
 
-const mockGame: any = {
-    PENALTY_BOX_EXIT_X: 120,
-    PENALTY_BOX_EXIT_Y: 120,
-    checkLoopedSound: () => {},
-    drawSprite: vi.fn(),
-    getLevel: () => 0,
-    playTime: 5000,
-};
 const mockPacman = {
     row: 0,
     column: 0,
 } as unknown as Pacman;
-mockGame.pacman = mockPacman;
+
+const mockSpriteSheet = {
+    drawByIndex: () => {},
+    drawScaled2: vi.fn(),
+} as unknown as SpriteSheet;
 
 export class ConcreteGhost extends Ghost {
 
@@ -38,6 +34,13 @@ const mocks = vi.hoisted(() => {
 });
 
 describe('Ghost', () => {
+    let mockGame: PacmanGame;
+
+    beforeEach(() => {
+        mockGame = new PacmanGame();
+        mockGame.assets.set('sprites', mockSpriteSheet);
+        mockGame.pacman = mockPacman;
+    });
 
     afterEach(() => {
         vi.clearAllMocks();
@@ -68,9 +71,10 @@ describe('Ghost', () => {
                 const original = await importOriginal();
                 return {
                     ...original,
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
                     Utils: {
                         randomInt: mocks.randomInt,
-                    } as any,
+                    } as never,
                 };
             });
         });
@@ -84,10 +88,10 @@ describe('Ghost', () => {
                 it('goes up', () => {
                     mockGoUpIfPossible.mockReturnValue(true);
                     ghost.changeDirectionFallback({} as Maze);
-                    expect(ghost.goUpIfPossible).toHaveBeenCalled();
-                    expect(ghost.goDownIfPossible).not.toHaveBeenCalled();
-                    expect(ghost.goLeftIfPossible).not.toHaveBeenCalled();
-                    expect(ghost.goRightIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoUpIfPossible).toHaveBeenCalled();
+                    expect(mockGoDownIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoLeftIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoRightIfPossible).not.toHaveBeenCalled();
                 });
             });
 
@@ -95,10 +99,10 @@ describe('Ghost', () => {
                 it('goes left', () => {
                     mockGoLeftIfPossible.mockReturnValue(true);
                     ghost.changeDirectionFallback({} as Maze);
-                    expect(ghost.goUpIfPossible).toHaveBeenCalled();
-                    expect(ghost.goDownIfPossible).not.toHaveBeenCalled();
-                    expect(ghost.goLeftIfPossible).toHaveBeenCalled();
-                    expect(ghost.goRightIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoUpIfPossible).toHaveBeenCalled();
+                    expect(mockGoDownIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoLeftIfPossible).toHaveBeenCalled();
+                    expect(mockGoRightIfPossible).not.toHaveBeenCalled();
                 });
             });
 
@@ -106,10 +110,10 @@ describe('Ghost', () => {
                 it('goes right', () => {
                     mockGoRightIfPossible.mockReturnValue(true);
                     ghost.changeDirectionFallback({} as Maze);
-                    expect(ghost.goUpIfPossible).toHaveBeenCalled();
-                    expect(ghost.goDownIfPossible).not.toHaveBeenCalled();
-                    expect(ghost.goLeftIfPossible).toHaveBeenCalled();
-                    expect(ghost.goRightIfPossible).toHaveBeenCalled();
+                    expect(mockGoUpIfPossible).toHaveBeenCalled();
+                    expect(mockGoDownIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoLeftIfPossible).toHaveBeenCalled();
+                    expect(mockGoRightIfPossible).toHaveBeenCalled();
                 });
             });
 
@@ -117,10 +121,10 @@ describe('Ghost', () => {
                 it('goes down', () => {
                     mockGoDownIfPossible.mockReturnValue(true);
                     ghost.changeDirectionFallback({} as Maze);
-                    expect(ghost.goUpIfPossible).toHaveBeenCalled();
-                    expect(ghost.goDownIfPossible).toHaveBeenCalled();
-                    expect(ghost.goLeftIfPossible).toHaveBeenCalled();
-                    expect(ghost.goRightIfPossible).toHaveBeenCalled();
+                    expect(mockGoUpIfPossible).toHaveBeenCalled();
+                    expect(mockGoDownIfPossible).toHaveBeenCalled();
+                    expect(mockGoLeftIfPossible).toHaveBeenCalled();
+                    expect(mockGoRightIfPossible).toHaveBeenCalled();
                 });
             });
         });
@@ -134,10 +138,10 @@ describe('Ghost', () => {
                 it('goes left', () => {
                     mockGoLeftIfPossible.mockReturnValue(true);
                     ghost.changeDirectionFallback({} as Maze);
-                    expect(ghost.goUpIfPossible).not.toHaveBeenCalled();
-                    expect(ghost.goDownIfPossible).not.toHaveBeenCalled();
-                    expect(ghost.goLeftIfPossible).toHaveBeenCalled();
-                    expect(ghost.goRightIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoUpIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoDownIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoLeftIfPossible).toHaveBeenCalled();
+                    expect(mockGoRightIfPossible).not.toHaveBeenCalled();
                 });
             });
 
@@ -145,10 +149,10 @@ describe('Ghost', () => {
                 it('goes up', () => {
                     mockGoUpIfPossible.mockReturnValue(true);
                     ghost.changeDirectionFallback({} as Maze);
-                    expect(ghost.goUpIfPossible).toHaveBeenCalled();
-                    expect(ghost.goDownIfPossible).not.toHaveBeenCalled();
-                    expect(ghost.goLeftIfPossible).toHaveBeenCalled();
-                    expect(ghost.goRightIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoUpIfPossible).toHaveBeenCalled();
+                    expect(mockGoDownIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoLeftIfPossible).toHaveBeenCalled();
+                    expect(mockGoRightIfPossible).not.toHaveBeenCalled();
                 });
             });
 
@@ -156,10 +160,10 @@ describe('Ghost', () => {
                 it('goes down', () => {
                     mockGoDownIfPossible.mockReturnValue(true);
                     ghost.changeDirectionFallback({} as Maze);
-                    expect(ghost.goUpIfPossible).toHaveBeenCalled();
-                    expect(ghost.goDownIfPossible).toHaveBeenCalled();
-                    expect(ghost.goLeftIfPossible).toHaveBeenCalled();
-                    expect(ghost.goRightIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoUpIfPossible).toHaveBeenCalled();
+                    expect(mockGoDownIfPossible).toHaveBeenCalled();
+                    expect(mockGoLeftIfPossible).toHaveBeenCalled();
+                    expect(mockGoRightIfPossible).not.toHaveBeenCalled();
                 });
             });
 
@@ -167,10 +171,10 @@ describe('Ghost', () => {
                 it('goes right', () => {
                     mockGoRightIfPossible.mockReturnValue(true);
                     ghost.changeDirectionFallback({} as Maze);
-                    expect(ghost.goUpIfPossible).toHaveBeenCalled();
-                    expect(ghost.goDownIfPossible).toHaveBeenCalled();
-                    expect(ghost.goLeftIfPossible).toHaveBeenCalled();
-                    expect(ghost.goRightIfPossible).toHaveBeenCalled();
+                    expect(mockGoUpIfPossible).toHaveBeenCalled();
+                    expect(mockGoDownIfPossible).toHaveBeenCalled();
+                    expect(mockGoLeftIfPossible).toHaveBeenCalled();
+                    expect(mockGoRightIfPossible).toHaveBeenCalled();
                 });
             });
         });
@@ -184,10 +188,10 @@ describe('Ghost', () => {
                 it('goes down', () => {
                     mockGoDownIfPossible.mockReturnValue(true);
                     ghost.changeDirectionFallback({} as Maze);
-                    expect(ghost.goUpIfPossible).not.toHaveBeenCalled();
-                    expect(ghost.goDownIfPossible).toHaveBeenCalled();
-                    expect(ghost.goLeftIfPossible).not.toHaveBeenCalled();
-                    expect(ghost.goRightIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoUpIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoDownIfPossible).toHaveBeenCalled();
+                    expect(mockGoLeftIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoRightIfPossible).not.toHaveBeenCalled();
                 });
             });
 
@@ -195,10 +199,10 @@ describe('Ghost', () => {
                 it('goes left', () => {
                     mockGoLeftIfPossible.mockReturnValue(true);
                     ghost.changeDirectionFallback({} as Maze);
-                    expect(ghost.goUpIfPossible).not.toHaveBeenCalled();
-                    expect(ghost.goDownIfPossible).toHaveBeenCalled();
-                    expect(ghost.goLeftIfPossible).toHaveBeenCalled();
-                    expect(ghost.goRightIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoUpIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoDownIfPossible).toHaveBeenCalled();
+                    expect(mockGoLeftIfPossible).toHaveBeenCalled();
+                    expect(mockGoRightIfPossible).not.toHaveBeenCalled();
                 });
             });
 
@@ -206,10 +210,10 @@ describe('Ghost', () => {
                 it('goes right', () => {
                     mockGoRightIfPossible.mockReturnValue(true);
                     ghost.changeDirectionFallback({} as Maze);
-                    expect(ghost.goUpIfPossible).not.toHaveBeenCalled();
-                    expect(ghost.goDownIfPossible).toHaveBeenCalled();
-                    expect(ghost.goLeftIfPossible).toHaveBeenCalled();
-                    expect(ghost.goRightIfPossible).toHaveBeenCalled();
+                    expect(mockGoUpIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoDownIfPossible).toHaveBeenCalled();
+                    expect(mockGoLeftIfPossible).toHaveBeenCalled();
+                    expect(mockGoRightIfPossible).toHaveBeenCalled();
                 });
             });
 
@@ -217,10 +221,10 @@ describe('Ghost', () => {
                 it('goes up', () => {
                     mockGoUpIfPossible.mockReturnValue(true);
                     ghost.changeDirectionFallback({} as Maze);
-                    expect(ghost.goUpIfPossible).toHaveBeenCalled();
-                    expect(ghost.goDownIfPossible).toHaveBeenCalled();
-                    expect(ghost.goLeftIfPossible).toHaveBeenCalled();
-                    expect(ghost.goRightIfPossible).toHaveBeenCalled();
+                    expect(mockGoUpIfPossible).toHaveBeenCalled();
+                    expect(mockGoDownIfPossible).toHaveBeenCalled();
+                    expect(mockGoLeftIfPossible).toHaveBeenCalled();
+                    expect(mockGoRightIfPossible).toHaveBeenCalled();
                 });
             });
         });
@@ -234,10 +238,10 @@ describe('Ghost', () => {
                 it('goes right', () => {
                     mockGoRightIfPossible.mockReturnValue(true);
                     ghost.changeDirectionFallback({} as Maze);
-                    expect(ghost.goUpIfPossible).not.toHaveBeenCalled();
-                    expect(ghost.goDownIfPossible).not.toHaveBeenCalled();
-                    expect(ghost.goLeftIfPossible).not.toHaveBeenCalled();
-                    expect(ghost.goRightIfPossible).toHaveBeenCalled();
+                    expect(mockGoUpIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoDownIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoLeftIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoRightIfPossible).toHaveBeenCalled();
                 });
             });
 
@@ -245,10 +249,10 @@ describe('Ghost', () => {
                 it('goes up', () => {
                     mockGoUpIfPossible.mockReturnValue(true);
                     ghost.changeDirectionFallback({} as Maze);
-                    expect(ghost.goUpIfPossible).toHaveBeenCalled();
-                    expect(ghost.goDownIfPossible).not.toHaveBeenCalled();
-                    expect(ghost.goLeftIfPossible).not.toHaveBeenCalled();
-                    expect(ghost.goRightIfPossible).toHaveBeenCalled();
+                    expect(mockGoUpIfPossible).toHaveBeenCalled();
+                    expect(mockGoDownIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoLeftIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoRightIfPossible).toHaveBeenCalled();
                 });
             });
 
@@ -256,10 +260,10 @@ describe('Ghost', () => {
                 it('goes down', () => {
                     mockGoDownIfPossible.mockReturnValue(true);
                     ghost.changeDirectionFallback({} as Maze);
-                    expect(ghost.goUpIfPossible).toHaveBeenCalled();
-                    expect(ghost.goDownIfPossible).toHaveBeenCalled();
-                    expect(ghost.goLeftIfPossible).not.toHaveBeenCalled();
-                    expect(ghost.goRightIfPossible).toHaveBeenCalled();
+                    expect(mockGoUpIfPossible).toHaveBeenCalled();
+                    expect(mockGoDownIfPossible).toHaveBeenCalled();
+                    expect(mockGoLeftIfPossible).not.toHaveBeenCalled();
+                    expect(mockGoRightIfPossible).toHaveBeenCalled();
                 });
             });
 
@@ -267,21 +271,22 @@ describe('Ghost', () => {
                 it('goes left', () => {
                     mockGoLeftIfPossible.mockReturnValue(true);
                     ghost.changeDirectionFallback({} as Maze);
-                    expect(ghost.goUpIfPossible).toHaveBeenCalled();
-                    expect(ghost.goDownIfPossible).toHaveBeenCalled();
-                    expect(ghost.goLeftIfPossible).toHaveBeenCalled();
-                    expect(ghost.goRightIfPossible).toHaveBeenCalled();
+                    expect(mockGoUpIfPossible).toHaveBeenCalled();
+                    expect(mockGoDownIfPossible).toHaveBeenCalled();
+                    expect(mockGoLeftIfPossible).toHaveBeenCalled();
+                    expect(mockGoRightIfPossible).toHaveBeenCalled();
                 });
             });
         });
     });
 
     describe('continueInCurrentDirection()', () => {
-        const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
+        let ghost: ConcreteGhost;
         const mockIncY = vi.fn();
         const mockIncX = vi.fn();
 
         beforeEach(() => {
+            ghost = new ConcreteGhost(mockGame);
             ghost.incY = mockIncY;
             ghost.incX = mockIncX;
         });
@@ -316,7 +321,11 @@ describe('Ghost', () => {
     });
 
     describe('getBlueTimeForLevel()', () => {
-        const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
+        let ghost: ConcreteGhost;
+
+        beforeEach(() => {
+            ghost = new ConcreteGhost(mockGame);
+        });
 
         it('is correct for levels 0 and 1', () => {
             expect(ghost.getBlueTimeForLevel(0)).toBe(8000);
@@ -339,7 +348,7 @@ describe('Ghost', () => {
         });
 
         it('is correct for levels 8+', () => {
-            for (let i: number = 8; i < 20; i++) {
+            for (let i = 8; i < 20; i++) {
                 expect(ghost.getBlueTimeForLevel(i)).toBe(0);
             }
         });
@@ -351,7 +360,11 @@ describe('Ghost', () => {
     });
 
     describe('getUpdateDelayMillis()', () => {
-        const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
+        let ghost: ConcreteGhost;
+
+        beforeEach(() => {
+            ghost = new ConcreteGhost(mockGame);
+        });
 
         it('returns the proper value for blue ghosts', () => {
             ghost.setMotionState(MotionState.BLUE);
@@ -364,8 +377,8 @@ describe('Ghost', () => {
             MotionState.EYES,
             MotionState.EYES_ENTERING_BOX,
             MotionState.IN_BOX,
-            MotionState.LEAVING_BOX
-        ].forEach(state => {
+            MotionState.LEAVING_BOX,
+        ].forEach((state) => {
             it(`returns the proper value for non-blue ghosts when they are ${state}`, () => {
                 ghost.setMotionState(state);
                 expect(ghost.getUpdateDelayMillis()).toBe(10);
@@ -386,15 +399,21 @@ describe('Ghost', () => {
             MotionState.LEAVING_BOX,
             MotionState.SCATTERING,
             MotionState.CHASING_PACMAN,
-            MotionState.BLUE
-        ].forEach(state => {
+            MotionState.BLUE,
+        ].forEach((state) => {
             ghost.setMotionState(state);
             expect(ghost.isEyes()).toBe(false);
         });
     });
 
     describe('paint()', () => {
-        const ghost = new ConcreteGhost(mockGame);
+        let ghost: ConcreteGhost;
+        let drawSpriteSpy: MockInstance<PacmanGame['drawSprite']>;
+
+        beforeEach(() => {
+            drawSpriteSpy = vi.spyOn(mockGame, 'drawSprite');
+            ghost = new ConcreteGhost(mockGame);
+        });
 
         describe('when they are blue', () => {
             beforeEach(() => {
@@ -402,34 +421,34 @@ describe('Ghost', () => {
             });
 
             it('paints the blue ghost', () => {
-                ghost.paint({} as CanvasRenderingContext2D);
-                expect(mockGame.drawSprite).toHaveBeenCalledOnce();
+                ghost.paint(mockGame.getRenderingContext());
+                expect(drawSpriteSpy).toHaveBeenCalledOnce();
             });
 
             describe('and they are about to stop being blue', () => {
                 beforeEach(() => {
                     ghost.exitBlueTime = 6000; // 1 second from now
-                    mockGame.playTime = 5250; // Current time
+                    vi.spyOn(mockGame, 'playTime', 'get').mockReturnValue(5250); // current time
                 });
 
                 it('paints the blue ghost blinking', () => {
-                    ghost.paint({} as CanvasRenderingContext2D);
-                    expect(mockGame.drawSprite).toHaveBeenCalledOnce();
+                    ghost.paint(mockGame.getRenderingContext());
+                    expect(drawSpriteSpy).toHaveBeenCalledOnce();
                 });
             });
         });
 
         [
-            MotionState.EYES, MotionState.EYES_ENTERING_BOX
-        ].forEach(state => {
+            MotionState.EYES, MotionState.EYES_ENTERING_BOX,
+        ].forEach((state) => {
             describe(`when they are ${state}`, () => {
                 beforeEach(() => {
                     ghost.setMotionState(state);
                 });
 
                 it('paints the eyes', () => {
-                    ghost.paint({} as CanvasRenderingContext2D);
-                    expect(mockGame.drawSprite).toHaveBeenCalledOnce();
+                    ghost.paint(mockGame.getRenderingContext());
+                    expect(drawSpriteSpy).toHaveBeenCalledOnce();
                 });
             });
         });
@@ -440,14 +459,14 @@ describe('Ghost', () => {
             });
 
             it('paints the normal ghost', () => {
-                ghost.paint({} as CanvasRenderingContext2D);
-                expect(mockGame.drawSprite).toHaveBeenCalledOnce();
+                ghost.paint(mockGame.getRenderingContext());
+                expect(drawSpriteSpy).toHaveBeenCalledOnce();
             });
         });
     });
 
     describe('possiblyTurnBlue()', () => {
-        [ MotionState.EYES, MotionState.EYES_ENTERING_BOX, MotionState.IN_BOX, MotionState.LEAVING_BOX ].forEach(state => {
+        [ MotionState.EYES, MotionState.EYES_ENTERING_BOX, MotionState.IN_BOX, MotionState.LEAVING_BOX ].forEach((state) => {
             it(`does nothing if they are ${state}`, () => {
                 const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
                 ghost.setMotionState(state);
@@ -456,7 +475,7 @@ describe('Ghost', () => {
             });
         });
 
-        [ MotionState.SCATTERING, MotionState.CHASING_PACMAN, MotionState.BLUE ].forEach(state => {
+        [ MotionState.SCATTERING, MotionState.CHASING_PACMAN, MotionState.BLUE ].forEach((state) => {
             it(`turns blue if they are ${state}`, () => {
                 const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
                 ghost.setMotionState(state);
@@ -469,13 +488,16 @@ describe('Ghost', () => {
 
     it('setCorner() works', () => {
         const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
-        expect(() => ghost.setCorner(new Point(20, 20))).not.toThrow();
+        expect(() => {
+            ghost.setCorner(new Point(20, 20));
+        }).not.toThrow();
     });
 
     describe('updatePositionBlue()', () => {
-        const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
+        let ghost: ConcreteGhost;
 
         beforeEach(() => {
+            ghost = new ConcreteGhost(mockGame);
             ghost.setMotionState(MotionState.BLUE);
         });
 
@@ -525,9 +547,11 @@ describe('Ghost', () => {
                 });
 
                 describe('and there is a clear shot to Pacman', () => {
+                    let incXSpy: MockInstance<Ghost['incX']>;
+
                     beforeEach(() => {
                         isClearShotRow.mockReturnValue(true);
-                        vi.spyOn(ghost, 'incX');
+                        incXSpy = vi.spyOn(ghost, 'incX');
                     });
 
                     describe('and they can go up', () => {
@@ -584,7 +608,7 @@ describe('Ghost', () => {
                                 expect(goDownIfPossible).toHaveBeenCalled();
                                 expect(goRightIfPossible).toHaveBeenCalled();
                                 expect(ghost.direction).toEqual(Direction.WEST);
-                                expect(ghost.incX).toHaveBeenCalled();
+                                expect(incXSpy).toHaveBeenCalled();
                             });
                         });
                     });
@@ -615,7 +639,7 @@ describe('Ghost', () => {
                                 expect(goDownIfPossible).toHaveBeenCalled();
                                 expect(goLeftIfPossible).toHaveBeenCalled();
                                 expect(ghost.direction).toEqual(Direction.EAST);
-                                expect(ghost.incX).toHaveBeenCalled();
+                                expect(incXSpy).toHaveBeenCalled();
                             });
                         });
                     });
@@ -631,7 +655,7 @@ describe('Ghost', () => {
                         ghost.updatePosition(maze, 1000);
                         expect(mockChange).toHaveBeenCalledOnce();
                     });
-                })
+                });
             });
 
             describe('and the ghost is in the same column as Pacman', () => {
@@ -643,10 +667,12 @@ describe('Ghost', () => {
                 });
 
                 describe('and there is a clear shot to Pacman', () => {
+                    let incYSpy: MockInstance<Ghost['incY']>;
+
                     beforeEach(() => {
                         isClearShotRow.mockReturnValue(false);
                         isClearShotColumn.mockReturnValue(true);
-                        vi.spyOn(ghost, 'incY');
+                        incYSpy = vi.spyOn(ghost, 'incY');
                     });
 
                     describe('and they can go left', () => {
@@ -703,7 +729,7 @@ describe('Ghost', () => {
                                 expect(goDownIfPossible).toHaveBeenCalled();
                                 expect(goRightIfPossible).toHaveBeenCalled();
                                 expect(ghost.direction).toEqual(Direction.NORTH);
-                                expect(ghost.incY).toHaveBeenCalled();
+                                expect(incYSpy).toHaveBeenCalled();
                             });
                         });
                     });
@@ -734,7 +760,7 @@ describe('Ghost', () => {
                                 expect(goLeftIfPossible).toHaveBeenCalled();
                                 expect(goRightIfPossible).toHaveBeenCalled();
                                 expect(ghost.direction).toEqual(Direction.SOUTH);
-                                expect(ghost.incY).toHaveBeenCalled();
+                                expect(incYSpy).toHaveBeenCalled();
                             });
                         });
                     });
@@ -751,61 +777,62 @@ describe('Ghost', () => {
                         ghost.updatePosition(maze, 1000);
                         expect(mockChange).toHaveBeenCalledOnce();
                     });
-                })
+                });
             });
         });
 
         it('returns to chasing Pacman after enough time', () => {
-            mockGame.playTime += 12000;
+            vi.spyOn(mockGame, 'playTime', 'get').mockReturnValue(mockGame.playTime + 12000);
             ghost.updatePosition({} as Maze, 1000);
             expect(ghost.getMotionState()).toEqual(MotionState.CHASING_PACMAN);
         });
     });
 
     describe('updatePositionEyes()', () => {
-        const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
+        let ghost: ConcreteGhost;
+        let currDirectionSpy: MockInstance<Ghost['continueInCurrentDirection']>;
 
         beforeEach(() => {
-            ghost.reset();
+            ghost = new ConcreteGhost(mockGame);
             ghost.setMotionState(MotionState.EYES);
         });
 
         describe('when not at an intersection', () => {
             beforeEach(() => {
                 vi.spyOn(ghost, 'atIntersection').mockReturnValue(false);
-                vi.spyOn(ghost, 'continueInCurrentDirection');
+                currDirectionSpy = vi.spyOn(ghost, 'continueInCurrentDirection');
             });
 
             it('continues in the current direction', () => {
                 ghost.updatePosition({} as Maze, 1000);
-                expect(ghost.continueInCurrentDirection).toHaveBeenCalledOnce();
+                expect(currDirectionSpy).toHaveBeenCalledOnce();
             });
 
             describe('when they are aligned with the penalty box entrance', () => {
                 beforeEach(() => {
-                    ghost.setLocation(8, 8);
-                    mockGame.PENALTY_BOX_EXIT_X = 8;
-                    mockGame.PENALTY_BOX_EXIT_Y = 0;
+                    ghost.setLocation(mockGame.PENALTY_BOX_EXIT_X, mockGame.PENALTY_BOX_EXIT_Y);
                 });
 
                 it('changes to the EYES_ENTERING_BOX state', () => {
                     ghost.updatePosition({} as Maze, 1000);
                     expect(ghost.getMotionState()).toEqual(MotionState.EYES_ENTERING_BOX);
-                    expect(ghost.continueInCurrentDirection).not.toHaveBeenCalled();
+                    expect(currDirectionSpy).not.toHaveBeenCalled();
                 });
             });
         });
 
         describe('when at an intersection', () => {
             const getPathBreadthFirst = vi.fn();
+            let incXSpy: MockInstance<Ghost['incX']>;
+            let incYSpy: MockInstance<Ghost['incY']>;
             const mockMaze = {
                 getPathBreadthFirst,
             } as unknown as Maze;
 
             beforeEach(() => {
                 vi.spyOn(ghost, 'atIntersection').mockReturnValue(true);
-                vi.spyOn(ghost, 'incX');
-                vi.spyOn(ghost, 'incY');
+                incXSpy = vi.spyOn(ghost, 'incX');
+                incYSpy = vi.spyOn(ghost, 'incY');
             });
 
             it('when null is returned, changes to the EYES_ENTERING_BOX state', () => {
@@ -819,50 +846,51 @@ describe('Ghost', () => {
                 getPathBreadthFirst.mockReturnValue({ row: ghost.row, col: ghost.column - 1 });
                 ghost.updatePosition(mockMaze, 1000);
                 expect(ghost.direction).toEqual(Direction.WEST);
-                expect(ghost.incX).toHaveBeenCalledExactlyOnceWith(-ghost.moveAmount);
-                expect(ghost.incY).not.toHaveBeenCalled();
+                expect(incXSpy).toHaveBeenCalledExactlyOnceWith(-ghost.moveAmount);
+                expect(incYSpy).not.toHaveBeenCalled();
             });
 
             it('turns right when the path is to the right', () => {
                 getPathBreadthFirst.mockReturnValue({ row: ghost.row, col: ghost.column + 1 });
                 ghost.updatePosition(mockMaze, 1000);
                 expect(ghost.direction).toEqual(Direction.EAST);
-                expect(ghost.incX).toHaveBeenCalledExactlyOnceWith(ghost.moveAmount);
-                expect(ghost.incY).not.toHaveBeenCalled();
+                expect(incXSpy).toHaveBeenCalledExactlyOnceWith(ghost.moveAmount);
+                expect(incYSpy).not.toHaveBeenCalled();
             });
 
             it('turns up when the path is above', () => {
                 getPathBreadthFirst.mockReturnValue({ row: ghost.row - 1, col: ghost.column });
                 ghost.updatePosition(mockMaze, 1000);
                 expect(ghost.direction).toEqual(Direction.NORTH);
-                expect(ghost.incY).toHaveBeenCalledExactlyOnceWith(-ghost.moveAmount);
-                expect(ghost.incX).not.toHaveBeenCalled();
+                expect(incYSpy).toHaveBeenCalledExactlyOnceWith(-ghost.moveAmount);
+                expect(incXSpy).not.toHaveBeenCalled();
             });
 
             it('turns down when the path is below', () => {
                 getPathBreadthFirst.mockReturnValue({ row: ghost.row + 1, col: ghost.column });
                 ghost.updatePosition(mockMaze, 1000);
                 expect(ghost.direction).toEqual(Direction.SOUTH);
-                expect(ghost.incY).toHaveBeenCalledExactlyOnceWith(ghost.moveAmount);
-                expect(ghost.incX).not.toHaveBeenCalled();
+                expect(incYSpy).toHaveBeenCalledExactlyOnceWith(ghost.moveAmount);
+                expect(incXSpy).not.toHaveBeenCalled();
             });
         });
     });
 
     describe('updatePositionEyesEnteringBox()', () => {
-        const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
+        let ghost: ConcreteGhost;
+        let incYSpy: MockInstance<Ghost['incY']>;
 
         beforeEach(() => {
-            ghost.reset();
+            ghost = new ConcreteGhost(mockGame);
             ghost.setMotionState(MotionState.EYES_ENTERING_BOX);
-            vi.spyOn(ghost, 'incY');
+            incYSpy = vi.spyOn(ghost, 'incY');
         });
 
         describe('when not leaving the box', () => {
             it('continues moving into the box', () => {
                 ghost.updatePosition({} as Maze, 1000);
                 expect(ghost.direction).toEqual(Direction.SOUTH);
-                expect(ghost.incY).toHaveBeenCalledOnce();
+                expect(incYSpy).toHaveBeenCalledOnce();
             });
         });
 
@@ -874,21 +902,22 @@ describe('Ghost', () => {
             it('changes the leaving the box state', () => {
                 ghost.updatePosition({} as Maze, 1000);
                 expect(ghost.getMotionState()).toEqual(MotionState.LEAVING_BOX);
-                expect(ghost.incY).not.toHaveBeenCalled();
+                expect(incYSpy).not.toHaveBeenCalled();
             });
         });
     });
 
     describe('updatePositionInBox()', () => {
-        const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
+        let ghost: ConcreteGhost;
+        let incYSpy: MockInstance<Ghost['incY']>;
 
         beforeEach(() => {
-            ghost.reset();
+            ghost = new ConcreteGhost(mockGame);
             ghost.setMotionState(MotionState.IN_BOX);
-            vi.spyOn(ghost, 'incY');
+            incYSpy = vi.spyOn(ghost, 'incY');
         });
 
-        [Direction.WEST, Direction.NORTH].forEach(direction => {
+        [ Direction.WEST, Direction.NORTH ].forEach((direction) => {
             describe('when the ghost is low enough in the box', () => {
                 beforeEach(() => {
                     ghost.y = 140;
@@ -898,7 +927,7 @@ describe('Ghost', () => {
                 it('keeps moving north', () => {
                     ghost.updatePosition({} as Maze, 1000);
                     expect(ghost.direction).toEqual(direction); // unchanged
-                    expect(ghost.incY).toHaveBeenCalledOnce();
+                    expect(incYSpy).toHaveBeenCalledOnce();
                 });
             });
 
@@ -911,12 +940,12 @@ describe('Ghost', () => {
                 it('starts moving south', () => {
                     ghost.updatePosition({} as Maze, 1000);
                     expect(ghost.direction).toEqual(Direction.SOUTH);
-                    expect(ghost.incY).not.toHaveBeenCalled();
+                    expect(incYSpy).not.toHaveBeenCalled();
                 });
             });
         });
 
-        [Direction.EAST, Direction.SOUTH].forEach(direction => {
+        [ Direction.EAST, Direction.SOUTH ].forEach((direction) => {
             describe('when the ghost is high enough in the box', () => {
                 beforeEach(() => {
                     ghost.y = 80;
@@ -926,7 +955,7 @@ describe('Ghost', () => {
                 it('keeps moving south', () => {
                     ghost.updatePosition({} as Maze, 1000);
                     expect(ghost.direction).toEqual(direction); // unchanged
-                    expect(ghost.incY).toHaveBeenCalledOnce();
+                    expect(incYSpy).toHaveBeenCalledOnce();
                 });
             });
 
@@ -939,19 +968,20 @@ describe('Ghost', () => {
                 it('starts moving north', () => {
                     ghost.updatePosition({} as Maze, 1000);
                     expect(ghost.direction).toEqual(Direction.NORTH);
-                    expect(ghost.incY).not.toHaveBeenCalled();
+                    expect(incYSpy).not.toHaveBeenCalled();
                 });
             });
         });
     });
 
     describe('updatePositionLeavingBox()', () => {
-        const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
+        let ghost: ConcreteGhost;
+        let incXSpy: MockInstance<Ghost['incX']>;
 
         beforeEach(() => {
-            ghost.reset();
+            ghost = new ConcreteGhost(mockGame);
             ghost.setMotionState(MotionState.LEAVING_BOX);
-            vi.spyOn(ghost, 'incX');
+            incXSpy = vi.spyOn(ghost, 'incX');
         });
 
         describe('when to the left of the exit', () => {
@@ -962,7 +992,7 @@ describe('Ghost', () => {
             it('moves right', () => {
                 ghost.updatePosition({} as Maze, 1000);
                 expect(ghost.direction).toEqual(Direction.EAST);
-                expect(ghost.incX).toHaveBeenCalledOnce();
+                expect(incXSpy).toHaveBeenCalledOnce();
             });
         });
 
@@ -974,7 +1004,7 @@ describe('Ghost', () => {
             it('moves left', () => {
                 ghost.updatePosition({} as Maze, 1000);
                 expect(ghost.direction).toEqual(Direction.WEST);
-                expect(ghost.incX).toHaveBeenCalledOnce();
+                expect(incXSpy).toHaveBeenCalledOnce();
             });
         });
 
@@ -1006,21 +1036,23 @@ describe('Ghost', () => {
     });
 
     describe('updatePositionScattering()', () => {
-        const ghost: ConcreteGhost = new ConcreteGhost(mockGame);
+        let ghost: ConcreteGhost;
+        let incXSpy: MockInstance<Ghost['incX']>;
+        let incYSpy: MockInstance<Ghost['incY']>;
 
         beforeEach(() => {
-            ghost.reset();
+            ghost = new ConcreteGhost(mockGame);
             ghost.setMotionState(MotionState.SCATTERING);
-            vi.spyOn(ghost, 'incX');
-            vi.spyOn(ghost, 'incY');
+            incXSpy = vi.spyOn(ghost, 'incX');
+            incYSpy = vi.spyOn(ghost, 'incY');
         });
 
         describe('when not at an intersection', () => {
             it('continues in current direction', () => {
-                vi.spyOn(ghost, 'continueInCurrentDirection').mockImplementation(() => {});
+                const currDirectionSpy = vi.spyOn(ghost, 'continueInCurrentDirection').mockImplementation(() => {});
                 vi.spyOn(ghost, 'atIntersection').mockReturnValue(false);
                 ghost.updatePosition({} as Maze, 1000);
-                expect(ghost.continueInCurrentDirection).toHaveBeenCalledOnce();
+                expect(currDirectionSpy).toHaveBeenCalledOnce();
             });
         });
 
@@ -1036,45 +1068,45 @@ describe('Ghost', () => {
 
             it('when null is returned, changes direction', () => {
                 getPathBreadthFirst.mockReturnValue(null);
-                vi.spyOn(ghost, 'changeDirectionFallback').mockImplementation(() => {});
+                const fallbackSpy = vi.spyOn(ghost, 'changeDirectionFallback').mockImplementation(() => {});
                 ghost.updatePosition(mockMaze, 1000);
-                expect(ghost.changeDirectionFallback).toHaveBeenCalledOnce();
+                expect(fallbackSpy).toHaveBeenCalledOnce();
             });
 
             it('turns left when the path is to the left', () => {
                 getPathBreadthFirst.mockReturnValue({ row: ghost.row, col: ghost.column - 1 });
                 ghost.updatePosition(mockMaze, 1000);
                 expect(ghost.direction).toEqual(Direction.WEST);
-                expect(ghost.incX).toHaveBeenCalledExactlyOnceWith(-ghost.moveAmount);
-                expect(ghost.incY).not.toHaveBeenCalled();
+                expect(incXSpy).toHaveBeenCalledExactlyOnceWith(-ghost.moveAmount);
+                expect(incYSpy).not.toHaveBeenCalled();
             });
 
             it('turns right when the path is to the right', () => {
                 getPathBreadthFirst.mockReturnValue({ row: ghost.row, col: ghost.column + 1 });
                 ghost.updatePosition(mockMaze, 1000);
                 expect(ghost.direction).toEqual(Direction.EAST);
-                expect(ghost.incX).toHaveBeenCalledExactlyOnceWith(ghost.moveAmount);
-                expect(ghost.incY).not.toHaveBeenCalled();
+                expect(incXSpy).toHaveBeenCalledExactlyOnceWith(ghost.moveAmount);
+                expect(incYSpy).not.toHaveBeenCalled();
             });
 
             it('turns up when the path is above', () => {
                 getPathBreadthFirst.mockReturnValue({ row: ghost.row - 1, col: ghost.column });
                 ghost.updatePosition(mockMaze, 1000);
                 expect(ghost.direction).toEqual(Direction.NORTH);
-                expect(ghost.incY).toHaveBeenCalledExactlyOnceWith(-ghost.moveAmount);
-                expect(ghost.incX).not.toHaveBeenCalled();
+                expect(incYSpy).toHaveBeenCalledExactlyOnceWith(-ghost.moveAmount);
+                expect(incXSpy).not.toHaveBeenCalled();
             });
 
             it('turns down when the path is below', () => {
                 getPathBreadthFirst.mockReturnValue({ row: ghost.row + 1, col: ghost.column });
                 ghost.updatePosition(mockMaze, 1000);
                 expect(ghost.direction).toEqual(Direction.SOUTH);
-                expect(ghost.incY).toHaveBeenCalledExactlyOnceWith(ghost.moveAmount);
-                expect(ghost.incX).not.toHaveBeenCalled();
+                expect(incYSpy).toHaveBeenCalledExactlyOnceWith(ghost.moveAmount);
+                expect(incXSpy).not.toHaveBeenCalled();
             });
 
             it('goes back to chasing Pacman after a while', () => {
-                mockGame.playTime += 10000;
+                vi.spyOn(mockGame, 'playTime', 'get').mockReturnValue(mockGame.playTime + 10000);
                 ghost.updatePosition(mockMaze, 1000);
                 expect(ghost.getMotionState()).toEqual(MotionState.CHASING_PACMAN);
             });

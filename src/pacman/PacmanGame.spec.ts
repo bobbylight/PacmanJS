@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, MockInstance, vi } from 'vitest';
+import { StretchMode } from 'gtp';
 import { GhostUpdateStrategy, PacmanGame } from './PacmanGame';
 import { SOUNDS } from './Sounds';
-import { MotionState } from './Ghost';
+import { Ghost, MotionState } from './Ghost';
 import { Fruit } from './Fruit';
 import { MazeState } from './MazeState';
-import { StretchMode } from 'gtp';
 import { Maze } from './Maze';
 
 describe('PacmanGame', () => {
@@ -41,16 +41,16 @@ describe('PacmanGame', () => {
         });
 
         it('increases score and plays a sound but returns null if Pacman collides with a fruit', () => {
-            vi.spyOn(game, 'increaseScore');
-            vi.spyOn(game.audio, 'playSound');
+            const increaseScoreSpy = vi.spyOn(game, 'increaseScore');
+            const playSoundSpy = vi.spyOn(game.audio, 'playSound');
 
             const fruit = game.addFruit();
             expect(fruit).not.toBeNull();
             if (fruit) {
                 game.pacman.setLocation(fruit.x, fruit.y);
                 expect(game.checkForCollisions()).toBeNull();
-                expect(game.increaseScore).toHaveBeenCalledOnce();
-                expect(game.audio.playSound).toHaveBeenCalledWith(SOUNDS.EATING_FRUIT, false);
+                expect(increaseScoreSpy).toHaveBeenCalledOnce();
+                expect(playSoundSpy).toHaveBeenCalledWith(SOUNDS.EATING_FRUIT, false);
             }
         });
     });
@@ -119,10 +119,10 @@ describe('PacmanGame', () => {
         const game = new PacmanGame();
         const mockImage = {
             drawScaled2: vi.fn(),
-        } as any;
+        };
 
         beforeEach(() => {
-            game.assets.get = vi.fn(() => mockImage);
+            game.assets.set('sprites', mockImage);
         });
 
         it('should draw a big dot at the correct position if playTime < 0', () => {
@@ -156,8 +156,9 @@ describe('PacmanGame', () => {
 
         it('draws nothing if there is no fruit', () => {
             const game = new PacmanGame();
-            const ctx = {} as any;
-            expect(() => game.drawFruit(ctx)).not.toThrow();
+            expect(() => {
+                game.drawFruit(game.getRenderingContext());
+            }).not.toThrow();
             expect(paintPointsEarned).not.toHaveBeenCalled();
         });
 
@@ -168,12 +169,14 @@ describe('PacmanGame', () => {
             });
 
             it('draws the fruit', () => {
-                const ctx = {} as any;
+                const ctx = game.getRenderingContext();
                 expect(fruit).not.toBeNull();
                 if (fruit) {
-                    vi.spyOn(fruit, 'paint').mockImplementation(() => {});
-                    expect(() => game.drawFruit(ctx)).not.toThrow();
-                    expect(fruit.paint).toHaveBeenCalledWith(ctx);
+                    const paintSpy = vi.spyOn(fruit, 'paint').mockImplementation(() => {});
+                    expect(() => {
+                        game.drawFruit(ctx);
+                    }).not.toThrow();
+                    expect(paintSpy).toHaveBeenCalledWith(ctx);
                 }
             });
 
@@ -187,10 +190,12 @@ describe('PacmanGame', () => {
                 });
 
                 it('draws the points earned', () => {
-                    const ctx = {} as any;
+                    const ctx = game.getRenderingContext();
                     expect(fruit).not.toBeNull();
                     if (fruit) {
-                        expect(() => game.drawFruit(ctx)).not.toThrow();
+                        expect(() => {
+                            game.drawFruit(ctx);
+                        }).not.toThrow();
                         expect(paintPointsEarned).toHaveBeenCalled();
                     }
                 });
@@ -202,7 +207,9 @@ describe('PacmanGame', () => {
 
                     it('removes the fruit', () => {
                         // No good way to test this currently
-                        expect(() => game.drawFruit({} as any)).not.toThrow();
+                        expect(() => {
+                            game.drawFruit(game.getRenderingContext());
+                        }).not.toThrow();
                     });
                 });
             });
@@ -213,16 +220,18 @@ describe('PacmanGame', () => {
         const game = new PacmanGame();
 
         it('draws all ghosts', () => {
-            const ctx = {} as any;
-            vi.spyOn(game.getGhost(0), 'paint').mockImplementation(() => {});
-            vi.spyOn(game.getGhost(1), 'paint').mockImplementation(() => {});
-            vi.spyOn(game.getGhost(2), 'paint').mockImplementation(() => {});
-            vi.spyOn(game.getGhost(3), 'paint').mockImplementation(() => {});
-            expect(() => game.drawGhosts(ctx)).not.toThrow();
-            expect(game.getGhost(0).paint).toHaveBeenCalledWith(ctx);
-            expect(game.getGhost(1).paint).toHaveBeenCalledWith(ctx);
-            expect(game.getGhost(2).paint).toHaveBeenCalledWith(ctx);
-            expect(game.getGhost(3).paint).toHaveBeenCalledWith(ctx);
+            const ctx = game.getRenderingContext();
+            const paintSpy0 = vi.spyOn(game.getGhost(0), 'paint').mockImplementation(() => {});
+            const paintSpy1 = vi.spyOn(game.getGhost(1), 'paint').mockImplementation(() => {});
+            const paintSpy2 = vi.spyOn(game.getGhost(2), 'paint').mockImplementation(() => {});
+            const paintSpy3 = vi.spyOn(game.getGhost(3), 'paint').mockImplementation(() => {});
+            expect(() => {
+                game.drawGhosts(ctx);
+            }).not.toThrow();
+            expect(paintSpy0).toHaveBeenCalledWith(ctx);
+            expect(paintSpy1).toHaveBeenCalledWith(ctx);
+            expect(paintSpy2).toHaveBeenCalledWith(ctx);
+            expect(paintSpy3).toHaveBeenCalledWith(ctx);
         });
     });
 
@@ -230,10 +239,10 @@ describe('PacmanGame', () => {
         const game = new PacmanGame();
 
         it('draws the scores', () => {
-            vi.spyOn(game, 'drawString').mockImplementation(() => {});
-            const ctx = {} as any;
+            const drawStringSpy = vi.spyOn(game, 'drawString').mockImplementation(() => {});
+            const ctx = game.getRenderingContext();
             game.drawScores(ctx);
-            expect(game.drawString).toHaveBeenCalledTimes(2);
+            expect(drawStringSpy).toHaveBeenCalledTimes(2);
         });
     });
 
@@ -241,10 +250,10 @@ describe('PacmanGame', () => {
         const game = new PacmanGame();
 
         it('draws the score headers', () => {
-            vi.spyOn(game, 'drawString').mockImplementation(() => {});
-            const ctx = {} as any;
+            const drawStringSpy = vi.spyOn(game, 'drawString').mockImplementation(() => {});
+            const ctx = game.getRenderingContext();
             game.drawScoresHeaders(ctx);
-            expect(game.drawString).toHaveBeenCalledTimes(2);
+            expect(drawStringSpy).toHaveBeenCalledTimes(2);
         });
     });
 
@@ -253,25 +262,26 @@ describe('PacmanGame', () => {
 
         it('draws a small dot at the correct position', () => {
             const ctx = game.getRenderingContext();
-            vi.spyOn(ctx, 'fillRect');
+            const fillRectSpy = vi.spyOn(ctx, 'fillRect');
             game.drawSmallDot(50, 50);
-            expect(ctx.fillRect).toHaveBeenCalledWith(50, 50, 2, 2);
+            expect(fillRectSpy).toHaveBeenCalledWith(50, 50, 2, 2);
         });
     });
 
     describe('drawSprite()', () => {
         const game = new PacmanGame();
+        const drawScaled2 = vi.fn();
         const mockImage = {
-            drawScaled2: vi.fn(),
-        } as any;
+            drawScaled2,
+        };
 
         beforeEach(() => {
-            game.assets.get = vi.fn(() => mockImage);
+            game.assets.set('sprites', mockImage);
         });
 
         it('should draw a sprite at the correct position', () => {
             game.drawSprite(10, 10, 50, 50);
-            expect(mockImage.drawScaled2).toHaveBeenCalledOnce();
+            expect(drawScaled2).toHaveBeenCalledOnce();
         });
     });
 
@@ -282,11 +292,11 @@ describe('PacmanGame', () => {
         };
 
         it('draws a string', () => {
-            vi.spyOn(game.assets, 'get').mockReturnValue(mockFontImage);
-            const ctx = {} as any;
+            const assetsGetSpy = vi.spyOn(game.assets, 'get').mockReturnValue(mockFontImage);
+            const ctx = game.getRenderingContext();
             const text = 'HELLO1-.>@! ';
             game.drawString(10, 10, text, ctx);
-            expect(game.assets.get).toHaveBeenCalledWith('font');
+            expect(assetsGetSpy).toHaveBeenCalledWith('font');
             expect(mockFontImage.drawByIndex).toHaveBeenCalledTimes(text.length);
         });
     });
@@ -297,13 +307,13 @@ describe('PacmanGame', () => {
 
     it('ghostEaten()', () => {
         const game = new PacmanGame();
-        vi.spyOn(game, 'increaseScore');
-        vi.spyOn(game.audio, 'playSound').mockImplementation(() => 1);
+        const increaseScoreSpy = vi.spyOn(game, 'increaseScore');
+        const playSoundSpy = vi.spyOn(game.audio, 'playSound').mockImplementation(() => 1);
 
         for (let i = 0; i < 4; i++) {
             expect(game.ghostEaten(game.getGhost(i))).toBeGreaterThan(0);
-            expect(game.increaseScore).toHaveBeenCalled();
-            expect(game.audio.playSound).toHaveBeenCalledWith(SOUNDS.EATING_GHOST);
+            expect(increaseScoreSpy).toHaveBeenCalled();
+            expect(playSoundSpy).toHaveBeenCalledWith(SOUNDS.EATING_GHOST);
         }
     });
 
@@ -316,12 +326,12 @@ describe('PacmanGame', () => {
         const game = new PacmanGame();
 
         it('gives an extra life but only once', () => {
-            vi.spyOn(game, 'increaseLives');
+            const increaseLivesSpy = vi.spyOn(game, 'increaseLives');
             game.increaseScore(PacmanGame.EXTRA_LIFE_SCORE);
-            expect(game.increaseLives).toHaveBeenCalledWith(1);
+            expect(increaseLivesSpy).toHaveBeenCalledWith(1);
 
             game.increaseScore(100000);
-            expect(game.increaseLives).toHaveBeenCalledTimes(1);
+            expect(increaseLivesSpy).toHaveBeenCalledTimes(1);
         });
     });
 
@@ -330,10 +340,10 @@ describe('PacmanGame', () => {
 
         it('resets the level', () => {
             const state = new MazeState([ [ 0, 1 ], [ 1, 0 ] ]);
-            vi.spyOn(state, 'reset').mockImplementation(() => {});
+            const resetSpy = vi.spyOn(state, 'reset').mockImplementation(() => {});
             game.state = state;
             game.loadNextLevel();
-            expect(state.reset).toHaveBeenCalled();
+            expect(resetSpy).toHaveBeenCalled();
         });
     });
 
@@ -341,15 +351,16 @@ describe('PacmanGame', () => {
         const game = new PacmanGame();
 
         it('sets all ghosts to blue', () => {
-            vi.spyOn(game, 'checkLoopedSound').mockImplementation(() => null);
+            const checkLoopedSoundSpy = vi.spyOn(game, 'checkLoopedSound').mockImplementation(() => null);
+            const possiblyTurnedBlySpy = [];
             for (let i = 0; i < 4; i++) {
-                vi.spyOn(game.getGhost(i), 'possiblyTurnBlue');
+                possiblyTurnedBlySpy.push(vi.spyOn(game.getGhost(i), 'possiblyTurnBlue'));
             }
             game.makeGhostsBlue();
             for (let i = 0; i < 4; i++) {
-                expect(game.getGhost(i).possiblyTurnBlue).toHaveBeenCalledOnce();
+                expect(possiblyTurnedBlySpy[i]).toHaveBeenCalledOnce();
             }
-            expect(game.checkLoopedSound).toHaveBeenCalled();
+            expect(checkLoopedSoundSpy).toHaveBeenCalled();
         });
     });
 
@@ -368,11 +379,11 @@ describe('PacmanGame', () => {
         const game = new PacmanGame();
 
         it('alternates between two sounds', () => {
-            vi.spyOn(game.audio, 'playSound');
+            const playSoundSpy = vi.spyOn(game.audio, 'playSound');
             game.playChompSound();
-            expect(game.audio.playSound).toHaveBeenCalledWith(SOUNDS.CHOMP_1);
+            expect(playSoundSpy).toHaveBeenCalledWith(SOUNDS.CHOMP_1);
             game.playChompSound();
-            expect(game.audio.playSound).toHaveBeenCalledWith(SOUNDS.CHOMP_2);
+            expect(playSoundSpy).toHaveBeenCalledWith(SOUNDS.CHOMP_2);
         });
     });
 
@@ -380,13 +391,13 @@ describe('PacmanGame', () => {
         const game = new PacmanGame();
 
         it('calls setState', () => {
-            vi.spyOn(game, 'setState').mockImplementation(() => {});
+            const setStateSpy = vi.spyOn(game, 'setState').mockImplementation(() => {});
 
             const levelsData = [ [ 0, 1 ], [ 1, 0 ] ];
             vi.spyOn(game.assets, 'get').mockReturnValue(levelsData);
 
             game.startGame(1);
-            expect(game.setState).toHaveBeenCalledOnce();
+            expect(setStateSpy).toHaveBeenCalledOnce();
         });
     });
 
@@ -394,21 +405,21 @@ describe('PacmanGame', () => {
         const game = new PacmanGame();
 
         it('stops the looping sound', () => {
-            vi.spyOn(game, 'setLoopedSound').mockImplementation(() => {});
+            const setLoopedSoundSpy = vi.spyOn(game, 'setLoopedSound').mockImplementation(() => {});
             game.startPacmanDying();
-            expect(game.setLoopedSound).toHaveBeenCalledWith(null);
+            expect(setLoopedSoundSpy).toHaveBeenCalledWith(null);
         });
 
         it('plays the pacman death sound', () => {
-            vi.spyOn(game.audio, 'playSound').mockImplementation(() => 1);
+            const playSoundSpy = vi.spyOn(game.audio, 'playSound').mockImplementation(() => 1);
             game.startPacmanDying();
-            expect(game.audio.playSound).toHaveBeenCalledWith(SOUNDS.DIES);
+            expect(playSoundSpy).toHaveBeenCalledWith(SOUNDS.DIES);
         });
 
         it('starts the pacman dying animation', () => {
-            vi.spyOn(game.pacman, 'startDying').mockImplementation(() => {});
+            const startDyingSpy = vi.spyOn(game.pacman, 'startDying').mockImplementation(() => {});
             game.startPacmanDying();
-            expect(game.pacman.startDying).toHaveBeenCalledOnce();
+            expect(startDyingSpy).toHaveBeenCalledOnce();
         });
     });
 
@@ -424,31 +435,41 @@ describe('PacmanGame', () => {
         const game = new PacmanGame();
 
         it('does not throw when not desktop mode', () => {
-            expect(() => game.toggleStretchMode()).not.toThrow();
+            expect(() => {
+                game.toggleStretchMode();
+            }).not.toThrow();
         });
 
         describe('when in desktop mode', () => {
+            let setStretchModeSpy: MockInstance<PacmanGame['setStretchMode']>;
+
             beforeEach(() => {
                 vi.spyOn(game, 'isDesktopGame').mockReturnValue(true);
-                vi.spyOn(game, 'setStretchMode');
+                setStretchModeSpy = vi.spyOn(game, 'setStretchMode');
             });
 
             it('updates properly when coming from NONE', () => {
                 game.setStretchMode(StretchMode.STRETCH_NONE);
-                expect(() => game.toggleStretchMode()).not.toThrow();
-                expect(game.setStretchMode).toHaveBeenCalledWith(StretchMode.STRETCH_FILL);
+                expect(() => {
+                    game.toggleStretchMode();
+                }).not.toThrow();
+                expect(setStretchModeSpy).toHaveBeenCalledWith(StretchMode.STRETCH_FILL);
             });
 
             it('updates properly when coming from FILL', () => {
                 game.setStretchMode(StretchMode.STRETCH_FILL);
-                expect(() => game.toggleStretchMode()).not.toThrow();
-                expect(game.setStretchMode).toHaveBeenCalledWith(StretchMode.STRETCH_PROPORTIONAL);
+                expect(() => {
+                    game.toggleStretchMode();
+                }).not.toThrow();
+                expect(setStretchModeSpy).toHaveBeenCalledWith(StretchMode.STRETCH_PROPORTIONAL);
             });
 
             it('updates properly when coming from PROPORTIONAL', () => {
                 game.setStretchMode(StretchMode.STRETCH_PROPORTIONAL);
-                expect(() => game.toggleStretchMode()).not.toThrow();
-                expect(game.setStretchMode).toHaveBeenCalledWith(StretchMode.STRETCH_NONE);
+                expect(() => {
+                    game.toggleStretchMode();
+                }).not.toThrow();
+                expect(setStretchModeSpy).toHaveBeenCalledWith(StretchMode.STRETCH_NONE);
             });
         });
     });
@@ -457,24 +478,27 @@ describe('PacmanGame', () => {
         const game = new PacmanGame();
 
         it('updates the sprite frames', () => {
-            vi.spyOn(game.pacman, 'updateFrame').mockImplementation(() => {});
+            const pacmanUpdateFrameSpy = vi.spyOn(game.pacman, 'updateFrame').mockImplementation(() => {});
+            const ghostUpdateFrameSpy = [];
             for (let i = 0; i < 4; i++) {
-                vi.spyOn(game.getGhost(i), 'updateFrame').mockImplementation(() => {});
+                ghostUpdateFrameSpy.push(vi.spyOn(game.getGhost(i), 'updateFrame').mockImplementation(() => {}));
             }
             game.updateSpriteFrames();
-            expect(game.pacman.updateFrame).toHaveBeenCalledOnce();
+            expect(pacmanUpdateFrameSpy).toHaveBeenCalledOnce();
             for (let i = 0; i < 4; i++) {
-                expect(game.getGhost(i).updateFrame).toHaveBeenCalledOnce();
+                expect(ghostUpdateFrameSpy[i]).toHaveBeenCalledOnce();
             }
         });
     });
 
     describe('updateSpritePositions()', () => {
         const game = new PacmanGame();
+        let updatePositionSpies: MockInstance<Ghost['updatePosition']>[];
 
         beforeEach(() => {
+            updatePositionSpies = [];
             for (let i = 0; i < 4; i++) {
-                vi.spyOn(game.getGhost(i), 'updatePosition').mockImplementation(() => {});
+                updatePositionSpies[i] = vi.spyOn(game.getGhost(i), 'updatePosition').mockImplementation(() => {});
             }
         });
 
@@ -482,7 +506,7 @@ describe('PacmanGame', () => {
             it('updates all ghosts', () => {
                 game.updateSpritePositions({} as Maze, 0);
                 for (let i = 0; i < 4; i++) {
-                    expect(game.getGhost(i).updatePosition).toHaveBeenCalledOnce();
+                    expect(updatePositionSpies[i]).toHaveBeenCalledOnce();
                 }
             });
         });
@@ -495,7 +519,7 @@ describe('PacmanGame', () => {
             it('updates no ghosts', () => {
                 game.updateSpritePositions({} as Maze, 0);
                 for (let i = 0; i < 4; i++) {
-                    expect(game.getGhost(i).updatePosition).not.toHaveBeenCalled();
+                    expect(updatePositionSpies[i]).not.toHaveBeenCalled();
                 }
             });
         });
@@ -507,9 +531,9 @@ describe('PacmanGame', () => {
 
             it('updates only the first ghost', () => {
                 game.updateSpritePositions({} as Maze, 0);
-                expect(game.getGhost(0).updatePosition).toHaveBeenCalledOnce();
+                expect(updatePositionSpies[0]).toHaveBeenCalledOnce();
                 for (let i = 1; i < 4; i++) {
-                    expect(game.getGhost(i).updatePosition).not.toHaveBeenCalled();
+                    expect(updatePositionSpies[i]).not.toHaveBeenCalled();
                 }
             });
         });

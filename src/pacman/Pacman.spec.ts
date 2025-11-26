@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, MockInstance, test, vi } from 'vitest';
+import { InputManager } from 'gtp';
 import { Direction } from './Direction';
 import { Maze } from './Maze';
 import { Pacman } from './Pacman';
 import { PacmanGame } from './PacmanGame';
-import { InputManager } from 'gtp';
 
 const mockImage = {
     draw: vi.fn(),
@@ -24,7 +24,7 @@ describe('Pacman', () => {
     });
 
     test('getUpdateDelayMillis() works as expected', () => {
-        const pacman = new Pacman(game)
+        const pacman = new Pacman(game);
         expect(pacman.getUpdateDelayMillis()).toEqual(10);
     });
 
@@ -225,7 +225,7 @@ describe('Pacman', () => {
                 const orig = pacman.x;
                 pacman.updatePosition(maze as unknown as Maze, 1000000);
                 expect(pacman.x).toBeGreaterThan(orig);
-                expect(game.increaseScore).toHaveBeenCalled();
+                expect(increaseScoreSpy).toHaveBeenCalled();
                 expect(maze.checkForDot).toHaveBeenCalledWith(pacman.row, pacman.column);
             });
 
@@ -236,7 +236,7 @@ describe('Pacman', () => {
                 const orig = pacman.x;
                 pacman.updatePosition(maze as unknown as Maze, 1000000);
                 expect(pacman.x).toEqual(orig);
-                expect(game.increaseScore).toHaveBeenCalled();
+                expect(increaseScoreSpy).toHaveBeenCalled();
                 expect(maze.checkForDot).toHaveBeenCalledWith(pacman.row, pacman.column);
             });
         });
@@ -249,7 +249,7 @@ describe('Pacman', () => {
                 const orig = pacman.y;
                 pacman.updatePosition(maze as unknown as Maze, 1000000);
                 expect(pacman.y).toBeLessThan(orig);
-                expect(game.increaseScore).toHaveBeenCalled();
+                expect(increaseScoreSpy).toHaveBeenCalled();
                 expect(maze.checkForDot).toHaveBeenCalledWith(pacman.row, pacman.column);
             });
 
@@ -260,7 +260,7 @@ describe('Pacman', () => {
                 const orig = pacman.y;
                 pacman.updatePosition(maze as unknown as Maze, 1000000);
                 expect(pacman.y).toEqual(orig);
-                expect(game.increaseScore).toHaveBeenCalled();
+                expect(increaseScoreSpy).toHaveBeenCalled();
                 expect(maze.checkForDot).toHaveBeenCalledWith(pacman.row, pacman.column);
             });
         });
@@ -273,7 +273,7 @@ describe('Pacman', () => {
                 const orig = pacman.y;
                 pacman.updatePosition(maze as unknown as Maze, 1000000);
                 expect(pacman.y).toBeGreaterThan(orig);
-                expect(game.increaseScore).toHaveBeenCalled();
+                expect(increaseScoreSpy).toHaveBeenCalled();
                 expect(maze.checkForDot).toHaveBeenCalledWith(pacman.row, pacman.column);
             });
 
@@ -284,7 +284,7 @@ describe('Pacman', () => {
                 const orig = pacman.y;
                 pacman.updatePosition(maze as unknown as Maze, 1000000);
                 expect(pacman.y).toEqual(orig);
-                expect(game.increaseScore).toHaveBeenCalled();
+                expect(increaseScoreSpy).toHaveBeenCalled();
                 expect(maze.checkForDot).toHaveBeenCalledWith(pacman.row, pacman.column);
             });
         });
