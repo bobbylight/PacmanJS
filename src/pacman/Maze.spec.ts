@@ -106,15 +106,15 @@ describe('Maze', () => {
 
             it('returns a path to an adjacent node', () => {
                 const path = maze.getPathBreadthFirst(1, 1, 1, 2);
-                expect(path).not.toBeNull();
-                if (path) {
-                    expect(path.row).toEqual(1);
-                    expect(path.col).toEqual(2);
+                if (!path) {
+                    throw new Error('path should not be null');
                 }
+                expect(path.row).toEqual(1);
+                expect(path.col).toEqual(2);
             });
 
             it('returns an error for an invalid destination', () => {
-                expect(() => maze.getPathBreadthFirst(1, 1, 3, 3)).toThrowError('No path found from (1, 1) to (3, 3)');
+                expect(() => maze.getPathBreadthFirst(1, 1, 3, 3)).toThrow('No path found from (1, 1) to (3, 3)');
             });
 
             it('returns null for the same start and end node', () => {
@@ -141,43 +141,43 @@ describe('Maze', () => {
 
                 // Step 1
                 const path = maze.getPathBreadthFirst(1, 1, 1, 4);
-                expect(path).not.toBeNull();
-                if (path) {
-                    expect(path.row).toEqual(2);
-                    expect(path.col).toEqual(1);
+                if (!path) {
+                    throw new Error('path should not be null');
                 }
+                expect(path.row).toEqual(2);
+                expect(path.col).toEqual(1);
 
                 // Step 2
                 const nextPath = maze.getPathBreadthFirst(2, 1, 1, 4);
-                expect(nextPath).not.toBeNull();
-                if (nextPath) {
-                    expect(nextPath.row).toEqual(2);
-                    expect(nextPath.col).toEqual(2);
+                if (!nextPath) {
+                    throw new Error('nextPath should not be null');
                 }
+                expect(nextPath.row).toEqual(2);
+                expect(nextPath.col).toEqual(2);
 
                 // Step 3
                 const nextPath2 = maze.getPathBreadthFirst(2, 2, 2, 3);
-                expect(nextPath2).not.toBeNull();
-                if (nextPath2) {
-                    expect(nextPath2.row).toEqual(2);
-                    expect(nextPath2.col).toEqual(3);
+                if (!nextPath2) {
+                    throw new Error('nextPath2 should not be null');
                 }
+                expect(nextPath2.row).toEqual(2);
+                expect(nextPath2.col).toEqual(3);
 
                 // Step 4
                 const nextPath3 = maze.getPathBreadthFirst(2, 3, 2, 4);
-                expect(nextPath3).not.toBeNull();
-                if (nextPath3) {
-                    expect(nextPath3.row).toEqual(2);
-                    expect(nextPath3.col).toEqual(4);
+                if (!nextPath3) {
+                    throw new Error('nextPath3 should not be null');
                 }
+                expect(nextPath3.row).toEqual(2);
+                expect(nextPath3.col).toEqual(4);
 
                 // Step 5
                 const finalPath = maze.getPathBreadthFirst(2, 4, 1, 4);
-                expect(finalPath).not.toBeNull();
-                if (finalPath) {
-                    expect(finalPath.row).toEqual(1);
-                    expect(finalPath.col).toEqual(4);
+                if (!finalPath) {
+                    throw new Error('finalPath should not be null');
                 }
+                expect(finalPath.row).toEqual(1);
+                expect(finalPath.col).toEqual(4);
 
                 // Another call returns null
                 const anotherPath = maze.getPathBreadthFirst(1, 4, 1, 4);

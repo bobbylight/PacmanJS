@@ -33,6 +33,17 @@ const mocks = vi.hoisted(() => {
     };
 });
 
+vi.mock(import('gtp'), async(importOriginal) => {
+    const original = await importOriginal();
+    return {
+        ...original,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        Utils: {
+            randomInt: mocks.randomInt,
+        } as never,
+    };
+});
+
 describe('Ghost', () => {
     let mockGame: PacmanGame;
 
@@ -66,17 +77,6 @@ describe('Ghost', () => {
             ghost.goDownIfPossible = mockGoDownIfPossible;
             ghost.goLeftIfPossible = mockGoLeftIfPossible;
             ghost.goRightIfPossible = mockGoRightIfPossible;
-
-            vi.mock(import('gtp'), async(importOriginal) => {
-                const original = await importOriginal();
-                return {
-                    ...original,
-                    // eslint-disable-next-line @typescript-eslint/naming-convention
-                    Utils: {
-                        randomInt: mocks.randomInt,
-                    } as never,
-                };
-            });
         });
 
         describe('when RNG returns 0', () => {

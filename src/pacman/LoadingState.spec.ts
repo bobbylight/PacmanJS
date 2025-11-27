@@ -1,11 +1,11 @@
-import { describe, expect, test, vi } from 'vitest';
+import { describe, expect, vi, it } from 'vitest';
 import { LoadingState } from './LoadingState';
 import { PacmanGame } from './PacmanGame';
 
 describe('LoadingState', () => {
 
     describe('update()', () => {
-        test('Loads the "loading" image', () => {
+        it('Loads the "loading" image', () => {
             const mockGame = new PacmanGame();
             const loadingState = new LoadingState({ game: mockGame });
 
@@ -19,7 +19,7 @@ describe('LoadingState', () => {
             expect(onLoadSpy).toHaveBeenCalled();
         });
 
-        test('when the loading image is loaded, it loads other assets', () => {
+        it('when the loading image is loaded, it loads other assets', () => {
             const mockGame = new PacmanGame();
             mockGame.assets.set('levels', [
                 [ [ 0, 1 ], [ 1, 0 ] ],

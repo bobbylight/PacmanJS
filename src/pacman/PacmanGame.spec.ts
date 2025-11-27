@@ -45,13 +45,13 @@ describe('PacmanGame', () => {
             const playSoundSpy = vi.spyOn(game.audio, 'playSound');
 
             const fruit = game.addFruit();
-            expect(fruit).not.toBeNull();
-            if (fruit) {
-                game.pacman.setLocation(fruit.x, fruit.y);
-                expect(game.checkForCollisions()).toBeNull();
-                expect(increaseScoreSpy).toHaveBeenCalledOnce();
-                expect(playSoundSpy).toHaveBeenCalledWith(SOUNDS.EATING_FRUIT, false);
+            if (!fruit) {
+                throw new Error('unexpected null fruit!');
             }
+            game.pacman.setLocation(fruit.x, fruit.y);
+            expect(game.checkForCollisions()).toBeNull();
+            expect(increaseScoreSpy).toHaveBeenCalledOnce();
+            expect(playSoundSpy).toHaveBeenCalledWith(SOUNDS.EATING_FRUIT, false);
         });
     });
 
@@ -170,34 +170,34 @@ describe('PacmanGame', () => {
 
             it('draws the fruit', () => {
                 const ctx = game.getRenderingContext();
-                expect(fruit).not.toBeNull();
-                if (fruit) {
-                    const paintSpy = vi.spyOn(fruit, 'paint').mockImplementation(() => {});
-                    expect(() => {
-                        game.drawFruit(ctx);
-                    }).not.toThrow();
-                    expect(paintSpy).toHaveBeenCalledWith(ctx);
+                if (!fruit) {
+                    throw new Error('unexpected null fruit!');
                 }
+                const paintSpy = vi.spyOn(fruit, 'paint').mockImplementation(() => {});
+                expect(() => {
+                    game.drawFruit(ctx);
+                }).not.toThrow();
+                expect(paintSpy).toHaveBeenCalledWith(ctx);
             });
 
             describe('and it is eaten', () => {
                 beforeEach(() => {
-                    expect(fruit).not.toBeNull();
-                    if (fruit) {
-                        game.pacman.setLocation(fruit.x, fruit.y);
+                    if (!fruit) {
+                        throw new Error('unexpected null fruit!');
                     }
+                    game.pacman.setLocation(fruit.x, fruit.y);
                     game.checkForCollisions();
                 });
 
                 it('draws the points earned', () => {
                     const ctx = game.getRenderingContext();
-                    expect(fruit).not.toBeNull();
-                    if (fruit) {
-                        expect(() => {
-                            game.drawFruit(ctx);
-                        }).not.toThrow();
-                        expect(paintPointsEarned).toHaveBeenCalled();
+                    if (!fruit) {
+                        throw new Error('unexpected null fruit!');
                     }
+                    expect(() => {
+                        game.drawFruit(ctx);
+                    }).not.toThrow();
+                    expect(paintPointsEarned).toHaveBeenCalled();
                 });
 
                 describe('and enough time has passed for the fruit to disappear', () => {
@@ -302,7 +302,7 @@ describe('PacmanGame', () => {
     });
 
     it('godMode()', () => {
-        expect(new PacmanGame().isGodMode()).toBeFalsy();
+        expect(new PacmanGame().isGodMode()).toEqual(false);
     });
 
     it('ghostEaten()', () => {
@@ -426,9 +426,9 @@ describe('PacmanGame', () => {
     it('toggleGodMode()', () => {
         const game = new PacmanGame();
         vi.spyOn(game, 'toggleGodMode');
-        expect(game.isGodMode()).toBeFalsy();
-        expect(game.toggleGodMode()).toBeTruthy();
-        expect(game.isGodMode()).toBeTruthy();
+        expect(game.isGodMode()).toEqual(false);
+        expect(game.toggleGodMode()).toEqual(true);
+        expect(game.isGodMode()).toEqual(true);
     });
 
     describe('toggleStretchMode()', () => {

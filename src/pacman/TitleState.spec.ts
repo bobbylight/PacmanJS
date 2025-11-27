@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, MockInstance, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, MockInstance, vi, it } from 'vitest';
 import { SpriteSheet } from 'gtp';
 import { TitleState } from './TitleState';
 import { PacmanGame } from './PacmanGame';
@@ -58,12 +58,12 @@ describe('TitleState', () => {
         vi.restoreAllMocks();
     });
 
-    test('enter() sets up Pinky properly', () => {
+    it('enter() sets up Pinky properly', () => {
         new TitleState(game);
         expect(ghost.direction).toEqual(Direction.EAST);
     });
 
-    test('enter() and exit() attach and remove listeners to the canvas properly', () => {
+    it('enter() and exit() attach and remove listeners to the canvas properly', () => {
 
         const state: TitleState = new TitleState(game);
         const addSpy = vi.spyOn(canvas, 'addEventListener');
@@ -87,7 +87,7 @@ describe('TitleState', () => {
             drawBigDotSpy = vi.spyOn(game, 'drawBigDot');
         });
 
-        test('draws our screen', () => {
+        it('draws our screen', () => {
             const ctx = game.getRenderingContext();
             const state: TitleState = new TitleState(game);
             state.enter(game);
@@ -100,7 +100,7 @@ describe('TitleState', () => {
             expect(ghostPaintSpy).toHaveBeenCalledWith(ctx);
         });
 
-        test('renders a message about no audio if audio is not initialized', () => {
+        it('renders a message about no audio if audio is not initialized', () => {
             game.audio.isInitialized = () => false;
             const ctx = game.getRenderingContext();
             const state: TitleState = new TitleState(game);
@@ -114,7 +114,7 @@ describe('TitleState', () => {
     });
 
     describe('update()', () => {
-        test('works', () => {
+        it('works', () => {
             const updateSpriteFramesSpy = vi.spyOn(game, 'updateSpriteFrames');
             const state: TitleState = new TitleState(game);
 
@@ -126,7 +126,7 @@ describe('TitleState', () => {
             expect(updateSpriteFramesSpy).toHaveBeenCalled();
         });
 
-        test('plays a sound when the user presses up', () => {
+        it('plays a sound when the user presses up', () => {
             const playSoundSpy = vi.spyOn(game.audio, 'playSound');
 
             const state: TitleState = new TitleState(game);
@@ -139,7 +139,7 @@ describe('TitleState', () => {
             expect(playSoundSpy).toHaveBeenCalledWith(SOUNDS.TOKEN);
         });
 
-        test('plays a sound when the user presses down', () => {
+        it('plays a sound when the user presses down', () => {
             const playSoundSpy = vi.spyOn(game.audio, 'playSound');
 
             const state: TitleState = new TitleState(game);
@@ -153,7 +153,7 @@ describe('TitleState', () => {
         });
 
         describe('when enter is pressed', () => {
-            test('starts the game with the default maze', () => {
+            it('starts the game with the default maze', () => {
                 const startGameSpy = vi.spyOn(game, 'startGame').mockImplementation(() => {});
 
                 const state: TitleState = new TitleState(game);
@@ -166,7 +166,7 @@ describe('TitleState', () => {
                 expect(startGameSpy).toHaveBeenCalledWith(0);
             });
 
-            test('starts the game with the alternate game if it was selected', () => {
+            it('starts the game with the alternate game if it was selected', () => {
                 const startGameSpy = vi.spyOn(game, 'startGame').mockImplementation(() => {});
 
                 const state: TitleState = new TitleState(game);

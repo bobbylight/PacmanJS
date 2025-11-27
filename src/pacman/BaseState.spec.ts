@@ -19,20 +19,21 @@ class TestableState extends BaseState {
     }
 }
 
+vi.mock(import('gtp'), async(importOriginal) => {
+    const original = await importOriginal();
+    return {
+        ...original,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        Utils: {
+            timestamp: mocks.timestamp,
+        } as never,
+    };
+});
+
 describe('BaseState', () => {
     let game: PacmanGame;
 
     beforeEach(() => {
-        vi.mock(import('gtp'), async(importOriginal) => {
-            const original = await importOriginal();
-            return {
-                ...original,
-                // eslint-disable-next-line @typescript-eslint/naming-convention
-                Utils: {
-                    timestamp: mocks.timestamp,
-                } as never,
-            };
-        });
         game = new PacmanGame();
     });
 

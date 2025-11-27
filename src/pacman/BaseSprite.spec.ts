@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { BaseSprite } from './BaseSprite';
 import { Maze } from './Maze';
 
@@ -19,7 +19,7 @@ class ConcreteSprite extends BaseSprite {
 
 describe('BaseSprite', () => {
 
-    test('can be subclassed', () => {
+    it('can be subclassed', () => {
         const sprite: ConcreteSprite = new ConcreteSprite();
         expect(sprite).toBeDefined();
     });

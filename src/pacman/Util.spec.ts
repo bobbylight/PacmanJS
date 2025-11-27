@@ -1,9 +1,9 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { fixLevelDatas } from './Util';
 
 describe('Util', () => {
     describe('fixLevelDatas', () => {
-        test('converts all hex strings in levelDatas to integers', () => {
+        it('converts all hex strings in levelDatas to integers', () => {
             const levelDatas = [
                 [
                     [ '1', 'A', 'f', '00', 'fe' ],
