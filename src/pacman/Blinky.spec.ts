@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, MockInstance, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, MockInstance, vi, it } from 'vitest';
 import { Blinky } from './Blinky';
 import { Direction } from './Direction';
 import { MotionState } from './Ghost';
@@ -21,7 +21,7 @@ describe('Blinky', () => {
         ghost.reset();
     });
 
-    test('reset() works as expected', () => {
+    it('reset() works as expected', () => {
         ghost.reset();
         expect(ghost.direction).toEqual(Direction.WEST);
         expect(ghost.getMotionState()).toEqual(MotionState.SCATTERING);
@@ -41,7 +41,7 @@ describe('Blinky', () => {
                     continueInCurrentDirection = vi.spyOn(ghost, 'continueInCurrentDirection');
                 });
 
-                test('continues in the current direction', () => {
+                it('continues in the current direction', () => {
                     ghost.updatePosition({} as Maze, 1000);
                     expect(continueInCurrentDirection).toHaveBeenCalled();
                 });
@@ -63,7 +63,7 @@ describe('Blinky', () => {
                     incYSpy = vi.spyOn(ghost, 'incY');
                 });
 
-                test('when a null node is returned, calls changeDirectionFallback', () => {
+                it('when a null node is returned, calls changeDirectionFallback', () => {
                     mockGetPathBreadthFirst.mockReturnValue(null);
                     const changeDirectionFallbackSpy = vi.spyOn(ghost, 'changeDirectionFallback').mockImplementation(() => {});
 
@@ -71,28 +71,28 @@ describe('Blinky', () => {
                     expect(changeDirectionFallbackSpy).toHaveBeenCalled();
                 });
 
-                test('moves west when necessary', () => {
+                it('moves west when necessary', () => {
                     mockGetPathBreadthFirst.mockReturnValue({ row: ghost.row, col: ghost.column - 1 });
                     ghost.updatePosition(maze, 1000);
                     expect(ghost.direction).toEqual(Direction.WEST);
                     expect(incXSpy).toHaveBeenCalledWith(-ghost.moveAmount);
                 });
 
-                test('moves east when necessary', () => {
+                it('moves east when necessary', () => {
                     mockGetPathBreadthFirst.mockReturnValue({ row: ghost.row, col: ghost.column + 1 });
                     ghost.updatePosition(maze, 1000);
                     expect(ghost.direction).toEqual(Direction.EAST);
                     expect(incXSpy).toHaveBeenCalledWith(ghost.moveAmount);
                 });
 
-                test('moves north when necessary', () => {
+                it('moves north when necessary', () => {
                     mockGetPathBreadthFirst.mockReturnValue({ row: ghost.row - 1, col: ghost.column });
                     ghost.updatePosition(maze, 1000);
                     expect(ghost.direction).toEqual(Direction.NORTH);
                     expect(incYSpy).toHaveBeenCalledWith(-ghost.moveAmount);
                 });
 
-                test('moves south when necessary', () => {
+                it('moves south when necessary', () => {
                     mockGetPathBreadthFirst.mockReturnValue({ row: ghost.row + 1, col: ghost.column });
                     ghost.updatePosition(maze, 1000);
                     expect(ghost.direction).toEqual(Direction.SOUTH);

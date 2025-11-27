@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, MockInstance, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, MockInstance, vi, it } from 'vitest';
 import { Direction } from './Direction';
 import { MotionState } from './Ghost';
 import { Pinky } from './Pinky';
@@ -15,7 +15,7 @@ describe('Pinky', () => {
         game.pacman = pacman;
     });
 
-    test('reset() works as expected', () => {
+    it('reset() works as expected', () => {
         const ghost: Pinky = new Pinky(game);
         ghost.reset();
 
@@ -57,7 +57,7 @@ describe('Pinky', () => {
                         colSpy.mockReturnValue(ghost.column + 1);
                     });
 
-                    test('changes direction', () => {
+                    it('changes direction', () => {
                         ghost.updatePosition({} as Maze, 1000);
                         expect(changeDirectionFallback).toHaveBeenCalled();
                     });
@@ -80,7 +80,7 @@ describe('Pinky', () => {
                             mockIsClearShotRow.mockReturnValue(true);
                         });
 
-                        test('moves west', () => {
+                        it('moves west', () => {
                             ghost.updatePosition(mockMaze, 1000);
                             expect(ghost.direction).toEqual(Direction.WEST);
                         });
@@ -95,7 +95,7 @@ describe('Pinky', () => {
                             mockIsClearShotRow.mockReturnValue(false);
                         });
 
-                        test('changes direction', () => {
+                        it('changes direction', () => {
                             ghost.updatePosition(mockMaze, 1000);
                             expect(changeDirectionFallback).toHaveBeenCalled();
                         });
@@ -125,7 +125,7 @@ describe('Pinky', () => {
                                 spy.mockReturnValue(true);
                             });
 
-                            test('moves east', () => {
+                            it('moves east', () => {
                                 ghost.updatePosition(mockMaze, 1000);
                                 expect(ghost.direction).toEqual(Direction.EAST);
                             });
@@ -137,7 +137,7 @@ describe('Pinky', () => {
                                 spy.mockReturnValue(false);
                             });
 
-                            test('changes direction', () => {
+                            it('changes direction', () => {
                                 ghost.updatePosition(mockMaze, 1000);
                                 expect(changeDirectionFallback).toHaveBeenCalled();
                             });
@@ -153,7 +153,7 @@ describe('Pinky', () => {
                             mockIsClearShotRow.mockReturnValue(false);
                         });
 
-                        test('changes direction', () => {
+                        it('changes direction', () => {
                             ghost.updatePosition(mockMaze, 1000);
                             expect(changeDirectionFallback).toHaveBeenCalled();
                         });
@@ -177,7 +177,7 @@ describe('Pinky', () => {
                             mockIsClearShotColumn.mockReturnValue(true);
                         });
 
-                        test('moves north', () => {
+                        it('moves north', () => {
                             ghost.updatePosition(mockMaze, 1000);
                             expect(ghost.direction).toEqual(Direction.NORTH);
                         });
@@ -192,7 +192,7 @@ describe('Pinky', () => {
                             mockIsClearShotColumn.mockReturnValue(false);
                         });
 
-                        test('changes direction', () => {
+                        it('changes direction', () => {
                             ghost.updatePosition(mockMaze, 1000);
                             expect(changeDirectionFallback).toHaveBeenCalled();
                         });
@@ -222,7 +222,7 @@ describe('Pinky', () => {
                                 spy.mockReturnValue(true);
                             });
 
-                            test('moves south', () => {
+                            it('moves south', () => {
                                 ghost.updatePosition(mockMaze, 1000);
                                 expect(ghost.direction).toEqual(Direction.SOUTH);
                             });
@@ -234,7 +234,7 @@ describe('Pinky', () => {
                                 spy.mockReturnValue(false);
                             });
 
-                            test('changes direction', () => {
+                            it('changes direction', () => {
                                 ghost.updatePosition(mockMaze, 1000);
                                 expect(changeDirectionFallback).toHaveBeenCalled();
                             });
@@ -250,7 +250,7 @@ describe('Pinky', () => {
                             mockIsClearShotColumn.mockReturnValue(false);
                         });
 
-                        test('changes direction', () => {
+                        it('changes direction', () => {
                             ghost.updatePosition(mockMaze, 1000);
                             expect(changeDirectionFallback).toHaveBeenCalled();
                         });
@@ -267,7 +267,7 @@ describe('Pinky', () => {
                     continueInCurrentDirection = vi.spyOn(ghost, 'continueInCurrentDirection');
                 });
 
-                test('continues in the current direction', () => {
+                it('continues in the current direction', () => {
                     ghost.updatePosition({} as Maze, 1000);
                     expect(continueInCurrentDirection).toHaveBeenCalled();
                 });

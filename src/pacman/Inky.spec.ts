@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, MockInstance, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, MockInstance, vi, it } from 'vitest';
 import { Direction } from './Direction';
 import { MotionState } from './Ghost';
 import { Inky } from './Inky';
@@ -15,7 +15,7 @@ describe('Inky', () => {
         game = new PacmanGame();
     });
 
-    test('reset() works as expected', () => {
+    it('reset() works as expected', () => {
         const ghost: Inky = new Inky(game);
         ghost.reset();
 
@@ -59,7 +59,7 @@ describe('Inky', () => {
                         spy.mockReturnValue(100); // Simulate Blinky being far away
                     });
 
-                    test('changes direction', () => {
+                    it('changes direction', () => {
                         ghost.updatePosition(mockMaze, 1000);
                         expect(changeDirectionFallback).toHaveBeenCalled();
                     });
@@ -82,7 +82,7 @@ describe('Inky', () => {
                             getPathBreadFirstMock.mockReturnValue(null);
                         });
 
-                        test('changes direction', () => {
+                        it('changes direction', () => {
                             ghost.updatePosition(mockMaze, 1000);
                             expect(changeDirectionFallback).toHaveBeenCalled();
                         });
@@ -93,7 +93,7 @@ describe('Inky', () => {
                             getPathBreadFirstMock.mockReturnValue({ row: ghost.row, col: ghost.column - 1 } as MazeNode);
                         });
 
-                        test('moves west', () => {
+                        it('moves west', () => {
                             ghost.updatePosition(mockMaze, 1000);
                             expect(ghost.direction).toEqual(Direction.WEST);
                         });
@@ -104,7 +104,7 @@ describe('Inky', () => {
                             getPathBreadFirstMock.mockReturnValue({ row: ghost.row, col: ghost.column + 1 } as MazeNode);
                         });
 
-                        test('moves west', () => {
+                        it('moves west', () => {
                             ghost.updatePosition(mockMaze, 1000);
                             expect(ghost.direction).toEqual(Direction.EAST);
                         });
@@ -115,7 +115,7 @@ describe('Inky', () => {
                             getPathBreadFirstMock.mockReturnValue({ row: ghost.row - 1, col: ghost.column } as MazeNode);
                         });
 
-                        test('moves west', () => {
+                        it('moves west', () => {
                             ghost.updatePosition(mockMaze, 1000);
                             expect(ghost.direction).toEqual(Direction.NORTH);
                         });
@@ -126,7 +126,7 @@ describe('Inky', () => {
                             getPathBreadFirstMock.mockReturnValue({ row: ghost.row + 1, col: ghost.column } as MazeNode);
                         });
 
-                        test('moves west', () => {
+                        it('moves west', () => {
                             ghost.updatePosition(mockMaze, 1000);
                             expect(ghost.direction).toEqual(Direction.SOUTH);
                         });
@@ -143,7 +143,7 @@ describe('Inky', () => {
                     continueInCurrentDirection = vi.spyOn(ghost, 'continueInCurrentDirection');
                 });
 
-                test('continues in the current direction', () => {
+                it('continues in the current direction', () => {
                     ghost.updatePosition({} as Maze, 1000);
                     expect(continueInCurrentDirection).toHaveBeenCalled();
                 });

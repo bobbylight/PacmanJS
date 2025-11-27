@@ -100,6 +100,7 @@ export class PacmanGame extends Game {
         this.ghostUpdateStrategy = GhostUpdateStrategy.UPDATE_ALL;
         this.score = 0; // For title screen
         this.desktopGame = args?.desktopGame ?? this.isRunningInElectron();
+        this.godMode = false;
 
         this.extraPointsArray = [ 100, 200, 300, 400, 500, 700, 800,
             1000, 1600, 2000, 3000, 5000 ];

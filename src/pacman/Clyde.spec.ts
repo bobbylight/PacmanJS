@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, MockInstance, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, MockInstance, vi, it } from 'vitest';
 import { Direction } from './Direction';
 import { MotionState } from './Ghost';
 import { Clyde } from './Clyde';
@@ -8,7 +8,7 @@ import { PacmanGame } from './PacmanGame';
 describe('Clyde', () => {
     const game = new PacmanGame();
 
-    test('reset() works as expected', () => {
+    it('reset() works as expected', () => {
         const ghost: Clyde = new Clyde(game);
         ghost.reset();
 
@@ -38,7 +38,7 @@ describe('Clyde', () => {
                     changeDirectionFallback = vi.spyOn(ghost, 'changeDirectionFallback');
                 });
 
-                test('changes direction', () => {
+                it('changes direction', () => {
                     ghost.updatePosition({} as Maze, 1000);
                     expect(changeDirectionFallback).toHaveBeenCalled();
                 });
@@ -53,7 +53,7 @@ describe('Clyde', () => {
                     continueInCurrentDirection = vi.spyOn(ghost, 'continueInCurrentDirection');
                 });
 
-                test('continues in the current direction', () => {
+                it('continues in the current direction', () => {
                     ghost.updatePosition({} as Maze, 1000);
                     expect(continueInCurrentDirection).toHaveBeenCalled();
                 });
