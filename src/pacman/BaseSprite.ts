@@ -5,7 +5,7 @@ import { SPRITE_SIZE } from './Constants';
 
 export abstract class BaseSprite {
 
-    readonly SCREEN_WIDTH= 224; // TODO: Move somewhere more generic
+    readonly SCREEN_WIDTH = 224; // TODO: Move somewhere more generic
     readonly moveAmount = 1; // TODO: Perhaps this is no longer needed?
     readonly TILE_SIZE = 8; // TODO: Move this somewhere more generic
 
