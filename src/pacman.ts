@@ -8,20 +8,10 @@ import { LoadingState } from './pacman/LoadingState';
 const CANVAS_WIDTH = 224; //448;
 const CANVAS_HEIGHT = 288; //576;
 
-declare global {
-    interface Window {
-        game?: PacmanGame;
-        init: (parent: HTMLElement | string, assetRoot?: string) => void;
-    }
-}
-
-window.init = function(parent: HTMLElement | string, assetRoot?: string) {
-    window.game = new PacmanGame({
-        parent: parent, width: CANVAS_WIDTH, height: CANVAS_HEIGHT,
-        assetRoot: assetRoot, keyRefreshMillis: 300, targetFps: 60,
-    });
-    window.game.setState(new LoadingState());
-    window.game.start();
-};
-window.init('parent');
+const game = new PacmanGame({
+    parent: 'parent', width: CANVAS_WIDTH, height: CANVAS_HEIGHT,
+    keyRefreshMillis: 300, targetFps: 60,
+});
+game.setState(new LoadingState(game));
+game.start();
 

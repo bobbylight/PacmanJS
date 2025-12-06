@@ -1,4 +1,4 @@
-import { BaseStateArgs, FadeOutInState, Utils } from 'gtp';
+import { FadeOutInState, Utils } from 'gtp';
 import { BaseState } from './BaseState';
 import { SOUNDS } from './Sounds';
 import { PacmanGame } from './PacmanGame';
@@ -12,7 +12,7 @@ export class LoadingState extends BaseState {
     /**
      * State that renders while resources are loading.
      */
-    constructor(args?: PacmanGame | BaseStateArgs<PacmanGame>) {
+    constructor(args: PacmanGame) {
         super(args);
         this.assetsLoaded = false;
     }

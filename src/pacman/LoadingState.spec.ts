@@ -6,13 +6,13 @@ describe('LoadingState', () => {
 
     describe('update()', () => {
         it('Loads the "loading" image', () => {
-            const mockGame = new PacmanGame();
-            const loadingState = new LoadingState({ game: mockGame });
+            const game = new PacmanGame();
+            const loadingState = new LoadingState(game);
 
-            const addImageSpy = vi.spyOn(mockGame.assets, 'addImage');
-            const onLoadSpy = vi.spyOn(mockGame.assets, 'onLoad');
+            const addImageSpy = vi.spyOn(game.assets, 'addImage');
+            const onLoadSpy = vi.spyOn(game.assets, 'onLoad');
 
-            loadingState.enter(mockGame);
+            loadingState.enter(game);
             loadingState.update(16);
 
             expect(addImageSpy).toHaveBeenCalledWith('loading', 'res/loadingMessage.png');
@@ -20,24 +20,24 @@ describe('LoadingState', () => {
         });
 
         it('when the loading image is loaded, it loads other assets', () => {
-            const mockGame = new PacmanGame();
-            mockGame.assets.set('levels', [
+            const game = new PacmanGame();
+            game.assets.set('levels', [
                 [ [ 0, 1 ], [ 1, 0 ] ],
                 [ [ 1, 0 ], [ 0, 1 ] ],
             ]);
 
-            const addImageSpy = vi.spyOn(mockGame.assets, 'addImage');
-            const addSpriteSheetSpy = vi.spyOn(mockGame.assets, 'addSpriteSheet');
-            const addJsonSpy = vi.spyOn(mockGame.assets, 'addJson');
-            const addSoundSpy = vi.spyOn(mockGame.assets, 'addSound');
-            const setSpy = vi.spyOn(mockGame.assets, 'set');
+            const addImageSpy = vi.spyOn(game.assets, 'addImage');
+            const addSpriteSheetSpy = vi.spyOn(game.assets, 'addSpriteSheet');
+            const addJsonSpy = vi.spyOn(game.assets, 'addJson');
+            const addSoundSpy = vi.spyOn(game.assets, 'addSound');
+            const setSpy = vi.spyOn(game.assets, 'set');
 
-            vi.spyOn(mockGame.assets, 'onLoad').mockImplementation((callback) => {
+            vi.spyOn(game.assets, 'onLoad').mockImplementation((callback) => {
                 callback();
             });
 
-            const loadingState = new LoadingState({ game: mockGame });
-            loadingState.enter(mockGame);
+            const loadingState = new LoadingState(game);
+            loadingState.enter(game);
             loadingState.update(60);
 
             expect(addImageSpy).toHaveBeenCalledWith('title', 'res/title.png');
