@@ -43,20 +43,20 @@ describe('MazeState', () => {
     });
 
     it('constructor sets mazeFile', () => {
-        const state = new MazeState(mockMazeFile);
+        const state = new MazeState(game, mockMazeFile);
         expect(state).toBeInstanceOf(MazeState);
     });
 
     it('enter initializes Pacman and the ghosts', () => {
-        const state = new MazeState(mockMazeFile);
-        state.enter(game);
+        const state = new MazeState(game, mockMazeFile);
+        state.enter();
         expect(pacmanResetSpy).toHaveBeenCalled();
         expect(resetGhostsSpy).toHaveBeenCalled();
     });
 
     it('reset does not throw an error', () => {
-        const state = new MazeState(mockMazeFile);
-        state.enter(game);
+        const state = new MazeState(game, mockMazeFile);
+        state.enter();
         expect(() => {
             state.reset();
         }).not.toThrow();
@@ -64,8 +64,8 @@ describe('MazeState', () => {
 
     it('update transitions READY to IN_GAME after delay', () => {
         const setLoopeSoundSpy = vi.spyOn(game, 'setLoopedSound');
-        const state = new MazeState(mockMazeFile);
-        state.enter(game);
+        const state = new MazeState(game, mockMazeFile);
+        state.enter();
         expect(state.getSubstate()).toEqual('READY');
         vi.spyOn(game, 'playTime', 'get').mockReturnValue(5000);
         state.update(16);
@@ -77,11 +77,11 @@ describe('MazeState', () => {
 
     it('when Pacman is hit with lives remaining, we go from DYING to READY after a delay', () => {
         const setLoopeSoundSpy = vi.spyOn(game, 'setLoopedSound');
-        const state = new MazeState(mockMazeFile);
+        const state = new MazeState(game, mockMazeFile);
         vi.spyOn(game, 'playTime', 'get').mockReturnValue(0);
         vi.spyOn(game.pacman, 'incDying').mockReturnValue(false);
         vi.spyOn(game, 'increaseLives').mockReturnValue(1);
-        state.enter(game);
+        state.enter();
         state.enterDyingSubstate(0);
         expect(state.getSubstate()).toEqual('DYING');
         vi.spyOn(game, 'playTime', 'get').mockReturnValue(5000);
@@ -94,11 +94,11 @@ describe('MazeState', () => {
 
     it('when Pacman is hit with no lives remaining, we go from DYING to GAME_OVER after a delay', () => {
         const setLoopeSoundSpy = vi.spyOn(game, 'setLoopedSound');
-        const state = new MazeState(mockMazeFile);
+        const state = new MazeState(game, mockMazeFile);
         vi.spyOn(game, 'playTime', 'get').mockReturnValue(0);
         vi.spyOn(game.pacman, 'incDying').mockReturnValue(false);
         vi.spyOn(game, 'increaseLives').mockReturnValue(0);
-        state.enter(game);
+        state.enter();
         state.enterDyingSubstate(0);
         expect(state.getSubstate()).toEqual('DYING');
         vi.spyOn(game, 'playTime', 'get').mockReturnValue(5000);
@@ -111,8 +111,8 @@ describe('MazeState', () => {
 
     it('while IN_GAME updates alls prite positions', () => {
         const updateSpritePositionsSpy = vi.spyOn(game, 'updateSpritePositions');
-        const state = new MazeState(mockMazeFile);
-        state.enter(game);
+        const state = new MazeState(game, mockMazeFile);
+        state.enter();
         state.enterInGameSubstate();
         vi.spyOn(game, 'playTime', 'get').mockReturnValue(5000);
         state.update(75);
@@ -120,8 +120,8 @@ describe('MazeState', () => {
     });
 
     it('render calls maze.render and game.drawFruit', () => {
-        const state = new MazeState(mockMazeFile);
-        state.enter(game);
+        const state = new MazeState(game, mockMazeFile);
+        state.enter();
         const ctx = {
             drawImage: vi.fn(),
             fillStyle: '',

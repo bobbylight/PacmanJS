@@ -10,10 +10,6 @@ const mocks = vi.hoisted(() => {
 });
 
 class TestableState extends BaseState {
-    constructor(game: PacmanGame) {
-        super({ game });
-    }
-
     override handleDefaultKeys() {
         super.handleDefaultKeys();
     }

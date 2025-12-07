@@ -491,7 +491,7 @@ export class PacmanGame extends Game {
 
         const levelsData: number[][][] = this.assets.get('levels');
         const levelData = levelsData[level];
-        const mazeState = new MazeState(levelData);
+        const mazeState = new MazeState(this, levelData);
         //this.setState(new FadeOutInState(this.state, mazeState));
         this.setState(mazeState); // The original did not fade in/out
     }

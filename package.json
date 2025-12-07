@@ -1,7 +1,7 @@
 {
   "name": "pacmanjs",
   "description": "Pacman written in TypeScript",
-  "version": "3.1.0",
+  "version": "4.0.0",
   "license": "MIT",
   "type": "module",
   "repository": {
@@ -36,6 +36,6 @@
     "vitest": "4.0.13"
   },
   "dependencies": {
-    "gtp": "4.1.1"
+    "gtp": "5.0.0"
   }
 }
