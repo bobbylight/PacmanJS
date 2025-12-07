@@ -1,4 +1,4 @@
-import { Game, Image, InputManager, SpriteSheet } from 'gtp';
+import { Image, InputManager, SpriteSheet } from 'gtp';
 import { BaseState } from './BaseState';
 import { PacmanGame } from './PacmanGame';
 import { Pacman } from './Pacman';
@@ -23,9 +23,9 @@ export class TitleState extends BaseState {
         this.initSprites(args);
     }
 
-    override enter(game: PacmanGame) {
-        this.game = game;
-        super.enter(game);
+    override enter() {
+        const game = this.game;
+        super.enter();
 
         game.canvas.addEventListener('touchstart', this.handleStart.bind(this), { capture: false, passive: true });
         this.choice = 0;
@@ -43,8 +43,8 @@ export class TitleState extends BaseState {
         ghost.direction = Direction.EAST;
     }
 
-    override leaving(game: Game) {
-        game.canvas.removeEventListener('touchstart', this.handleStart.bind(this), false);
+    override leaving() {
+        this.game.canvas.removeEventListener('touchstart', this.handleStart.bind(this), false);
     }
 
     handleStart() {

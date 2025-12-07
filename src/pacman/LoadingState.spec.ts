@@ -12,7 +12,7 @@ describe('LoadingState', () => {
             const addImageSpy = vi.spyOn(game.assets, 'addImage');
             const onLoadSpy = vi.spyOn(game.assets, 'onLoad');
 
-            loadingState.enter(game);
+            loadingState.enter();
             loadingState.update(16);
 
             expect(addImageSpy).toHaveBeenCalledWith('loading', 'res/loadingMessage.png');
@@ -37,7 +37,7 @@ describe('LoadingState', () => {
             });
 
             const loadingState = new LoadingState(game);
-            loadingState.enter(game);
+            loadingState.enter();
             loadingState.update(60);
 
             expect(addImageSpy).toHaveBeenCalledWith('title', 'res/title.png');

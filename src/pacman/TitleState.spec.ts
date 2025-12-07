@@ -69,10 +69,10 @@ describe('TitleState', () => {
         const addSpy = vi.spyOn(canvas, 'addEventListener');
         const removeSpy = vi.spyOn(canvas, 'removeEventListener');
 
-        state.enter(game);
+        state.enter();
         expect(addSpy).toHaveBeenCalled();
 
-        state.leaving(game);
+        state.leaving();
         expect(removeSpy).toHaveBeenCalled();
     });
 
@@ -90,7 +90,7 @@ describe('TitleState', () => {
         it('draws our screen', () => {
             const ctx = game.getRenderingContext();
             const state: TitleState = new TitleState(game);
-            state.enter(game);
+            state.enter();
             state.render(ctx);
 
             expect(drawStringSpy).toHaveBeenCalled();
@@ -104,7 +104,7 @@ describe('TitleState', () => {
             game.audio.isInitialized = () => false;
             const ctx = game.getRenderingContext();
             const state: TitleState = new TitleState(game);
-            state.enter(game);
+            state.enter();
             state.render(ctx);
 
             expect(drawStringSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), 'SOUND IS DISABLED AS');
@@ -119,7 +119,7 @@ describe('TitleState', () => {
             const state: TitleState = new TitleState(game);
 
             vi.spyOn(game, 'playTime', 'get').mockReturnValue(0);
-            state.enter(game);
+            state.enter();
             vi.spyOn(game, 'playTime', 'get').mockReturnValue(500); // simulate enough time passing
             state.update(500);
 
@@ -131,7 +131,7 @@ describe('TitleState', () => {
 
             const state: TitleState = new TitleState(game);
             vi.spyOn(game, 'playTime', 'get').mockReturnValue(0);
-            state.enter(game);
+            state.enter();
             vi.spyOn(game, 'playTime', 'get').mockReturnValue(500); // simulate enough time passing
             vi.spyOn(game.inputManager, 'up').mockReturnValue(true);
             state.update(500);
@@ -144,7 +144,7 @@ describe('TitleState', () => {
 
             const state: TitleState = new TitleState(game);
             vi.spyOn(game, 'playTime', 'get').mockReturnValue(0);
-            state.enter(game);
+            state.enter();
             vi.spyOn(game, 'playTime', 'get').mockReturnValue(500); // simulate enough time passing
             vi.spyOn(game.inputManager, 'down').mockReturnValue(true);
             state.update(500);
@@ -158,7 +158,7 @@ describe('TitleState', () => {
 
                 const state: TitleState = new TitleState(game);
                 vi.spyOn(game, 'playTime', 'get').mockReturnValue(0);
-                state.enter(game);
+                state.enter();
                 vi.spyOn(game, 'playTime', 'get').mockReturnValue(500); // simulate enough time passing
                 vi.spyOn(game.inputManager, 'enter').mockReturnValue(true);
                 state.update(500);
@@ -171,7 +171,7 @@ describe('TitleState', () => {
 
                 const state: TitleState = new TitleState(game);
                 vi.spyOn(game, 'playTime', 'get').mockReturnValue(0);
-                state.enter(game);
+                state.enter();
                 vi.spyOn(game, 'playTime', 'get').mockReturnValue(500);
                 vi.spyOn(game.inputManager, 'down').mockReturnValue(true);
                 state.update(500);

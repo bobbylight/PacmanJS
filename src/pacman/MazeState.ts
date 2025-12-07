@@ -24,8 +24,8 @@ export class MazeState extends BaseState {
 
     private static readonly DYING_FRAME_DELAY_MILLIS = 75;
 
-    constructor(mazeFile: number[][]) {
-        super();
+    constructor(game: PacmanGame, mazeFile: number[][]) {
+        super(game);
         this.mazeFile = mazeFile;
     }
 
@@ -33,9 +33,9 @@ export class MazeState extends BaseState {
         return this.firstTimeThrough ? 4500 : 2000;
     }
 
-    override enter(game: PacmanGame) {
+    override enter() {
 
-        this.game = game;
+        const game = this.game;
         game.pacman.reset();
         game.resetGhosts();
 

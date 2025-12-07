@@ -339,7 +339,7 @@ describe('PacmanGame', () => {
         const game = new PacmanGame();
 
         it('resets the level', () => {
-            const state = new MazeState([ [ 0, 1 ], [ 1, 0 ] ]);
+            const state = new MazeState(game, [ [ 0, 1 ], [ 1, 0 ] ]);
             const resetSpy = vi.spyOn(state, 'reset').mockImplementation(() => {});
             game.state = state;
             game.loadNextLevel();
