@@ -7,7 +7,7 @@ import { Pacman } from './Pacman';
 import { PacmanGame } from './PacmanGame';
 
 describe('Pinky', () => {
-    const pacman: Pacman = { row: 0, column: 0 } as never as Pacman;
+    const pacman: Pacman = { row: 0, column: 0 } as never;
     let game: PacmanGame;
 
     beforeEach(() => {

@@ -4,11 +4,10 @@ import { MotionState } from './Ghost';
 import { Inky } from './Inky';
 import { Maze } from './Maze';
 import { Blinky } from './Blinky';
-import { MazeNode } from './MazeNode';
 import { PacmanGame } from './PacmanGame';
 
 describe('Inky', () => {
-    const blinky: Blinky = { row: 0, column: 0 } as never as Blinky;
+    const blinky: Blinky = { row: 0, column: 0 } as never;
     let game: PacmanGame;
 
     beforeEach(() => {
@@ -52,7 +51,7 @@ describe('Inky', () => {
                 describe('and Blinky is too far away', () => {
                     const mockMaze: Maze = {
                         getPathBreadthFirst: vi.fn(),
-                    } as never as Maze;
+                    } as never;
 
                     beforeEach(() => {
                         const spy = vi.spyOn(blinky, 'row', 'get');
@@ -69,7 +68,7 @@ describe('Inky', () => {
                     const getPathBreadFirstMock = vi.fn();
                     const mockMaze: Maze = {
                         getPathBreadthFirst: getPathBreadFirstMock,
-                    } as never as Maze;
+                    } as never;
                     beforeEach(() => {
                         const spy = vi.spyOn(blinky, 'row', 'get');
                         spy.mockReturnValue(ghost.row + 1);
@@ -90,7 +89,7 @@ describe('Inky', () => {
 
                     describe('and the ghost should move west', () => {
                         beforeEach(() => {
-                            getPathBreadFirstMock.mockReturnValue({ row: ghost.row, col: ghost.column - 1 } as MazeNode);
+                            getPathBreadFirstMock.mockReturnValue({ row: ghost.row, col: ghost.column - 1 });
                         });
 
                         it('moves west', () => {
@@ -101,7 +100,7 @@ describe('Inky', () => {
 
                     describe('and the ghost should move east', () => {
                         beforeEach(() => {
-                            getPathBreadFirstMock.mockReturnValue({ row: ghost.row, col: ghost.column + 1 } as MazeNode);
+                            getPathBreadFirstMock.mockReturnValue({ row: ghost.row, col: ghost.column + 1 });
                         });
 
                         it('moves west', () => {
@@ -112,7 +111,7 @@ describe('Inky', () => {
 
                     describe('and the ghost should move north', () => {
                         beforeEach(() => {
-                            getPathBreadFirstMock.mockReturnValue({ row: ghost.row - 1, col: ghost.column } as MazeNode);
+                            getPathBreadFirstMock.mockReturnValue({ row: ghost.row - 1, col: ghost.column });
                         });
 
                         it('moves west', () => {
@@ -123,7 +122,7 @@ describe('Inky', () => {
 
                     describe('and the ghost should move south', () => {
                         beforeEach(() => {
-                            getPathBreadFirstMock.mockReturnValue({ row: ghost.row + 1, col: ghost.column } as MazeNode);
+                            getPathBreadFirstMock.mockReturnValue({ row: ghost.row + 1, col: ghost.column });
                         });
 
                         it('moves west', () => {
