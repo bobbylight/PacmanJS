@@ -6,44 +6,53 @@ html, body {
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
 }
+
 h1 {
   margin-top: 0;
 }
+
 h3 {
   margin: 0;
   padding: 0.5rem;
   text-align: left; /*start;*/
 }
+
 h4 {
   margin-bottom: 0;
 }
+
 #parent {
   margin-bottom: 3rem;
 }
+
 .content {
   width: 600px;
   margin: 0 auto;
   text-align: center;
 }
+
 .panel {
-  border: 1px solid #c0c0c0;
-  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
+
 .panel-header {
   background: #e0e0e0;
   border-bottom: 1px solid #c0c0c0;
 }
+
 .panel-footer {
   border-top: 1px solid #c0c0c0;
   padding: 0.2rem 0;
   margin-top: 2rem;
   font-size: smaller;
 }
+
 .info {
   width: 20rem;
   margin: 0 auto;
   text-align: initial;
 }
+
 canvas {
   /* Keep pixel art looking good when canvas is scaled up.  */
   /* In the future, this might be an opt-in feature of GTP. */
@@ -53,4 +62,14 @@ canvas {
   image-rendering: pixelated; /* Chrome */
   image-rendering: crisp-edges;
   -ms-interpolation-mode: nearest-neighbor;  /* IE (non-standard property) */
+}
+
+kbd {
+  background: #222;
+  border: 1px solid #666;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-family: monospace;
+  color: #ffd43b;
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.1);
 }
